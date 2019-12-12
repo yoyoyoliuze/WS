@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div style="padding-bottom:100rpx">
       <div class="top flexc">
         <span :class="move?'move':''">已服务</span>
       </div>
@@ -22,6 +22,28 @@
         <div class="ali-c jus-b"><p>折扣</p><span>-¥20</span></div>
         <div class="ali-c jus-b"><p>优惠券</p><span>-¥20</span></div>
       </div>
+      <div class="ali-c jus-e heji">
+        <span>合计:￥48</span>
+      </div>
+      <div class="jishi">
+        <div class="tit ali-c"><span></span><p>技师图片</p></div>
+        <scroll-view scroll-x enable-flex class="jishi-img ali-c">
+          <div class="ali-c" v-for="(item, index) in imgList" :key="index">
+            <img mode='aspectFill' src="/static/images/jishi.png" alt="">
+          </div>
+        </scroll-view>
+      </div>
+      <div class="info">
+        <div class="tit ali-c"><span></span><p>订单信息</p></div>
+        <p>订单编号：</p>
+        <p>创建时间：</p>
+        <p>支付时间：</p>
+        <p>取消时间：</p>
+
+      </div>
+      <div class="end jus-e ali-c">
+        <p class="flexc">评价</p>
+      </div>
   </div>
 </template>
 
@@ -31,7 +53,8 @@ export default {
 
   data () {
     return {
-      move:false
+      move:false,
+      imgList:[,,,,,,,,]
     }
   },
   onUnload(){
@@ -46,8 +69,89 @@ export default {
 </script> 
 
 <style scoped lang='scss'>
+.end{
+  background-color: #fff;
+  width: 100vw;
+  height: 98rpx;
+  padding: 0 30rpx;
+  position: fixed;
+  bottom: 0;
+  box-sizing: border-box;
+  box-shadow: -3rpx 0 5rpx 5rpx rgba(0,0,0,0.1);
+  p{
+    width: 201rpx;
+    height: 64rpx;
+    border-radius: 4rpx;
+    border: solid 1rpx #cc9f68;
+    color: #cc9f68;
+  }
+}
+.info{
+  background-color: #fff;
+  padding:  0 30rpx 30rpx 30rpx;
+  margin-top: 20rpx;
+  p{
+    color: #999999;
+    font-size: 24rpx;
+    margin-bottom: 20rpx;
+  }
+  .tit{
+    height: 88rpx;
+    p{
+      font-size: 28rpx;
+      color: #333;
+      margin: 0
+    }
+    span{
+      width: 5rpx;
+      height: 28rpx;
+      background-color: #ed8077;
+      border-radius: 2rpx;
+      margin-right: 20rpx
+    }
+  }
+}
+.jishi{
+  background-color: #fff;
+  padding:  0 0 30rpx 30rpx;
+  margin-top: 20rpx;
+  .tit{
+    height: 88rpx;
+    span{
+      width: 5rpx;
+      height: 28rpx;
+      background-color: #ed8077;
+      border-radius: 2rpx;
+      margin-right: 20rpx
+    }
+  }
+  .jishi-img{
+    height: 180rpx;
+
+    img{
+      display: inline-block;
+      width: 180rpx;
+      height: 180rpx;
+      border-radius: 8rpx;
+      margin-right: 20rpx;
+      
+    }
+  }
+}
+.heji{
+  height: 88rpx;
+  color: #ff3333;
+  padding: 0 30rpx;
+  background-color: #fff
+}
 .jus-box{
-  // background-color: 
+  background-color: #fff;
+  padding: 20rpx 30rpx;
+  border-bottom: 1rpx solid #ededed;
+  font-size: 24rpx;
+  .ali-c{
+    height: 60rpx;
+  }
 }
 .shop{
    background-color: #fff;
