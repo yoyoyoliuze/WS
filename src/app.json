@@ -1,0 +1,45 @@
+{
+  "pages": [
+    "pages/index/main",
+    "pages/order/main",
+    "pages/mine/main"
+  ],
+  "subpackages":[
+    {
+      "root":"pages/orderson/",
+      "pages":[
+        "orderDetail/main"
+      ]
+    }
+  ],
+  "window": {
+    "backgroundTextStyle": "light",
+    "navigationBarBackgroundColor": "#fff",
+    "navigationBarTitleText": "万色",
+    "navigationBarTextStyle": "black"
+  },
+  "tabBar": {
+    "color": "#999",
+    "backgroundColor": "#fafafa",
+    "selectedColor": "#cdad7e",
+    "borderStyle": "white",
+
+    "list": [{
+      "text": "首页",
+      "pagePath": "pages/index/main",
+      "iconPath": "static/images/tab/icon_1.png",
+      "selectedIconPath": "static/images/tab/icon_1_active.png"
+    }, {
+      "text": "我的预约",
+      "pagePath": "pages/order/main",
+      "iconPath": "static/images/tab/icon_2.png",
+      "selectedIconPath": "static/images/tab/icon_2_active.png"
+    }, {
+      "text": "我的",
+      "pagePath": "pages/mine/main",
+      "iconPath": "static/images/tab/icon_3.png",
+      "selectedIconPath": "static/images/tab/icon_3_active.png"
+    }],
+    "position": "bottom"
+  }
+}
