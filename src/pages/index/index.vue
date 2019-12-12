@@ -76,6 +76,39 @@
         </div>
       </div>
     </div>
+    <!--弹层-->
+    <div class="mask"></div>
+    <div class="yuMask">
+        <img src="/static/images/cancle.png" alt="" class="cancle_b">
+        <div class="bg_fff yu_main">
+            <div class="flex yu_item  flexAlignCenter justifyContentBetween">
+                <div class="flex yu_left">
+                    <img src="/static/images/ava.png" alt="" class="b_ava">
+                    <div class="flex flexColumn justifyContentBetween">
+                        <p class="flex">
+                          <span>Alisa</span><span class="b_pill">店长</span>
+                        </p>
+                        <p>13553206236</p>
+                        <p class="btn_pill">彩绘指甲</p>
+                    </div>
+                </div>
+                <img src="/static/images/rili.png" alt="" class="b_rili">
+            </div>
+            <div class="flex yu_item  flexAlignCenter justifyContentBetween">
+                <div class="flex yu_left">
+                    <img src="/static/images/ava.png" alt="" class="b_ava">
+                    <div class="flex flexColumn justifyContentBetween">
+                        <p class="flex">
+                          <span>Alisa</span><span class="b_pill">店长</span>
+                        </p>
+                        <p>13553206236</p>
+                        <p class="btn_pill">彩绘指甲</p>
+                    </div>
+                </div>
+                <img src="/static/images/rili.png" alt="" class="b_rili">
+            </div>
+        </div>
+    </div>
   </div>
 </template>
 
@@ -279,6 +312,36 @@ export default {
       }
       p{
         font-size: 18rpx
+      }
+    }
+  }
+}
+.cancle_b{
+  width:60rpx;height:60rpx;
+}
+.b_ava{
+  width:140rpx;height:140rpx;margin-right:15rpx;
+  border-radius:50%;
+}
+.b_rili{
+  width:80rpx;height:60rpx;
+}
+.btn_pill{
+  border:1rpx solid #999999;border-radius:8rpx;color:#999999;
+}
+.yuMask{
+  position: fixed;z-index:100;
+  width:690rpx;height:650rpx;
+  top:200rpx;
+  left:30rpx;right:30rpx;
+  text-align: center;
+  .yu_main{
+    margin-top:100rpx;
+    padding:30rpx;border-radius:15rpx;
+    .yu_item{
+      height:215rpx;border-bottom: 1rpx solid #f5f5f5;
+      &:last-child{
+        border:0
       }
     }
   }

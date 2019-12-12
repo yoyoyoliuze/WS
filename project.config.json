@@ -9,7 +9,7 @@
 	},
 	"miniprogramRoot": "dist/wx/",
 	"compileType": "miniprogram",
-	"appid": "wx993e09fb14f02b2c",
+	"appid": "wx73dbae1cbf851757",
 	"projectname": "ws",
 	"simulatorType": "wechat",
 	"simulatorPluginLibVersion": {},
@@ -55,6 +55,20 @@
 					"id": -1,
 					"name": "pages/orderson/orderDetail/main",
 					"pathName": "pages/orderson/orderDetail/main",
+					"query": "",
+					"scene": null
+				},
+				{
+					"id": -1,
+					"name": "设置",
+					"pathName": "pages/member/set/main",
+					"query": "",
+					"scene": null
+				},
+				{
+					"id": -1,
+					"name": "编辑个人信息",
+					"pathName": "pages/member/editinfo/main",
 					"scene": null
 				}
 			]
