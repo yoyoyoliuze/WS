@@ -2,8 +2,6 @@
   "pages": [
     "pages/index/main",
     "pages/order/main",
-    "pages/member/editinfo/main",
-    "pages/member/set/main",
     "pages/mine/main"
   ],
   "subpackages":[
@@ -11,6 +9,29 @@
       "root":"pages/orderson/",
       "pages":[
         "orderDetail/main"
+      ]
+    },
+    {
+      "root":"pages/member/",
+      "pages":[
+        "editinfo/main",
+        "set/main"
+      ]
+    },
+    {
+      "root":"pages/home/",
+      "pages":[
+        "hot/main",
+        "school/main",
+        "cord/main",
+        "card/main"
+      ]
+    },
+    {
+      "root":"pages/other/",
+      "pages":[
+        "success/main"
+        
       ]
     }
   ],

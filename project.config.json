@@ -69,6 +69,41 @@
 					"id": -1,
 					"name": "编辑个人信息",
 					"pathName": "pages/member/editinfo/main",
+					"query": "",
+					"scene": null
+				},
+				{
+					"id": -1,
+					"name": "热门项目",
+					"pathName": "pages/home/hot/main",
+					"query": "",
+					"scene": null
+				},
+				{
+					"id": -1,
+					"name": "万色学院",
+					"pathName": "pages/home/school/main",
+					"query": "",
+					"scene": null
+				},
+				{
+					"id": -1,
+					"name": "在线登记",
+					"pathName": "pages/home/cord/main",
+					"query": "",
+					"scene": null
+				},
+				{
+					"id": -1,
+					"name": "会员卡",
+					"pathName": "pages/home/card/main",
+					"query": "",
+					"scene": null
+				},
+				{
+					"id": -1,
+					"name": "支付成功",
+					"pathName": "pages/other/success/main",
 					"scene": null
 				}
 			]
