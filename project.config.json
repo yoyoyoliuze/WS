@@ -104,6 +104,27 @@
 					"id": -1,
 					"name": "支付成功",
 					"pathName": "pages/other/success/main",
+					"query": "",
+					"scene": null
+				},
+				{
+					"id": -1,
+					"name": "预约时间",
+					"pathName": "pages/other/apointtime/main",
+					"query": "",
+					"scene": null
+				},
+				{
+					"id": -1,
+					"name": "预约",
+					"pathName": "pages/other/yuyue/main",
+					"query": "",
+					"scene": null
+				},
+				{
+					"id": -1,
+					"name": "全部评价",
+					"pathName": "pages/other/allcomment/main",
 					"scene": null
 				}
 			]

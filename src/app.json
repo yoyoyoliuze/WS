@@ -30,7 +30,10 @@
     {
       "root":"pages/other/",
       "pages":[
-        "success/main"
+        "success/main",
+        "apointtime/main",
+        "yuyue/main",
+        "allcomment/main"
         
       ]
     }
