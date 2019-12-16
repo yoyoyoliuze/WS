@@ -2,17 +2,44 @@
   <div class="bg_fff b_card">
       <div class="swiper_bb">
         <img src="/static/images/icons/bg1.png" alt="" class="img_bg">
-        <swiper class="swiper-box" display-multiple-items='1' interval='3000' circular previous-margin="60" next-margin="60" @change="swiperChange">
+        <swiper class="swiper-box" display-multiple-items='1' interval='3000' previous-margin="60" next-margin="60" @change="swiperChange">
           <swiper-item class="swiper-item" v-for="(item,index) in 3" :key="index">
             <div class="card" :class="swiperIndex==index?'active_swiper':'quite'">
-                <img src="/static/images/icons/jin.png" alt="" v-if="index==0">
-                <img src="/static/images/icons/yin.png" alt="" v-if="index==1">
+                <img src="/static/images/icons/yin.png" alt="" v-if="index==0">
+                <img src="/static/images/icons/jin.png" alt="" v-if="index==1">
                 <img src="/static/images/icons/si.png" alt="" v-if="index==2">
-                <div class="card_detail flex flexWrap">
+                <!-- <div class="card_detail flex flexWrap">
                     <p class="font30 fb">金卡</p>
                     <p class="font30 fb">￥18800元</p>
                     <p class="font24 mt2">项目折扣</p>
                     <p class="font24 mt2">6.8折</p>
+                </div> -->
+                <div class="card_detailb">
+                  <div class="top jus-b">
+                    <div class="ali-c left">
+                      <img src="/static/images/ava.png" alt="">
+                      <div>
+                        <p>巴啦啦小魔仙</p>
+                        <span>金卡会员</span>
+                      </div>
+                    </div>
+                    <div class="jus-e right" @click="switchPath('/pages/myson/consume/main')">
+                      <p>消费流水</p>
+                    </div>
+                  </div>
+                  <div class="bottom ali-c jus-b">
+                    <div class="ali-c">
+                      <div>
+                        <p><span>￥</span>18800</p>
+                        <span>余额</span>
+                      </div>
+                      <div>
+                        <p>6.8<span>折</span></p>
+                        <span>余额</span>
+                      </div>
+                    </div>
+                    <p class="flexc" @click="switchPath('/pages/myson/recharge/main')">充值</p>
+                  </div>
                 </div>
             </div>
           </swiper-item>
@@ -45,7 +72,7 @@
               </div>
           </div>
       </div>
-      <div class="btn_fix">立即升级会员</div>
+      <div class="btn_fix" @click="switchPath('/pages/myson/jiesuan/main')">立即升级会员</div>
   </div>
 </template>
 
@@ -123,6 +150,70 @@ export default {
       width:480rpx;height:260rpx;position: relative;
       img{
         width:100%;height:100%;
+      }
+    }
+    .card_detailb{
+      width:100%;height:100%;
+      // top:60rpx;left:60rpx;
+      top: 0;left: 0;
+      position: absolute;z-index:80;
+      color:#a1782c;
+      .bottom{
+        height: 100rpx;
+        div,p{
+          text-align: center;
+          color:#a1782c;
+        }
+        .ali-c{
+          div{
+            margin: 0 20rpx;
+            p{
+              font-size: 36rpx;
+              font-weight: bold;
+              span{
+                font-size: 20rpx;
+              }
+            }
+            span{
+              font-size: 24rpx;
+            }
+          }
+        }
+        .flexc{
+          width: 98rpx;
+          height: 40rpx;
+          background-color: rgba(255,255,255,0.4);
+          border-radius: 20rpx 0rpx 0rpx 20rpx;
+          font-size: 20rpx
+        }
+      }
+      .top{
+        height: 150rpx;
+        .left{
+          padding-left: 30rpx;
+          div{
+            color:#a1782c!important;
+          }
+          img{
+            width: 80rpx;
+            height: 80rpx;
+            border-radius: 50%;
+            margin-right: 20rpx
+          }
+          span{
+            color:#a1782c!important;
+            font-size: 20rpx;
+            padding: 5rpx 10rpx;
+            border-radius: 15rpx 0rpx 16rpx 0rpx;
+	          border: solid 1rpx #a1782c;
+          }
+        }
+        .right{
+          color:#a1782c!important;
+          text-decoration: underline;
+          font-size: 20rpx;
+          padding: 20rpx
+        }
       }
     }
     .card_detail{

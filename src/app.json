@@ -12,6 +12,19 @@
       ]
     },
     {
+      "root":"pages/myson/",
+      "pages":[
+        "ticket/main",
+        "consume/main",
+        "recharge/main",
+        "jiesuan/main",
+        "pingjia/main",
+        "focus/main",
+        "invite/main",
+        "rule/main"
+      ]
+    },
+    {
       "root":"pages/member/",
       "pages":[
         "editinfo/main",

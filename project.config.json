@@ -125,6 +125,56 @@
 					"id": -1,
 					"name": "全部评价",
 					"pathName": "pages/other/allcomment/main",
+					"query": "",
+					"scene": null
+				},
+				{
+					"id": -1,
+					"name": "pages/myson/ticket/main",
+					"pathName": "pages/myson/ticket/main",
+					"query": "",
+					"scene": null
+				},
+				{
+					"id": -1,
+					"name": "pages/myson/focus/main",
+					"pathName": "pages/myson/focus/main",
+					"query": "",
+					"scene": null
+				},
+				{
+					"id": -1,
+					"name": "pages/myson/invite/main",
+					"pathName": "pages/myson/invite/main",
+					"query": "",
+					"scene": null
+				},
+				{
+					"id": -1,
+					"name": "pages/myson/consume/main",
+					"pathName": "pages/myson/consume/main",
+					"query": "",
+					"scene": null
+				},
+				{
+					"id": -1,
+					"name": "pages/myson/recharge/main",
+					"pathName": "pages/myson/recharge/main",
+					"query": "",
+					"scene": null
+				},
+				{
+					"id": -1,
+					"name": "pages/myson/jiesuan/main",
+					"pathName": "pages/myson/jiesuan/main",
+					"query": "",
+					"scene": null
+				},
+				{
+					"id": 19,
+					"name": "评价",
+					"pathName": "pages/myson/pingjia/main",
+					"query": "",
 					"scene": null
 				}
 			]

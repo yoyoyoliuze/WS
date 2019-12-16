@@ -1,5 +1,6 @@
 <template>
   <div>
+    <div class="cliDom" :style="clientX?domStyle:''"  :class="clientX?'cliDomActive':''"></div>
       <div class="top-box">
         <div class="top ali-c">
           <img mode='aspectFill' class="left" src="/static/images/ava.png" alt="">
@@ -20,21 +21,21 @@
         <div class="card">
           <p class="tit ali-c">我的预约</p>
           <div class="icon-box flex-wrap ali-c">
-            <div class="icon flexc">
+            <div class="icon flexc" @click="switchPath('/pages/myson/focus/main',$event)">
               <div>
                 <img src="/static/images/my_icon_1.png" alt="">
                 <p>待服务</p>
                 <span class="flexc">2</span>
               </div>
             </div>
-            <div class="icon flexc">
+            <div class="icon flexc" @click="switchPath('/pages/myson/focus/main',$event)">
               <div>
                 <img src="/static/images/my_icon_2.png" alt="">
                 <p>已服务</p>
                 <span class="flexc">2</span>
               </div>
             </div>
-            <div class="icon flexc">
+            <div class="icon flexc" @click="switchPath('/pages/myson/focus/main',$event)">
               <div>
                 <img src="/static/images/my_icon_3.png" alt="">
                 <p>已取消</p>
@@ -48,31 +49,31 @@
         <div class="card">
           <p class="tit ali-c">我的服务</p>
           <div class="icon-box icon-boxb flex-wrap ali-c">
-            <div class="icon flexc">
+            <div class="icon flexc" @click="switchPath('/pages/home/card/main',$event)">
               <div>
                 <img src="/static/images/my_icon_4.png" alt="">
                 <p>会员卡</p>
               </div>
             </div>
-            <div class="icon flexc">
+            <div class="icon flexc" @click="switchPath('/pages/myson/ticket/main',$event)">
               <div>
                 <img src="/static/images/my_icon_5.png" alt="">
                 <p>优惠券</p>
               </div>
             </div>
-            <div class="icon flexc">
+            <div class="icon flexc" @click="switchPath('/pages/myson/invite/main',$event)">
               <div>
                 <img src="/static/images/my_icon_6.png" alt="">
                 <p>邀请好友</p>
               </div>
             </div>
-            <div class="icon flexc">
+            <div class="icon flexc" @click="switchPath('/pages/myson/focus/main',$event)">
               <div>
                 <img src="/static/images/my_icon_7.png" alt="">
                 <p>我的关注</p>
               </div>
             </div>
-            <div class="icon flexc">
+            <div class="icon flexc" @click="switchPath('/pages/member/set/main',$event)">
               <div>
                 <img src="/static/images/my_icon_8.png" alt="">
                 <p>设置</p>
@@ -90,13 +91,33 @@ export default {
 
   data () {
     return {
-      
+      clientX:0,
+      clientY:0
+    }
+  },
+  computed: {
+    domStyle(){
+      return 'top:'+(this.clientY*2)+'rpx;left:'+(this.clientX*2)+'rpx'
+    }
+  },
+  methods: {
+    switchPath(path,e){
+      this.clientX = e.clientX
+      this.clientY = e.clientY
+      setTimeout(() => {
+        this.clientX = 0
+        this.clientY = 0
+        wx.navigateTo({
+          url:path
+        })
+      }, 0);
     }
   },
 }
 </script>
 
 <style scoped lang='scss'>
+
 .card-box{
   padding: 0 30rpx;
   width: 100vw;
