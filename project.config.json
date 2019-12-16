@@ -132,6 +132,13 @@
 					"id": -1,
 					"name": "预约确定",
 					"pathName": "pages/other/yusuccess/main",
+					"query": "",
+					"scene": null
+				},
+				{
+					"id": -1,
+					"name": "我的预约",
+					"pathName": "pages/other/myyue/main",
 					"scene": null
 				}
 			]
