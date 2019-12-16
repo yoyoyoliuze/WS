@@ -21,7 +21,7 @@
                         <span class="col_tag">满意</span>
                     </p>
                 </div>
-                <div>美甲做的很好看，而且很实话，物美价廉的感 觉，很喜欢。</div>
+                <div>美甲做的很好看，而且很实话，物美价廉的感觉，很喜欢。</div>
                 <div class="cg font24 flex justifyContentBetween mt1">
                   <p>技师：Alisa</p>
                   <p>2019-11-21</p>
@@ -40,7 +40,7 @@
                         <span class="col_tag">一般</span>
                     </p>
                 </div>
-                <div>美甲做的很好看，而且很实话，物美价廉的感 觉，很喜欢。</div>
+                <div>美甲做的很好看，而且很实话，物美价廉的感觉，很喜欢。</div>
                 <div class="cg font24 flex justifyContentBetween mt1">
                   <p>技师：Alisa</p>
                   <p>2019-11-21</p>
