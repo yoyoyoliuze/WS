@@ -139,6 +139,20 @@
 					"id": -1,
 					"name": "我的预约",
 					"pathName": "pages/other/myyue/main",
+					"query": "",
+					"scene": null
+				},
+				{
+					"id": -1,
+					"name": "pages/myson/shopDetail/main",
+					"pathName": "pages/myson/shopDetail/main",
+					"query": "",
+					"scene": null
+				},
+				{
+					"id": -1,
+					"name": "技师详情",
+					"pathName": "pages/myson/jishiDetail/main",
 					"scene": null
 				}
 			]
