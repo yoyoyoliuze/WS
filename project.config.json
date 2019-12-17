@@ -144,15 +144,8 @@
 				},
 				{
 					"id": -1,
-					"name": "pages/myson/shopDetail/main",
-					"pathName": "pages/myson/shopDetail/main",
-					"query": "",
-					"scene": null
-				},
-				{
-					"id": -1,
-					"name": "技师详情",
-					"pathName": "pages/myson/jishiDetail/main",
+					"name": "选择服务",
+					"pathName": "pages/other/chose/main",
 					"scene": null
 				}
 			]
