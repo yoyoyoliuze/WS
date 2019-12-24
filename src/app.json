@@ -17,6 +17,8 @@
         "ticket/main",
         "consume/main",
         "recharge/main",
+        "shopDetail/main",
+        "jishiDetail/main",
         "jiesuan/main",
         "pingjia/main",
         "focus/main",
