@@ -151,15 +151,8 @@
 				},
 				{
 					"id": -1,
-					"name": "pages/myson/shopDetail/main",
-					"pathName": "pages/myson/shopDetail/main",
-					"query": "",
-					"scene": null
-				},
-				{
-					"id": -1,
-					"name": "pages/myson/jishiDetail/main",
-					"pathName": "pages/myson/jishiDetail/main",
+					"name": "项目详情",
+					"pathName": "pages/other/serdetail/main",
 					"scene": null
 				}
 			]
