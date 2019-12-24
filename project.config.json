@@ -146,6 +146,13 @@
 					"id": -1,
 					"name": "选择服务",
 					"pathName": "pages/other/chose/main",
+					"query": "",
+					"scene": null
+				},
+				{
+					"id": -1,
+					"name": "项目详情",
+					"pathName": "pages/other/serdetail/main",
 					"scene": null
 				}
 			]
