@@ -146,6 +146,20 @@
 					"id": -1,
 					"name": "选择服务",
 					"pathName": "pages/other/chose/main",
+					"query": "",
+					"scene": null
+				},
+				{
+					"id": -1,
+					"name": "pages/myson/shopDetail/main",
+					"pathName": "pages/myson/shopDetail/main",
+					"query": "",
+					"scene": null
+				},
+				{
+					"id": -1,
+					"name": "pages/myson/jishiDetail/main",
+					"pathName": "pages/myson/jishiDetail/main",
 					"scene": null
 				}
 			]
