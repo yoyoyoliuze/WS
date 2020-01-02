@@ -77,8 +77,8 @@
       </div>
     </div>
     <!--弹层-->
-    <div class="mask"></div>
-    <div class="yuMask">
+    <div class="mask" style="display:none"></div>
+    <div class="yuMask" style="display:none">
         <img src="/static/images/cancle.png" alt="" class="cancle_b">
         <div class="bg_fff yu_main">
             <div class="flex yu_item  flexAlignCenter justifyContentBetween">
@@ -119,7 +119,8 @@ export default {
       bannerList:[,,,,],
       hotList:[,,,,,,,]
     }
-  }
+  },
+  
 }
 </script>
 
