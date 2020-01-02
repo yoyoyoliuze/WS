@@ -10,7 +10,7 @@
         <div class="flex1 flexc" :class="{'active':tabIndex==index}" v-for="(item, index) in tabList" :key="index" @click="cliTab(index)">{{item}}</div>
         <span :style="'left:'+tabStyle+'rpx'"></span>
       </div>
-      <div class="list" :class="isJump?'nav':''" @click="goUrl('/pages/orderson/orderDetail/main','')">
+      <div class="list" @click="goUrl('/pages/orderson/orderDetail/main','')">
         <div class="tit ali-c">待服务</div>
         <div class="main">
           <div class="time-box ali-c">
@@ -55,7 +55,7 @@
 </template>
 
 <script>
-import {switchPath,isJump} from '@/utils'
+import {switchPath} from '@/utils'
 export default {
 
   data () {
@@ -64,7 +64,6 @@ export default {
       serverIndex:0,
       tabList:['待服务','已服务','已取消'],
       tabIndex:0,
-      isJump:false
       
     }
   },
@@ -78,13 +77,9 @@ export default {
   },
   methods: {
     goUrl(url,param){
-      this.isJump = true
-      setTimeout(() => {
-        this.isJump = false
         wx.navigateTo({
           url:url+'?id='+param
         })
-      }, 100);
     },
     cliServer(index){
       this.serverIndex = index

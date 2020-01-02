@@ -77,8 +77,8 @@
       </div>
     </div>
     <!--弹层-->
-    <div class="mask" style="display:none"></div>
-    <div class="yuMask" style="display:none">
+    <div class="mask" v-if="false"></div>
+    <div class="yuMask" v-if="false">
         <img src="/static/images/cancle.png" alt="" class="cancle_b">
         <div class="bg_fff yu_main">
             <div class="flex yu_item  flexAlignCenter justifyContentBetween">

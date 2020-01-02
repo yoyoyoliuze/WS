@@ -35,6 +35,23 @@
         <span :style="'left:'+tabStyle+'rpx'"></span>
       </div>
 
+      <div class="server-list-box">
+        <div class="tit jus-b ali-c">
+          <span>美甲</span>
+          <img src="/static/images/more.png" alt="">
+        </div>
+        <div class="list-box flex-wrap jus-b">
+          <div class="list" v-for="(item, index) in 3" :key="index">
+            <div class="box">
+              <p>彩绘指甲</p>
+              <p>(服务时长：半小时)</p>
+              <p>298元</p>
+            </div>
+            <p class="flexc">查看详情</p>
+          </div>
+        </div>
+      </div>
+
       <div class="jishi-box">
         <div class="jishi ali-c jus-b">
           <div class="ali-c left">
@@ -160,11 +177,52 @@ export default {
 </script>
 
 <style scoped lang='scss'>
+.server-list-box{
+  .list-box{
+    background-color: #fff;
+    padding: 0 70rpx;
+    .list{
+      width: 274rpx;
+      text-align: center;
+      margin: 10rpx 0;
+      .flexc{
+        width: 274rpx;
+        height: 60rpx;
+        background-color: #cc9f68;
+        border-radius: 10rpx;
+        color: #fff;
+      }
+      div p:nth-child(2){
+        font-size: 24rpx;
+        margin: 10rpx 0;
+      }
+      div p:nth-child(3){
+        color: #ff3333;
+      }
+      .box{
+        width: 274rpx;
+        height: 151rpx;
+        border-radius: 10rpx;
+        border: solid 1rpx #cc9f68;
+        margin-bottom: 10rpx;
+      }
+    }
+  }
+  .tit{
+    height: 88rpx;
+    background-color: #fff;
+    border-bottom: 1rpx solid #ededed;
+    padding: 0 30rpx;
+    img{
+      width: 13rpx;
+	    height: 26rpx;
+    }
+  }
+}
 .kefu{
     background-color: #fff;
     margin-top: 20rpx;
     height: 98rpx;
-    
   }
 .info{
   background-color: #fff;
