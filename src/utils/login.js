@@ -1,7 +1,7 @@
 import {host,LoginPath,RegisterPath} from '../utils';
-const LoginRequestUrl = "Login/wx_Oauto";//登录接口地址，
+const LoginRequestUrl = "Login/SignIn_New";//登录接口地址，
 const LoginSuccessCode = 0;//登录成功
-const LoginNotRegisterCode = 100;//未注册
+const LoginNotRegisterCode = 2;//未注册
 const LoginfailCode = 1;//登录失败
 
 // params = { success:成功执行的方法}
@@ -53,8 +53,8 @@ export default function logins(params) {
                                     }
                                     const _res =res.data;
                                     // 设置一些缓存，注册或者支付要使用的，直接在缓存获取
-                                    wx.setStorageSync("unionid", _res.data.Unionid);
-                                    wx.setStorageSync("openId", _res.data.OpenId);
+                                    wx.setStorageSync("unionid", _res.data.unionid);
+                                    wx.setStorageSync("openId", _res.data.openId);
                                     wx.setStorageSync("wxToken", _res.data.WxToken); //保存的令牌 accessToken
                                     // 登录成功
                                     if (_res.code === LoginSuccessCode) {
@@ -74,7 +74,6 @@ export default function logins(params) {
                                         // 自动登录不刷新页面时
                                           wx.showToast({
                                             title: "登陆成功！",
-                                            icon:"none",
                                             duration:1500
                                           });
                                         // }

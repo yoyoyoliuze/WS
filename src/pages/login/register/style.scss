@@ -11,7 +11,7 @@
 }
 .btn{
     color:#fff;
-    background: #3172f5;
+    background: #cc9f68;
     text-align: center;
     height: 86rpx;
     line-height: 86rpx;
@@ -48,14 +48,20 @@
 .from .from-line {
 	margin-bottom: 30rpx;
 	position: relative;
+	display:flex;
+	align-items:center;
+	border: 1px solid #d9d9d9;
+	border-radius: 200rpx;
+	overflow:hidden;
+	.phone-input{
+		width:500rpx;
+	}
 }
 
 .from .ipt {
-	border: 1px solid #d9d9d9;
-	border-radius: 200rpx;
 	height: 80rpx;
 	/* width: 100%; */
-	padding: 0 20rpx 0 100rpx;
+	padding: 0 20rpx 0 20rpx;
 	font-size: 30rpx;
 }
 
@@ -72,36 +78,6 @@
 	z-index: 9;
 }
 
-.from .icon_phone {
-	background: url(http://img.su-cloud.cn/qjImg/phone.png) center center no-repeat;
-	background-size: 40rpx;
-}
-
-.from .icon_pwd {
-	background: url(http://img.su-cloud.cn/qjImg/pwd.png) center center no-repeat;
-	background-size: 40rpx;
-}
-
-.from .icon_company {
-	background: url(http://img.su-cloud.cn/qjImg/conpny.png) center center no-repeat;
-	background-size: 40rpx;
-}
-
-.from .icon_name {
-	background: url(http://img.su-cloud.cn/qjImg/user.png) center center no-repeat;
-	background-size: 40rpx;
-}
-
-.from .icon_addr {
-	background: url(http://img.su-cloud.cn/qjImg/addr.png) center center no-repeat;
-	background-size: 40rpx;
-}
-
-.from .icon_code {
-	
-	background: url(http://img.su-cloud.cn/qjImg/xinxi.png) center center no-repeat;
-	background-size: 40rpx;
-}
 
 .from .from-line .getcode {
 	height: 84rpx;
@@ -109,11 +85,12 @@
 	position: absolute;
 	right: 0;
 	top: 0;
-	background: #5ad38e;
+	background: #cc9f68;
 	color: #fff;
 	padding: 0 20rpx;
 	border-radius: 0 200rpx 200rpx 0;
 	z-index: 5;
+	font-size:28rpx;
 }
 
 .from .from-txt {
@@ -123,4 +100,12 @@
 
 .from .from-txt .link {
 	color: #0bd5a9;
+}
+.phone-icon{
+	width:40rpx;
+	margin-left:20rpx;
+}
+.phoneCode-icon{
+	width:40rpx;
+	margin-left:20rpx;
 }

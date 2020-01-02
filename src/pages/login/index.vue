@@ -104,7 +104,7 @@ export default {
     // }
     .login-btn {
       text-align: center;
-      background: #3172f5;
+      background: #cc9f68;
       width: 90%;
       height: 80rpx;
       line-height: 80rpx;
