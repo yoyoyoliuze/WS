@@ -2,7 +2,7 @@
   <div>
     <swiper class="swiper-box" autoplay interval='3000' circular indicator-dots>
       <swiper-item v-for="(item, index) in bannerList" :key="index">
-        <img mode='aspectFill' src="/static/images/banner.png" alt="">
+        <img mode='aspectFill' :src="item.Pic" alt="">
       </swiper-item>
     </swiper>
     <div class="search-box flexc">
@@ -76,6 +76,11 @@
         </div>
       </div>
     </div>
+    
+    <!--首页启动图-->
+    <div class="stratPic">
+        <img :src="startPic" alt="">
+    </div>
     <!--弹层-->
     <div class="mask" v-if="false"></div>
     <div class="yuMask" v-if="false">
@@ -113,13 +118,35 @@
 </template>
 
 <script>
+import {post} from '@/utils'
 export default {
   data () {
     return {
-      bannerList:[,,,,],
+      bannerList:[],
+      startPic:'',
       hotList:[,,,,,,,]
     }
   },
+  onShow(){
+    this.getBannerList()
+    this.getModalMask()
+  },
+  methods:{
+    getBannerList(){
+      post('Banner/BannerList',{}).then(res=>{
+          if(res.code==0){
+            this.bannerList = res.data
+          }
+      })
+    },
+    getModalMask(){
+      post('Banner/HomePicList',{}).then(res=>{
+        if(res.code==0){
+          this.startPic = res.data[0].Logo
+        }
+      })
+    }
+  }
   
 }
 </script>
@@ -139,7 +166,7 @@ export default {
       font-weight: 900
     }
     .two{
-      margin-bottom: 20rpx;
+      margin-bottom: 20rpx;      
       span{
         color: #999999;
         font-size: 22rpx;
@@ -345,6 +372,14 @@ export default {
         border:0
       }
     }
+  }
+}
+.stratPic{
+  width:750rpx;
+  position: fixed;
+  top:0;left:0;z-index:100;
+  img{
+    width:100%;height:100%;
   }
 }
 </style>
