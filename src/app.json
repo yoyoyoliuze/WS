@@ -2,7 +2,9 @@
   "pages": [
     "pages/index/main",
     "pages/order/main",
-    "pages/mine/main"
+    "pages/mine/main",
+    "pages/login/main",
+    "pages/login/register/main"
   ],
   "subpackages":[
     {
