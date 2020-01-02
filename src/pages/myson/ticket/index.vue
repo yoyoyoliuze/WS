@@ -21,14 +21,12 @@
 </template>
 
 <script>
-import {switchPath,isJump} from '@/utils'
 export default {
 
   data () {
     return {
       tabList:['未使用','已使用','已失效'],
       tabIndex:0,
-      isJump:false
       
     }
   },
@@ -42,13 +40,9 @@ export default {
   },
   methods: {
     goUrl(url,param){
-      this.isJump = true
-      setTimeout(() => {
-        this.isJump = false
         wx.navigateTo({
           url:url+'?id='+param
         })
-      }, 100);
     },
     cliServer(index){
       this.serverIndex = index
