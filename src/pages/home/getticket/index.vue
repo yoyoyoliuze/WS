@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div class="coupon">
+      <div class="coupon">
           <div class="list jus-b" v-for="(item,index) in data" :key="index">
             <div class="left flex">
               <div class="ill_ll cr">
@@ -17,7 +17,7 @@
               <div class="cf">立即领取</div>
             </div>
           </div>
-    </div>
+      </div>
   </div>
 </template>
 
