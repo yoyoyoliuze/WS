@@ -1,15 +1,15 @@
 <template>
   <div>
       <div class="flex bg_fff p3">
-          <div class="hot_itl font30">默认</div>
-          <div class="hot_itl flex flexAlignCenter justifyContentCenter">
+          <div class="hot_itl font30" :class="{'active':tabActive==0}" @click="cliTab(0)">默认</div>
+          <div class="hot_itl flex flexAlignCenter justifyContentCenter" :class="{'active':tabActive==1}" @click="cliTab(1)">
               <p class="mr_b font30">人气</p>
               <p class="flex flexColumn justifyContentAround">
                   <img src="/static/images/icons/up1.png" alt="" class="img">
                   <img src="/static/images/icons/d2.png" alt="" class="img mt_b">
               </p>
           </div>
-          <div class="hot_itl flex flexAlignCenter justifyContentCenter">
+          <div class="hot_itl flex flexAlignCenter justifyContentCenter" :class="{'active':tabActive==2}" @click="cliTab(2)">
               <p class="mr_b font30">价格</p>
               <p class="flex flexColumn justifyContentAround">
                   <img src="/static/images/icons/d2.png" alt="" class="img up2">
@@ -42,15 +42,18 @@ import '@/style/bb.scss'
 export default {
   
   onShow(){
+    this.tabActive = 0
   },
 
   data () {
     return {
-      
+      tabActive:0
     }
   },
   methods: {
-    
+    cliTab(index){
+      this.tabActive = index
+    },
     switchPath(url){
       wx.navigateTo({
         url
@@ -62,6 +65,9 @@ export default {
 </script>
 
 <style lang='scss' scoped>
+.active{
+  color: #cc9f68!important
+}
   .hot_itl{
     width:33%;
     text-align:center;

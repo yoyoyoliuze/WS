@@ -20,22 +20,22 @@
     <div class="hot">
       <div class="tit ali-c jus-b">
         <p>热门项目</p>
-        <span>更多</span>
+        <span @click="goUrl('/pages/home/hot/main')">更多</span>
       </div>
       <scroll-view scroll-x enable-flex class="move ali-c">
         <div class="list" v-for="(item, index) in hotList" :key="index">
-          <img mode='aspectFill' src="/static/images/jishi.png" alt="">
-          <p class="title">法国LPG黑眼圈护理</p>
-          <p class="detail">眼部祛皱 改善黑眼圈</p>
+          <img mode='aspectFill' :src="item.PicNo" alt="">
+          <p class="tita">{{item.Name}}</p>
+          <p class="detail oneline">{{item.Synopsis}}</p>
           <div class="price">
-            <span>￥</span><span>298</span><span>￥318</span> 
+            <span>￥</span><span>{{item.Price}}</span><span>￥{{item.VipPrice}}</span> 
           </div> 
         </div>
       </scroll-view>
     </div>
     <div class="school">
       <div class="one ali-c jus-b">
-        <div class="left ali-c jus-b">
+        <div class="left ali-c jus-b"  @click="goUrl('/pages/myson/ticket/main')">
           <div>
             <p>优惠券</p>
             <span>会员可享受特权哦</span>
@@ -132,10 +132,20 @@ export default {
     this.getModalMask()
   },
   methods:{
-    getBannerList(){
+    getHotList(){
       post('Banner/BannerList',{}).then(res=>{
           if(res.code==0){
             this.bannerList = res.data
+          }
+      })
+    },
+    getBannerList(){
+      post('Goods/GoodsList',{
+        Page:1,
+        PageSize:5
+      }).then(res=>{
+          if(res.code==0){
+            this.hotList = res.data
           }
       })
     },
@@ -144,6 +154,11 @@ export default {
         if(res.code==0){
           this.startPic = res.data[0].Logo
         }
+      })
+    },
+    goUrl(url,id){
+      wx.navigateTo({
+        url:url+'?id='+id
       })
     }
   }
@@ -272,14 +287,14 @@ export default {
         height: 200rpx;
         border-radius: 8rpx;
       }
-      .title{
+      .tita{
         font-size: 30rpx;
         // margin-top: 20rpx;
       }
       .detail{
         font-size: 26rpx;
         color: #999;
-        line-height: 66rpx
+        margin: 10rpx 0;
       }
       .price span:nth-child(1){
         color: #ff3333;
