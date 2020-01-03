@@ -53,7 +53,7 @@
       <img mode='aspectFill' class="two" src="/static/images/index_shop_bg.png" alt="" @click="goUrl('/pages/home/school/main')">
     </div>
     <div class="shop">
-      <div class="list">
+      <div class="list" v-for="(item, index) in shopList" :key="index">
         <p class="one">万色印象万众城店</p>
         <div class="two ali-c jus-b">
           <div class="ali-c">
@@ -124,15 +124,26 @@ export default {
     return {
       bannerList:[],
       startPic:'',
-      hotList:[,,,,,,,]
+      hotList:[],
+      shopList:[,,,]
     }
   },
   onShow(){
     this.getHotList()
     this.getBannerList()
     this.getModalMask()
+    this.getShopList()
   },
   methods:{
+    getShopList(){
+      wx.getLocation({
+        type: 'wgs84',
+        success (res) {
+          const latitude = res.latitude
+          const longitude = res.longitude
+        }
+      })
+    },
     getBannerList(){
       post('Banner/BannerList',{}).then(res=>{
           if(res.code==0){
