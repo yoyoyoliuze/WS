@@ -1,19 +1,22 @@
 <template>
   <div>
-      <div class="list jus-b">
-        <div class="left flex">
-          <div class="ill_ll cr">
-            <p class="cr"><span class="twity">20</span>元</p>
+      <div class="coupon">
+          <div class="list jus-b" v-for="(item,index) in data" :key="index">
+            <div class="left flex">
+              <div class="ill_ll cr">
+                <p class="cr"><span class="twity">{{item.Denomination}}</span><span>{{item.Denomination>0?'元':'折'}}</span></p>
+              </div>
+              <div>
+                <p>{{item.Name}}</p>
+                <span v-if="item.ExpiryDay!=0">有效期至{{item.ExpiryDay}}</span>
+                <span v-if="item.ExpiryDay==0">有效期{{item.StartTime}}至{{item.EndTime}}</span>
+                <div class="flexc use tll">{{item.DiscountType==1?'减满券':'折扣券'}}</div>
+              </div>
+            </div>
+            <div class="right flexc" @tap="getCoupon(item)">
+              <div class="cf">立即领取</div>
+            </div>
           </div>
-          <div>
-            <p>满100元减20元券</p>
-            <span>有效期至2020-01-12</span>
-            <div class="flexc use tll">减满券</div>
-          </div>
-        </div>
-        <div class="right flexc">
-          <div class="cf">立即领取</div>
-        </div>
       </div>
   </div>
 </template>
@@ -47,6 +50,20 @@ export default {
       }).then(res=>{
         if(res.code==0){
           this.data = res.data
+        }
+      })
+    },
+    getCoupon(item){
+      post('Coupon/GetCoupon',{
+        UserId:this.userId,
+        Token:this.token,
+        CouponId:item.Id
+      }).then(res=>{
+        if(res.code==0){
+          wx.showToast({
+            title:'领取成功！'
+          })
+          this.getData()
         }
       })
     }

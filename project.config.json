@@ -17,7 +17,8 @@
 			"ignore": [],
 			"disablePlugins": [],
 			"outputPath": ""
-		}
+		},
+		"uglifyFileName": true
 	},
 	"miniprogramRoot": "dist/wx/",
 	"compileType": "miniprogram",
@@ -179,6 +180,13 @@
 					"id": -1,
 					"name": "领券中心",
 					"pathName": "pages/home/getticket/main",
+					"query": "",
+					"scene": null
+				},
+				{
+					"id": -1,
+					"name": "登录",
+					"pathName": "pages/login/main",
 					"query": "",
 					"scene": null
 				}
