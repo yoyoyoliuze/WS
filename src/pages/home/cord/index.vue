@@ -16,7 +16,7 @@
           </div>
       </div>
       <div class="gou flex pp3">
-          <input type="radio" checked="true">
+          <input type="radio" :checked="isCheck" @tap="tapCheck">
           <p class="cg ml1">确认以上信息真实有效</p>
       </div>
       <div class="btn">提交</div>
@@ -29,7 +29,7 @@ import "@/style/bb.scss"
 export default {
   data() {
     return {
-      
+      isCheck:false
     };
   },
   onLoad(params) {
@@ -49,6 +49,13 @@ export default {
       wx.navigateTo({
         url: `/pages/member2/${url}/main`
       });
+    },
+    tapCheck(){
+      if(this.isCheck){
+        this.isCheck = false
+      }else{
+        this.isCheck = true
+      }
     }
   },
   computed: {}

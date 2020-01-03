@@ -50,7 +50,7 @@
           <img mode='aspectFill' src="/static/images/index_card.png" alt="">
         </div>
       </div>
-      <img mode='aspectFill' class="two" src="/static/images/index_shop_bg.png" alt="">
+      <img mode='aspectFill' class="two" src="/static/images/index_shop_bg.png" alt="" @click="goUrl('/pages/home/school/main')">
     </div>
     <div class="shop">
       <div class="list">
@@ -128,18 +128,19 @@ export default {
     }
   },
   onShow(){
+    this.getHotList()
     this.getBannerList()
     this.getModalMask()
   },
   methods:{
-    getHotList(){
+    getBannerList(){
       post('Banner/BannerList',{}).then(res=>{
           if(res.code==0){
             this.bannerList = res.data
           }
       })
     },
-    getBannerList(){
+    getHotList(){
       post('Goods/GoodsList',{
         Page:1,
         PageSize:5

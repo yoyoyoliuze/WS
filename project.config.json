@@ -170,8 +170,16 @@
 				},
 				{
 					"id": -1,
-					"name": "pages/login/main",
-					"pathName": "pages/login/main",
+					"name": "优惠券",
+					"pathName": "pages/myson/ticket/main",
+					"query": "",
+					"scene": null
+				},
+				{
+					"id": -1,
+					"name": "领券中心",
+					"pathName": "pages/home/getticket/main",
+					"query": "",
 					"scene": null
 				}
 			]
