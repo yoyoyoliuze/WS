@@ -165,6 +165,13 @@
 					"id": -1,
 					"name": "项目详情",
 					"pathName": "pages/other/serdetail/main",
+					"query": "",
+					"scene": null
+				},
+				{
+					"id": -1,
+					"name": "pages/login/main",
+					"pathName": "pages/login/main",
 					"scene": null
 				}
 			]

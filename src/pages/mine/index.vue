@@ -1,6 +1,5 @@
 <template>
   <div>
-    <div class="cliDom" :style="clientX?domStyle:''"  :class="clientX?'cliDomActive':''"></div>
       <div class="top-box">
         <div class="top ali-c">
           <img mode='aspectFill' class="left" src="/static/images/ava.png" alt="">
@@ -91,26 +90,20 @@ export default {
 
   data () {
     return {
-      clientX:0,
-      clientY:0
+      isLogin:false
     }
   },
   computed: {
-    domStyle(){
-      return 'top:'+(this.clientY*2)+'rpx;left:'+(this.clientX*2)+'rpx'
-    }
+    
+  },
+  onShow(){
+
   },
   methods: {
-    switchPath(path,e){
-      this.clientX = e.clientX
-      this.clientY = e.clientY
-      setTimeout(() => {
-        this.clientX = 0
-        this.clientY = 0
+    switchPath(path){
         wx.navigateTo({
           url:path
         })
-      }, 0);
     }
   },
 }
