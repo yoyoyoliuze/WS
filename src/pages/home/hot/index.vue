@@ -5,33 +5,37 @@
           <div class="hot_itl flex flexAlignCenter justifyContentCenter" :class="{'active':tabActive==1}" @click="cliTab(1)">
               <p class="mr_b font30">人气</p>
               <p class="flex flexColumn justifyContentAround">
-                  <img src="/static/images/icons/up1.png" alt="" class="img">
-                  <img src="/static/images/icons/d2.png" alt="" class="img mt_b">
+                  <img :src="tabActive===1&&paixu===2?'/static/images/icons/d2.png':'/static/images/icons/up1.png'" alt="" class="img" :class="{'up2':tabActive===1&&paixu===2}">
+                  <img :src="tabActive===1&&paixu===1?'/static/images/icons/d2.png':'/static/images/icons/up1.png'" alt="" class="img mt_b" :class="{'up2':(tabActive===1&&paixu===2)||tabActive!==1}">
               </p>
           </div>
           <div class="hot_itl flex flexAlignCenter justifyContentCenter" :class="{'active':tabActive==2}" @click="cliTab(2)">
               <p class="mr_b font30">价格</p>
               <p class="flex flexColumn justifyContentAround">
-                  <img src="/static/images/icons/d2.png" alt="" class="img up2">
-                  <img src="/static/images/icons/d1.png" alt="" class="img mt_b">
+                  <img :src="tabActive===2&&paixu===2?'/static/images/icons/d2.png':'/static/images/icons/up1.png'" alt="" class="img" :class="{'up2':tabActive===2&&paixu===2}">
+                  <img :src="tabActive===2&&paixu===1?'/static/images/icons/d2.png':'/static/images/icons/up1.png'" alt="" class="img mt_b" :class="{'up2':(tabActive===2&&paixu===2)||tabActive!==2}">
               </p>
           </div>
       </div>
       <div class="mt2 bg_fff hot_list pw3">
-          <div class="hot_item p3 flex justifyContentBetween" v-for="(item,index) in 5" :key="index">
-              <img src="/static/images/jishi.png" alt="" class="item_m">
+          <div class="hot_item p3 flex justifyContentBetween" v-for="(item,index) in list" :key="index">
+              <img :src="item.PicNo" alt="" class="item_m">
               <div class="item_r flex1 flex flexColumn justifyContentBetween">
                   <div>
-                      <p class="font30 fb">法国LPG黑眼圈护理</p>
-                      <p class="cg mt1"><span class="item_pill">30分钟</span>眼部祛皱 改善黑眼圈</p>
+                      <p class="font30 fb">{{item.Name}}</p>
+                      <p class="cg mt1">{{item.Synopsis}}</p>
+                      <!-- <span class="item_pill">30分钟</span> -->
                   </div>
                   <div class="flex justifyContentBetween flexAlignCenter">
-                      <span class="cr font38">¥298 </span>
-                      <span class="font24 cg">2563人预约</span>
+                      <span class="cr font38">¥{{item.Price}}</span>
+                      <span class="font24 cg">{{item.SalesVolume}}人预约</span>
                   </div>
               </div>
           </div>
       </div>
+      <p class="list-data" v-if="isHaveData">暂无数据</p>
+      <p class="list-data" v-if="isOver">没有更多了</p>
+
   </div>
 </template>
 
@@ -43,16 +47,73 @@ export default {
   
   onShow(){
     this.tabActive = 0
+    this.paixu = 0
+    this.getList()
   },
-
+  watch: {
+    paixu(e){
+      console.log('此时排序的值为：'+e)
+    }
+  },
   data () {
     return {
-      tabActive:0
+      tabActive:0,
+      paixu:0,//排序，0为不排序，1为升序，2为降序
+      page:1,
+      pagesize:12,
+      list:[],
+      isHaveData:false,
+      isOver:false
     }
   },
   methods: {
+    getList(){
+      if(this.paixu==1){
+        var xu = 0
+      }else if(this.paixu==2){
+        var xu = 1
+      }else{
+        var xu = ''
+      }
+      post('Goods/GoodsList',{
+        Page:this.page,
+        PageSize:this.pagesize,
+        Sort:this.tabActive,
+        Order:xu,
+        IsHot:1
+      }).then(res=>{
+        if(res.code==0){
+          this.list.push(...res.data)
+          if(this.list.length == 0){
+            this.isHaveData = true
+          }
+          if(!this.isHaveData&&res.data.length!=this.pagesize){
+            this.isOver = true
+          }
+        }
+      })
+    },
     cliTab(index){
-      this.tabActive = index
+      if(index===0){//点击第一个
+        this.tabActive = 0,
+        this.paixu = 0
+      }else if(index===1){//点击第二个
+        if(index===this.tabActive){//重复点击
+          this.paixu = this.paixu===1?2:1
+        }else{//首次点击
+          this.tabActive = 1
+          this.paixu = 1
+        }
+      }else if(index===2){//点击第三个
+        if(index===this.tabActive){//重复点击
+          this.paixu = this.paixu===1?2:1
+        }else{//首次点击
+          this.tabActive = 2
+          this.paixu = 1
+        }
+      }
+      this.list = []
+      this.getList()
     },
     switchPath(url){
       wx.navigateTo({
