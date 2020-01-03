@@ -1,16 +1,18 @@
 <template>
   <div>
       <div class="list jus-b">
-        <div class="left">
-          <p>满100元减20元券</p>
-          <span>有效期至2020-01-12</span>
-          <div class="flexc use">减满券</div>
+        <div class="left flex">
+          <div class="ill_ll cr">
+            <p class="cr"><span class="twity">20</span>元</p>
+          </div>
+          <div>
+            <p>满100元减20元券</p>
+            <span>有效期至2020-01-12</span>
+            <div class="flexc use tll">减满券</div>
+          </div>
         </div>
         <div class="right flexc">
-          <div>
-            <p>20<span>元</span></p>
-            <span>满100可使用</span>
-          </div>
+          <div class="cf">立即领取</div>
         </div>
       </div>
   </div>
@@ -94,7 +96,7 @@ export default {
       font-size: 20rpx;
       color: #999;
     }
-    div{
+    .tll{
       width: 128rpx;
 	    height: 40rpx;
 	    background-color: #cc9f68;
@@ -124,22 +126,14 @@ export default {
     }
   }
 }
-.tab{
-  position: relative;
-  height: 92rpx;
-  background-color: #fff;
-  position: relative;
-  .active{
-    color: #cc9f68
-  }
-  span{
-    position: absolute;
-    bottom: 0;
-    transition: all .2s;
-    height: 5rpx;
-    width: 50rpx;
-    background-color: #cc9f68
+
+.ill_ll{
+  margin-right:30rpx;margin-top:10rpx;
+  .twity{
+    font-size:40rpx!important;
+    color:#f00!important;
   }
 }
+
 
 </style>
