@@ -189,6 +189,13 @@
 					"pathName": "pages/login/main",
 					"query": "",
 					"scene": null
+				},
+				{
+					"id": -1,
+					"name": "我的关注",
+					"pathName": "pages/myson/focus/main",
+					"query": "",
+					"scene": null
 				}
 			]
 		}

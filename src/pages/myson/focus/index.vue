@@ -1,43 +1,60 @@
 <template>
   <div>
-      <div class="list">
+      <div class="list" v-for="(item,index) in list" :key="index">
         <div class="top ali-c">
           <img class="left" src="/static/images/ava.png" alt="">
           <div class="right">
             <div class="ali-c one">
-              <p>Alisa</p>
-              <span class="flexc">店长</span>
+              <p>{{item.Name}}</p>
+              <span class="flexc">{{item.LvlName}}</span>
             </div>
             <div class="ali-c two">
               <img src="/static/images/my_icon_7.png" alt="">
               <span>好评率</span>
-              <span>100%</span>
+              <span>{{item.FeedbackRate}}</span>
             </div>
           </div>
         </div>
         <div class="address ali-c jus-b">
           <div class="ali-c">
-            <p>万色印象万众城店</p>
+            <p>{{item.ShopData.ShopNick}}</p>
             <img class="left" src="/static/images/more.png" alt="">
           </div>
           <img class="right" src="/static/images/address_r.png" alt="">
         </div>
         <div class="btn-box jus-e ali-c">
-          <p class="flexc active">预约</p>
+          <p class="flexc" :class="item.IsRest==1?'active':'normal'">{{item.IsRest==1?'休息中':'预约'}}</p>
         </div>
       </div>
   </div>
 </template>
 
 <script>
-
+import {post} from '@/utils'
 export default {
-
   data () {
     return {
-      
+      list:[],
     }
   },
+  onShow(){
+    this.userId = wx.getStorageSync("userId")
+    this.token = wx.getStorageSync("token")
+    this.getData()
+  },
+  methods: {
+    getData(){
+      post('User/MemberCollections',{
+        UserId:this.userId,
+        Token:this.token,
+        Page:1
+      }).then(res=>{
+        if(res.code==0){
+          this.list = res.data
+        }
+      })
+    }
+  }
 }
 </script>
 
@@ -61,6 +78,9 @@ export default {
     }
     .active{
       background-color: #c4c4c4!important
+    }
+    .normal{
+      background-color: #cc9f68!important
     }
   }
   .address{
