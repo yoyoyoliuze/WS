@@ -1,23 +1,27 @@
 <template>
   <div class="page_detail">
       <div>
-          <img src="/static/images/zhijia.png" alt="" class="zhijia">
+          <swiper indicator-dots indicator-active-color="#cc9f68" style="height:421rpx;">
+              <swiper-item v-for="(item,index) in data.PicData" :key="index">
+                     <img :src="item.PicUrl" alt="" class="zhijia">
+              </swiper-item>
+          </swiper>
           <div class="flex justifyContentBetween pp3 bg_fff flexAlignCenter">
               <div class="flex1">
-                  <div class="ser_name fb">新年款式美甲</div>
+                  <div class="ser_name fb">{{data.Name}}</div>
                   <p class="flex cg mt1 flexAlignCenter">
-                      <span class="s_pill font20">30分钟</span>
-                      <span>眼部祛皱 改善黑眼圈</span>
+                      <span class="s_pill font20">{{data.HourNum*60}}分钟</span>
+                      <span{{data.Synopsis}}</span{>
                   </p>
-                  <p class="cr mt1">¥<span class="price">298</span></p>
-                  <p class="cg ">服务时长：60分钟</p>
+                  <p class="cr mt1">¥<span class="price">{{data.Price}}</span></p>
+                  <p class="cg ">服务时长：{{data.HourNum*60}}分钟</p>
               </div>
               <div class="flex flexColumn flexAlignCenter">
                   <p class="flex flexColumn flexAlignCenter sh_bg">
                       <img src="/static/images/icons/share.png" alt="" class="share">
                       <span class="cg">分享</span>
                   </p>
-                  <p class="cg mt3">2563人预约</p>
+                  <p class="cg mt3">{{data.SalesVolume}}人预约</p>
               </div>
           </div>
       </div>
@@ -25,18 +29,19 @@
           <div class="flex p2 bor_bill justifyContentBetween flexAlignCenter">
               <p class="flex flexAlignCenter">
                   <img src="/static/images/jishi.png" alt="" class="shop_ava">
-                  <span class="mr2">万色印象万众城店</span>
+                  <span class="mr2">{{data.ShopData.ShopNick}}</span>
               </p>
               <img src="/static/images/icons/phone.png" alt="" class="phone">
           </div>
           <div class="flex p2 justifyContentBetween flexAlignCenter">
-              <p>深圳市龙华区民治大道辉华大厦正门口 </p>
+              <p>{{data.ShopData.Address}}</p>
               <img src="/static/images/icons/tu.png" alt="" class="site">
           </div>
       </div>
       <div class="mt2 bg_fff">
         <div class="pp3 text_center">产品介绍</div>
-        <img src="/static/images/s1.png" alt="" class="pic" mode="widthFix">
+        <div v-html="ContentDetail"></div>
+        <!-- <img src="/static/images/s1.png" alt="" class="pic" mode="widthFix">
         <img src="/static/images/s2.png" alt="" class="pic" mode="widthFix">
         <img src="/static/images/s3.png" alt="" class="pic" mode="widthFix">
         <img src="/static/images/s4.png" alt="" class="pic" mode="widthFix">
@@ -47,7 +52,7 @@
         <img src="/static/images/s9.png" alt="" class="pic" mode="widthFix">
         <img src="/static/images/s10.png" alt="" class="pic" mode="widthFix">
         <img src="/static/images/s11.png" alt="" class="pic" mode="widthFix">
-        <img src="/static/images/s12.png" alt="" class="pic" mode="widthFix">
+        <img src="/static/images/s12.png" alt="" class="pic" mode="widthFix"> -->
       </div>
       <div class="fix_btn">立即预约</div>
   </div>
@@ -56,12 +61,26 @@
 <script>
 
 import '@/style/bb.scss'
-
+import {post} from '@/utils/index'
 export default {
   data () {
     return {
-      
+        userID:'',
+        token:'',
+        ID:'',
+        lat:'',
+        lng:'',
+        data:{},
     }
+  },
+  onLoad(options){
+    this.ID = options.id;
+    const location = wx.getStorageSync('location');
+    this.lat = location.lat;
+    this.lng = location.lng;
+    this.userID = wx.getStorageSync("userId")
+    this.token = wx.getStorageSync("token")
+    this.getData();
   },
   onShow(){
     this.setBarTitle()
@@ -69,13 +88,24 @@ export default {
   components: {
    
   },
-
   methods: {
     setBarTitle() {
         wx.setNavigationBarTitle({
             title: "项目详情"
         });
     },
+    getData(){
+      post('Goods/Goodsxq',{
+        Id:this.ID,
+        Lat:this.lat,
+        Lng:this.lng,
+        UserId:this.userID,
+        Token:this.token
+      }).then(res=>{
+          console.log(res)
+          this.data = res.data;
+      })
+    }
   },
 
   created () {
@@ -86,7 +116,7 @@ export default {
 
 <style lang="scss">
   .zhijia{
-    width:100%;vertical-align: middle;
+    width:100%;vertical-align: middle;height:100%;
   }
   .share{
     width:30rpx;height:30rpx;

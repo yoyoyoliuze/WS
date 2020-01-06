@@ -23,7 +23,7 @@
         <span @click="goUrl('/pages/home/hot/main')">更多</span>
       </div>
       <scroll-view scroll-x enable-flex class="move ali-c">
-        <div class="list" v-for="(item, index) in hotList" :key="index">
+        <div class="list" v-for="(item, index) in hotList" :key="index" @click="goUrl('/pages/other/serdetail/main',item.Id)">
           <img mode='aspectFill' :src="item.PicNo" alt="">
           <p class="tita">{{item.Name}}</p>
           <p class="detail oneline">{{item.Synopsis}}</p>
@@ -139,8 +139,9 @@ export default {
       wx.getLocation({
         type: 'wgs84',
         success (res) {
-          const latitude = res.latitude
-          const longitude = res.longitude
+          const latitude = res.latitude;
+          const longitude = res.longitude;
+          wx.setStorageSync('location',{lat:res.latitude,lng:res.longitude});//定位缓存
         }
       })
     },
@@ -169,6 +170,7 @@ export default {
       })
     },
     goUrl(url,id){
+      console.log(url,'i')
       wx.navigateTo({
         url:url+'?id='+id
       })
