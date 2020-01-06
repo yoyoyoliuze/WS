@@ -1,31 +1,34 @@
 <template>
   <div>
-      <div class="list" v-for="(item,index) in list" :key="index">
-        <div class="top ali-c">
-          <img class="left" src="/static/images/ava.png" alt="">
-          <div class="right">
-            <div class="ali-c one">
-              <p>{{item.Name}}</p>
-              <span class="flexc">{{item.LvlName}}</span>
-            </div>
-            <div class="ali-c two">
-              <img src="/static/images/my_icon_7.png" alt="">
-              <span>好评率</span>
-              <span>{{item.FeedbackRate}}</span>
+    <div v-if="list.length>0">
+        <div class="list" v-for="(item,index) in list" :key="index">
+          <div class="top ali-c">
+            <img class="left" src="/static/images/ava.png" alt="">
+            <div class="right">
+              <div class="ali-c one">
+                <p>{{item.Name}}</p>
+                <span class="flexc">{{item.LvlName}}</span>
+              </div>
+              <div class="ali-c two">
+                <img src="/static/images/my_icon_7.png" alt="">
+                <span>好评率</span>
+                <span>{{item.FeedbackRate}}</span>
+              </div>
             </div>
           </div>
-        </div>
-        <div class="address ali-c jus-b">
-          <div class="ali-c">
-            <p>{{item.ShopData.ShopNick}}</p>
-            <img class="left" src="/static/images/more.png" alt="">
+          <div class="address ali-c jus-b">
+            <div class="ali-c">
+              <p>{{item.ShopData.ShopNick}}</p>
+              <img class="left" src="/static/images/more.png" alt="">
+            </div>
+            <img class="right" src="/static/images/address_r.png" alt="">
           </div>
-          <img class="right" src="/static/images/address_r.png" alt="">
+          <div class="btn-box jus-e ali-c">
+            <p class="flexc" :class="item.IsRest==1?'active':'normal'">{{item.IsRest==1?'休息中':'预约'}}</p>
+          </div>
         </div>
-        <div class="btn-box jus-e ali-c">
-          <p class="flexc" :class="item.IsRest==1?'active':'normal'">{{item.IsRest==1?'休息中':'预约'}}</p>
-        </div>
-      </div>
+    </div>
+    <div v-else style="padding:300rpx 0;text-align:center">暂无数据</div>
   </div>
 </template>
 
@@ -47,7 +50,8 @@ export default {
       post('User/MemberCollections',{
         UserId:this.userId,
         Token:this.token,
-        Page:1
+        Page:1,
+        Type:1,//0产品 1商家 2技师
       }).then(res=>{
         if(res.code==0){
           this.list = res.data
