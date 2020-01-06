@@ -54,7 +54,7 @@ export default {
 
 <style lang='scss' scoped>
   .sc_list{
-    font-size:24rpx;padding:0 30rpx!important;
+    font-size:24rpx;padding:0 30rpx!important;box-sizing: border-box
   }
   .sc_item{
     .img{
