@@ -6,6 +6,11 @@
     "pages/login/main",
     "pages/login/register/main"
   ],
+  "permission": {
+    "scope.userLocation": {
+      "desc": "你的位置信息将用于小程序位置接口的效果展示" 
+    }
+  },
   "subpackages":[
     {
       "root":"pages/orderson/",
@@ -89,5 +94,7 @@
       "selectedIconPath": "static/images/tab/icon_3_active.png"
     }],
     "position": "bottom"
+    
   }
+  
 }
