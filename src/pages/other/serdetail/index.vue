@@ -11,7 +11,7 @@
                   <div class="ser_name fb">{{data.Name}}</div>
                   <p class="flex cg mt1 flexAlignCenter">
                       <span class="s_pill font20">{{data.HourNum*60}}分钟</span>
-                      <span{{data.Synopsis}}</span{>
+                      <span>{{data.Synopsis}}</span>
                   </p>
                   <p class="cr mt1">¥<span class="price">{{data.Price}}</span></p>
                   <p class="cg ">服务时长：{{data.HourNum*60}}分钟</p>
@@ -25,17 +25,17 @@
               </div>
           </div>
       </div>
-      <div class="mt2 bg_fff pw3">
+      <div class="mt2 bg_fff pw3" v-if="data.ShopData">
           <div class="flex p2 bor_bill justifyContentBetween flexAlignCenter">
               <p class="flex flexAlignCenter">
                   <img src="/static/images/jishi.png" alt="" class="shop_ava">
                   <span class="mr2">{{data.ShopData.ShopNick}}</span>
               </p>
-              <img src="/static/images/icons/phone.png" alt="" class="phone">
+              <img src="/static/images/icons/phone.png" alt="" class="phone" @click="callPhone">
           </div>
           <div class="flex p2 justifyContentBetween flexAlignCenter">
               <p>{{data.ShopData.Address}}</p>
-              <img src="/static/images/icons/tu.png" alt="" class="site">
+              <img src="/static/images/icons/tu.png" alt="" class="site" @click="openLocation">
           </div>
       </div>
       <div class="mt2 bg_fff">
@@ -54,14 +54,14 @@
         <img src="/static/images/s11.png" alt="" class="pic" mode="widthFix">
         <img src="/static/images/s12.png" alt="" class="pic" mode="widthFix"> -->
       </div>
-      <div class="fix_btn">立即预约</div>
+      <div class="fix_btn" @click="submit">立即预约</div>
   </div>
 </template>
 
 <script>
 
-import '@/style/bb.scss'
-import {post} from '@/utils/index'
+import '@/style/bb.scss';
+import {post} from '@/utils/index';
 export default {
   data () {
     return {
@@ -105,6 +105,29 @@ export default {
           console.log(res)
           this.data = res.data;
       })
+    },
+    openLocation(){
+        const shop = this.data.ShopData;
+        console.log(shop)
+        wx.openLocation({
+            latitude:shop.Lat*1,
+            longitude:shop.Lng*1,
+            name:shop.ShopNick,
+            address:shop.Address
+        })
+    },
+    callPhone(){
+        if(this.data.ShopData.Phone){
+            wx.makePhoneCall({
+            phoneNumber: this.data.ShopData.Phone //仅为示例，并非真实的电话号码
+            })
+        }
+    },
+    // 预约
+    submit(){
+        wx.navigateTo({
+            url:`/pages/other/apointtime/main?shopID=${this.data.ShopData.ShopId}&time=${data.HourNum*60}`
+        })
     }
   },
 
