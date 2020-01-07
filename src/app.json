@@ -71,6 +71,10 @@
     "navigationBarTitleText": "万色",
     "navigationBarTextStyle": "black"
   },
+  "usingComponents": {
+    "van-datetime-picker": "./static/vant/datetime-picker/index",
+    "van-action-sheet": "./static/vant/action-sheet/index"
+},
   "tabBar": {
     "color": "#999",
     "backgroundColor": "#fafafa",

@@ -54,12 +54,13 @@
     </div>
     <div class="shop">
       <div class="list" v-for="(item, index) in shopList" :key="index">
-        <p class="one">万色印象万众城店</p>
+        <p class="one">{{item.ShopNick}}</p>
         <div class="two ali-c jus-b">
           <div class="ali-c">
             <span>纹绣</span>
           </div>
-          <p>300m</p>
+          <p v-if="item.Distance>0">{{item.Distance}}km</p>
+          <p v-if="item.Distance==0">小于1km</p>
         </div>
         <div class="thr ali-c jus-b">
           <div class="left">
@@ -69,11 +70,11 @@
             </div>
             <div class="b ali-c">
               <img src="/static/images/address_y.png" alt="">
-              <p>深圳市龙华区民治大道辉华大厦正门口</p>
+              <p>{{item.Address}}</p>
             </div>
           </div>
           <p class="right flexc">去预约</p>
-        </div>
+        </div> 
       </div>
     </div>
     
@@ -125,7 +126,7 @@ export default {
       bannerList:[],
       startPic:'',
       hotList:[],
-      shopList:[,,,]
+      shopList:[]
     }
   },
   onShow(){
@@ -136,14 +137,28 @@ export default {
   },
   methods:{
     getShopList(){
+      let _this = this
       wx.getLocation({
         type: 'wgs84',
         success (res) {
           const latitude = res.latitude;
           const longitude = res.longitude;
           wx.setStorageSync('location',{lat:res.latitude,lng:res.longitude});//定位缓存
+          post('Shop/NearbyShop',{
+            Lat:latitude,
+            Lng:longitude
+          }).then(res=>{
+            if(res.code===0){
+              
+              _this.shopList = res.data
+              _this.shopList.forEach(item => {
+                item.Distance = item.Distance.toFixed(2)
+              });
+            }
+          })
         }
       })
+
     },
     getBannerList(){
       post('Banner/BannerList',{}).then(res=>{
