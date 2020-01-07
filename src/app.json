@@ -37,6 +37,10 @@
       "root":"pages/member/",
       "pages":[
         "editinfo/main",
+        "card/main",
+        "cika/main",
+        "ticket/main",
+        "right/main",
         "set/main"
       ]
     },
@@ -71,6 +75,10 @@
     "navigationBarTitleText": "万色",
     "navigationBarTextStyle": "black"
   },
+  "usingComponents": {
+    "van-datetime-picker": "./static/vant/datetime-picker/index",
+    "van-action-sheet": "./static/vant/action-sheet/index"
+},
   "tabBar": {
     "color": "#999",
     "backgroundColor": "#fafafa",

@@ -199,8 +199,28 @@
 				},
 				{
 					"id": -1,
-					"name": "pages/myson/shopDetail/main",
-					"pathName": "pages/myson/shopDetail/main",
+					"name": "会员卡卡片",
+					"pathName": "pages/member/card/main",
+					"scene": null
+				},
+				{
+					"id": -1,
+					"name": "会员此卡",
+					"pathName": "pages/member/cika/main",
+					"scene": null
+				},
+				{
+					"id": -1,
+					"name": "我的次卡",
+					"pathName": "pages/member/ticket/main",
+					"query": "",
+					"scene": null
+				},
+				{
+					"id": -1,
+					"name": "次卡权益",
+					"pathName": "pages/member/right/main",
+					"query": "",
 					"scene": null
 				}
 			]

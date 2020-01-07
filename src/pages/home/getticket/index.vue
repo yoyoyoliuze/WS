@@ -8,7 +8,7 @@
               </div>
               <div>
                 <p>{{item.Name}}</p>
-                <span v-if="item.ExpiryDay!=0">有效期至{{item.ExpiryDay}}</span>
+                <span v-if="item.ExpiryDay!=0">有效期至{{item.EndTime}}</span>
                 <span v-if="item.ExpiryDay==0">有效期{{item.StartTime}}至{{item.EndTime}}</span>
                 <div class="flexc use tll">{{item.DiscountType==1?'减满券':'折扣券'}}</div>
               </div>

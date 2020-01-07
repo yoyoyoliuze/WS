@@ -1,79 +1,64 @@
 <template>
-  <div>
-      <div class="flex bg_fff pp2">
-          <div class="ti_item flex flexColumn">
-              <span>今天</span>
-              <span class="font22">周二</span>
-          </div>
-          <div class="ti_item flex flexColumn">
-              <span>今天</span>
-              <span class="font22">周二</span>
-          </div>
-          <div class="ti_item flex flexColumn">
-              <span>今天</span>
-              <span class="font22">周二</span>
-          </div>
-      </div>
-      <div class="pp3">
-          <div class="time_item pp3 bg_fff">
-              <div class="cfc">上午</div>
-              <div class="flex flexWrap time_bor">
-                  <span>09:00</span>
-                  <span class="active1">09:30</span>
-                  <span class="active1">10:00</span>
-                  <span>10:30</span>
-                  <span class="active2">11:00</span>
-                  <span class="active2">11:30</span>
-                  <span>12:00</span>
-              </div>
-          </div>
-          <div class="time_item pp3 bg_fff">
-              <div class="cfc">下午</div>
-              <div class="flex flexWrap time_bor">
-                  <span>12:30</span>
-                  <span>13:00</span>
-                  <span>13:30</span>
-                  <span>14:00</span>
-                  <span>14:30</span>
-                  <span>15:00</span>
-                  <span>15:30</span>
-                  <span>16:00</span>
-                  <span>16:30</span>
-                  <span>17:00</span>
-                  <span>17:30</span>
-                  <span>18:00</span>
-              </div>
-          </div>
-          <div class="time_item pp3 bg_fff">
-              <div class="cfc">晚上</div>
-              <div class="flex flexWrap time_bor">
-                  <span>18:30</span>
-                  <span>19:00</span>
-                  <span>19:30</span>
-                  <span>20:00</span>
-                  <span>20:30</span>
-                  <span>21:00</span>
-                  <span>21:30</span>
-                  <span>22:00</span>
-              </div>
-          </div>
+  <div class="bfff">
+      <div class="list">
+        <div class="item " :class="{'active':item.active}" 
+          v-for="(item,index) in data" :key="index"
+          @click="onClick(index)"
+         >
+            <div class="tit">星期{{item.title}}</div>
+            <p>{{item.value}}</p>
+            <img v-if="item.active" src="/static/images/icons/gou.png" alt="">
+        </div>
       </div>
       <div  class="bg_fff pp3 flex justifyContentBetween">
-          <div><span class="cr">1</span> 个项目，服务时长<span class="cr">半小时</span> </div>
+          <div><span class="cr">1</span> 个项目，服务时长<span class="cr">{{time}}分钟</span> </div>
           <div class="btn_next">下一步</div>
       </div>
   </div>
 </template>
 
 <script>
-import '@/style/bb.scss'
+import '@/style/bb.scss';
+import {post} from '@/utils/index';
 export default {
 
   data () {
     return {
-      
+      shopID:'',
+      time:0,//服务时间
+      proNum:1,
+      data:[]
     }
   },
+  onLoad(options){
+    this.shopID = options.shopID;
+    this.time = options.time||0;//服务时间
+    this.proNum = options.proNum||1;//服务时间
+    this.getData();
+  },
+  methods:{
+    getData(){
+      post('Order/TakeOutMake',{ShopId:this.shopID}).then(res=>{
+        const list = res.data.datelist;
+        list.map(item=>{
+          const title = item.value.replace(/-/g,'/');
+          item.title = new Date(title).getDay();
+          item.active = false;
+        })
+        list[0].active = true;
+        this.data = list;
+      })
+    },
+    onClick(index){
+      this.data.map((item,i)=>{
+        if(i!==index){
+           item.active = false;
+        }else{
+           item.active = true;
+        }
+      })
+    }
+  }
 }
 </script>
 
@@ -104,5 +89,47 @@ export default {
   .btn_next{
     color:#ffffff;background: #cc9f68;
     padding:8rpx 20rpx;border-radius: 10rpx;
+  }
+  .bfff{
+    background:#fff;
+    height:100vh;
+  }
+  .justifyContentBetween{
+    position:fixed;
+    left:0;
+    bottom:0;
+    width:100%;
+    box-sizing:border-box;
+    border-top:#f2f2f2 1rpx solid;
+  }
+  .list{
+    border-top:20rpx #f2f2f2 solid;
+    padding:50rpx 100rpx 100rpx;
+    .item{
+      line-height:2;
+      padding:30rpx 0;
+      text-align:center;
+      margin-bottom:40rpx;
+      border:3rpx #ccc solid;
+      color:#999;
+      position:relative;
+      .tit{
+      color:#999;
+      }
+      img{
+        position:absolute;
+        right:-1rpx;
+        top:-2rpx;
+        width:69rpx;
+        height:67rpx;
+      }
+      &.active{
+        border:3rpx #cc9f68 solid;
+        color:#cc9f68;
+        div{
+          color:#cc9f68;
+        }
+      }
+    }
   }
 </style>
