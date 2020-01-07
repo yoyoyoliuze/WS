@@ -2,16 +2,16 @@
   <div>
       <div class="top-box">
         <div class="top ali-c">
-          <img mode='aspectFill' class="left" src="/static/images/ava.png" alt="">
+          <img mode='aspectFill' class="left" :src="memberInfo.Avatar" alt="" @click="switchPath('/pages/member/editinfo/main',$event)">
           <div class="right">
             <div class="ali-c one">
-              <p>巴啦啦小魔仙</p>
-              <div class="ali-c vip">
+              <p>{{memberInfo.NickName}}</p>
+              <div class="ali-c vip" v-if="memberInfo.GradeName">
                 <img src="/static/images/vip.png" alt="">
-                <span>金卡会员</span>
+                <span>{{memberInfo.GradeName}}</span>
               </div>
             </div>
-            <p class="two">13257927518</p>
+            <p class="two">{{memberInfo.Mobile}}</p>
           </div>
         </div>
         <img class="bg" mode='aspectFill' src="/static/images/mine_bg.png" alt="">
@@ -85,25 +85,37 @@
 </template>
 
 <script>
-
+import {post} from '@/utils'
 export default {
 
   data () {
     return {
-      isLogin:false
+      isLogin:false,
+      memberInfo:{},
+      userId:"",
+      token:""
     }
   },
-  computed: {
-    
-  },
   onShow(){
-
+    this.userId = wx.getStorageSync("userId")
+    this.token = wx.getStorageSync("token")
+    this.getMemberInfo()
   },
   methods: {
     switchPath(path){
         wx.navigateTo({
           url:path
         })
+    },
+    getMemberInfo(){
+      post('User/GetCenterInfo',{
+        UserId:this.userId,
+        Token:this.token
+      }).then(res=>{
+        if(res.code==0){
+          this.memberInfo = res.data
+        }
+      })
     }
   },
 }
