@@ -222,6 +222,13 @@
 					"pathName": "pages/member/right/main",
 					"query": "",
 					"scene": null
+				},
+				{
+					"id": -1,
+					"name": "pages/myson/jiesuan/main",
+					"pathName": "pages/myson/jiesuan/main",
+					"query": "",
+					"scene": null
 				}
 			]
 		}
