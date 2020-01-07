@@ -38,6 +38,8 @@
       "pages":[
         "editinfo/main",
         "card/main",
+        "cika/main",
+        "ticket/main",
         "set/main"
       ]
     },
