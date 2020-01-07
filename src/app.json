@@ -37,6 +37,7 @@
       "root":"pages/member/",
       "pages":[
         "editinfo/main",
+        "card/main",
         "set/main"
       ]
     },

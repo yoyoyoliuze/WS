@@ -54,6 +54,12 @@
                 <p>会员卡</p>
               </div>
             </div>
+            <div class="icon flexc" @click="switchPath('/pages/home/card/main',$event)">
+              <div>
+                <img src="/static/images/my_icon_9.png" alt="">
+                <p>会员次卡</p>
+              </div>
+            </div>
             <div class="icon flexc" @click="switchPath('/pages/myson/ticket/main',$event)">
               <div>
                 <img src="/static/images/my_icon_5.png" alt="">

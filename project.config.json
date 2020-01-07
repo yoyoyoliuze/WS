@@ -196,6 +196,12 @@
 					"pathName": "pages/myson/focus/main",
 					"query": "",
 					"scene": null
+				},
+				{
+					"id": -1,
+					"name": "会员卡卡片",
+					"pathName": "pages/member/card/main",
+					"scene": null
 				}
 			]
 		}
