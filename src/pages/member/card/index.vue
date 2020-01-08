@@ -49,14 +49,16 @@ import '@/style/bb.scss'
 
 export default {
   
-  onShow(){
-  },
-
   data () {
     return {
       swiperIndex:0,
+      data:[]
     }
   },
+  onShow(){
+    
+  },
+
   methods: {
     //轮播滑动时，获取当前的轮播id
     swiperChange(e) {
@@ -68,7 +70,8 @@ export default {
       wx.navigateTo({
         url
       })
-    }
+    },
+    
     
   },
 }
