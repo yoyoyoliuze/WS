@@ -1,21 +1,39 @@
 <template>
-  <div>
+  <div class="box">
     <div class="bg_fff pp3">
         <div class="sc_card flex flexColumn justifyContentCenter">
           <div class="flex justifyContentAround flexAlignCenter">
               <div class="flex flexColumn flexAlignCenter">
                 <p>
-                  <img src="/static/images/ava.png" alt="" class="ava">
+                  <img :src="shop.Logo" alt="" class="ava">
                 </p>
-                <p class="cf font24">万色印象万众城店<span class="name_pill">店长</span></p>
+                <p class="cf font24">{{shop.ShopNick}}
+                  <!-- <span class="name_pill">店长</span> -->
+                </p>
               </div>
               <div class="cf flex flexColumn flexAlignCenter">
-                <p class="font30">17:00-18:00</p>
-                <p class="font24 mt2">2019.11.27 (周三)</p>
+                <p class="font30">{{date}}</p>
+                <p class="font24 mt2">星期{{getDay}}</p>
               </div>
           </div>
-          <div class="text_right cf font24 card_num">预约号：JS001</div>
+          <!-- <div class="text_right cf font24 card_num">预约号：JS001</div> -->
       </div>
+    </div>
+    <div class="bg_fff mt2 cellBox">
+        <div class="flex flexAlignCenter">
+            <img src="/static/images/icons/fill-icon.png" alt="" class="icon1">
+            <span class="ml1">预约信息</span>
+        </div>
+        <div class=" flex flexWrap justifyContentBetween">
+            <div class="cell bb1">
+              <h4>预约人姓名</h4>
+              <input type="text" placeholder="请输入您的姓名" v-model="name">
+            </div>
+            <div class="cell">
+              <h4>联系方式</h4>
+              <input type="text" placeholder="请输入您的手机号码" v-model="phone">
+            </div>
+        </div>
     </div>
     <div class="pp3 bg_fff mt2">
         <div class="flex flexAlignCenter">
@@ -23,29 +41,24 @@
             <span class="ml1">预约项目</span>
         </div>
         <div class="pw3 item_desc flex flexWrap justifyContentBetween">
-            <div class="flex flexColumn flexAlignCenter desc_main ch_active">
-                <p>彩绘指甲</p>
-                <p class="font24">（服务时长：半小时）</p>
-                <p class="cr">298元</p>
-            </div>
-            <div class="flex flexColumn flexAlignCenter desc_main">
-                <p>彩绘指甲</p>
-                <p class="font24">（服务时长：半小时）</p>
-                <p class="cr">298元</p>
+            <div class="flex flexColumn flexAlignCenter desc_main ch_active" v-for="(item,index) in data.ProData" :key="index">
+                <p>{{item.Name}}</p>
+                <p class="font24">（服务时长：{{item.HourNum*60}}分钟）</p>
+                <p class="cr">{{item.Price}}元</p>
             </div>
         </div>
     </div>
     <!--服务独有-->
-    <div class="flex justifyContentBetween pp3 mt2 bg_fff">
+    <div class="flex justifyContentBetween pp3 mt2 bg_fff" @click="showCoupon = true">
         <div class="flex flexAlignCenter">
             <div class="flex flexAlignCenter">
               <img src="/static/images/icons/yh.png" alt="" class="icon2">
               <span class="ml1">优惠劵</span>
           </div>
-          <div class="cg ml1">满减劵  满100减20</div>
+          <div class="cg ml1">{{selectCouponItem.MeetConditions?"满"+selectCouponItem.MeetConditions:""}}{{selectCouponItem.DiscountType==1?'减'+selectCouponItem.Denomination:'打'+selectCouponItem.Denomination*10+'折'}}</div>
         </div>
         <div class="flex flexAlignCenter">
-            <span class="cr">-20</span>
+            <span class="cr">-{{selectCouponItem.DiscountType==1?selectCouponItem.Denomination:selectCouponItem.Denomination*10+'折'}}</span>
             <img src="/static/images/icons/more.png" alt="" class="right ml1">
         </div>
     </div>
@@ -55,22 +68,41 @@
             <img src="/static/images/icons/sign.png" alt="" class="icon3">
             <span class="ml1">备注</span>
         </div>
-        <textarea class="sign mt2 boxSize" name="" id="" cols="30" rows="10" placeholder="请输入备注"></textarea>
+        <textarea class="sign mt2 boxSize" name="" id="" cols="30" rows="10" placeholder="请输入备注" v-model="remark"></textarea>
     </div>
-    <!--服务按钮-->
-    <div class="pp3 flex justifyContentBetween bg_fff mt2">
-        <div> 
-          <span><span class="cr">2个</span>项目</span>  
-          <span class="cen_text">应付款：<span class="cr"> ¥594.00 </span></span>
+    <!-- 价格信息 -->
+    <div class="pp3 bg_fff mt2 total">
+        <div class="lefts">
+          <div v-if="data.yhPrice">
+            <p>优惠金额：</p>￥{{data.yhPrice}}
+          </div>
+          <div v-if="data.zkPrice">
+            <p>折扣金额：</p>￥{{data.zkPrice}}
+          </div>
+          <div v-if="data.ServiceFee">
+           <p>服务费：</p>￥{{data.ServiceFee}}
+          </div>
         </div>
-        <div class="btn_yu">立即预约</div>
+        <div class="rights">
+          <div>共计{{data.AllNumber}}个项目总时长1小时</div>
+          <div>项目总额：<span>¥{{data.TotalPrice}}</span></div>
+        </div>
+    </div>
+
+    <!--服务按钮-->
+    <div class="pp3 flex justifyContentBetween fixed bg_fff mt2">
+        <div> 
+          <span><span class="cr">{{data.AllNumber}}个</span>项目</span>  
+          <span class="cen_text">应付款：<span class="cr"> ¥{{data.AllPrice}}</span></span>
+        </div>
+        <div class="btn_yu" @click="yysubmit">立即预约</div>
     </div>
     <!--技师独有-->
     <div class="btn" style="display:none">立即预约</div>
 
     <!--服务弹层-->
-    <div class="mask"></div>
-    <div class="modal_mask">
+    <div class="mask" v-if="false"></div>
+    <div class="modal_mask" v-if="false">
         <div class="flex ms_title fb">
           <img src="/static/images/icons/left.png" alt="" class="left">
           选择支付方式
@@ -103,39 +135,24 @@
         <div class="msk_btn">确定</div>
         
     </div> 
-
-    <div class="modal_mask">
+    <div class="mask" v-if="showCoupon" @click="couponClose"></div>
+    <div class="modal_mask" v-if="showCoupon">
         <div class="flex ms_title fb">
-          <img src="/static/images/icons/left.png" alt="" class="left">
+          <img src="/static/images/icons/left.png" alt="" class="left" @click="couponClose">
           选择优惠券
         </div>
-        <div class="pp3">
-            <radio-group @change="changes" class="gou">
-              <label class="flex-between payitem">
+        <div class="pp3 couponList">
+            <radio-group  class="gou">
+              <label class="flex-between payitem" v-for="(item,index) in couponList" :key="index" @click="couponChange(item)">
                 <div class="flex-center">
-                  <span>满减劵  </span>
-                  <span class="ml2"> 满100减20</span>
+                  <span>{{item.DiscountType==1?'满减劵':item.DiscountType==2?'折扣券':''}}</span>
+                  <span class="ml2"> {{item.MeetConditions?"满"+item.MeetConditions:""}}{{item.DiscountType==1?'减'+item.Denomination:'打'+item.Denomination*10+'折'}}</span>
                 </div>
-                <input type="radio" name="payType" :checked="payType==0" value="0" />
-              </label>
-              <label class="flex-between payitem" >
-                <div class="flex-center">
-                  <span>满减劵  </span>
-                  <span class="ml2"> 满100减20</span>
-                </div>
-                <input type="radio" name="payType" :checked="payType==1" value="1" />
-              </label>
-              <label class="flex-between payitem" >
-                <div class="flex-center">
-                  <span>满减劵  </span>
-                  <span class="ml2"> 满100减20</span>
-                </div>
-                <input type="radio" name="payType" :checked="payType==2" value="2" />
+                <input type="radio" name="payType" :checked="item.Id===selectCouponItem.Id" value="0" />
               </label>
             </radio-group>
         </div>
-        <div class="msk_btn">完成</div>
-        
+        <div class="msk_btn" @click="couponConfirm">完成</div>
     </div> 
       
   </div>
@@ -144,15 +161,38 @@
 <script>
 
 import '@/style/bb.scss'
-
+import {post,valPhone} from '@/utils/index'
 export default {
   data () {
     return {
-      payType:0
+      UserId:'',
+      Token:'',
+      // shopID:'',
+      proID:'',//预约的产品id
+      payType:0,
+      date:'',
+      getDay:'',
+      data:{},
+      shop:{},
+      showCoupon:false,
+      couponList:[],//优惠券列表
+      selectCouponItem:{},
+      name:'',
+      phone:'',
+      remark:'',
     }
   },
+  onLoad(options){
+    this.setBarTitle();
+    // this.shopID = options.shopID;
+    this.proID = wx.getStorageSync('submitProID');//字符串，多个项目用逗号分隔，
+    this.date = options.date;//服务日期
+    this.getDay = options.getDay;//服务周几
+    this.getData();
+  },
   onShow(){
-    this.setBarTitle()
+        this.UserId=wx.getStorageSync('userId');
+        this.Token=wx.getStorageSync('token');
   },
   components: {
    
@@ -164,6 +204,69 @@ export default {
             title: "预约确定"
         });
     },
+    getData(useCouponId){
+      post('Order/ConfirmMakeOrder',{
+        UserId:wx.getStorageSync('userId'),
+        Token:wx.getStorageSync('token'),
+        ProIdList:this.proID,
+        MakeTime:this.date,
+        CouponId:useCouponId||0,//-1:请选择优惠券;0:默认自动匹配优惠券;>0:使用的优惠券
+      }).then(res=>{
+        console.log(res)
+        const data = res.data;
+        this.data = data;
+        this.shop =data.ShopData;
+        if(data.CouponId>0){
+          data.UseCouponList.map(item=>{
+            if(item.Id ===data.CouponId){
+              this.selectCouponItem = item;
+            }
+          })
+        }
+        this.couponList = data.UseCouponList;
+      })
+    },
+    // 选择优惠券
+    couponConfirm(){
+        this.showCoupon = false;
+        this.getData(this.selectCouponItem.Id);
+    },
+    // 取消选择优惠券
+    couponClose(){
+      this.showCoupon = false;
+      this.couponList.map(item=>{
+        if(item.Id===this.data.CouponId){
+          this.selectCouponItem= item;
+        }
+      })
+    },
+    // 选择优惠券
+    couponChange(e){
+      this.selectCouponItem = e;
+    },
+    // 预提交
+    yysubmit(){
+      if(!this.name){
+        wx.showToast({
+          title:'请输入联系人',
+          icon:'none'
+        })
+        return;
+      }
+      if(!valPhone(this.phone)) return;
+      post('Order/SubmitMakeOrder',{
+        UserId:this.UserId,
+        Token:this.Token,
+        ProIdList:this.proID,
+        MakeTime:this.date,
+        CouponId:this.selectCouponItem.Id||'',
+        ContactName:this.name,
+        Tel:this.phone,
+        Remark:this.remark
+      }).then(res=>{
+        console.log(res)
+      })
+    }
   },
 
   created () {
@@ -173,6 +276,9 @@ export default {
 </script>
 
 <style lang="scss">
+  .box{
+    padding-bottom:90rpx;
+  }
   .sc_card{
     background: #333333;border-radius:25rpx;
     width:690rpx;height:380rpx;
@@ -266,5 +372,67 @@ export default {
     margin:10rpx auto 10rpx;
     color:#ffffff;background: #cc9f68;text-align: center;
     height:80rpx;line-height: 80rpx;border-radius:15rpx;
+  }
+  .cellBox{
+    padding:30rpx 30rpx 0;
+  }
+  .cell{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    width:100%;
+    height:88rpx;
+    h4{
+
+    }
+    input{
+      text-align:right;
+    }
+    &.bb1{
+      border-bottom:1rpx #e8e8e8 solid;
+    }
+  }
+  .total{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    width:100%;
+    box-sizing:border-box;
+    font-size:14rpx;
+    .lefts{
+      div{
+        display:flex;
+        align-items:center;
+       line-height:1.8;
+      }
+      p{
+        color:#999;
+      }
+    }
+    .rights{
+      text-align:right;
+      line-height:1.8;
+      span{
+        color:#ff3333;
+      }
+    }
+  }
+  .couponList{
+    max-height:400rpx;
+    overflow:auto;
+  }
+  .modal_mask {
+    height:auto;
+  }
+  .msk_btn{
+    margin: 10rpx auto 30rpx;
+  }
+  .fixed{
+    border-top:1rpx #e8e8e8 solid;
+    position:fixed;
+    box-sizing:border-box;
+    bottom:0;
+    left:0;
+    width:100%;
   }
 </style>

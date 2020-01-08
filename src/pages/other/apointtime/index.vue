@@ -12,7 +12,7 @@
       </div>
       <div  class="bg_fff pp3 flex justifyContentBetween">
           <div><span class="cr">1</span> 个项目，服务时长<span class="cr">{{time}}分钟</span> </div>
-          <div class="btn_next">下一步</div>
+          <div class="btn_next" @click="submit">下一步</div>
       </div>
   </div>
 </template>
@@ -42,7 +42,29 @@ export default {
         const list = res.data.datelist;
         list.map(item=>{
           const title = item.value.replace(/-/g,'/');
-          item.title = new Date(title).getDay();
+          switch(new Date(title).getDay()){
+            case 0:
+              item.title ='日';
+              break;
+            case 1:
+              item.title ='一';
+              break;
+            case 2:
+              item.title ='二';
+              break;
+            case 3:
+              item.title ='三';
+              break;
+            case 4:
+              item.title ='四';
+              break;
+            case 5:
+              item.title ='五';
+              break;
+            case 6:
+              item.title ='六';
+              break;
+          }
           item.active = false;
         })
         list[0].active = true;
@@ -55,6 +77,15 @@ export default {
            item.active = false;
         }else{
            item.active = true;
+        }
+      })
+    },
+    submit(){
+      this.data.map((item,i)=>{
+        if(item.active === true){
+           wx.navigateTo({
+             url:`/pages/other/yusuccess/main?shopID=${this.shopID}&date=${item.value}&getDay=${item.title}`
+           })
         }
       })
     }
