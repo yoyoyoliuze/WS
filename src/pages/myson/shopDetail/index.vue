@@ -1,9 +1,9 @@
 <template>
-  <div>
+  <div style="padding-bottom:100rpx" :class="{'p-top':isP}">
       <div class="top">
         <img class="bg" src="/static/images/ava.png" alt="">
         <div class="main">
-          <p class="name">万色印象万众城店</p>
+          <p class="name">{{shopDetail.ShopNick}}</p>
           <div class="flex-warp ali-c tag">
             <span>纹绣</span>
           </div>
@@ -35,7 +35,7 @@
         <span :style="'left:'+tabStyle+'rpx'"></span>
       </div>
 
-      <div class="server-list-box">
+      <!-- <div class="server-list-box">
         <div class="tit jus-b ali-c">
           <span>美甲</span>
           <img src="/static/images/more.png" alt="">
@@ -50,7 +50,7 @@
             <p class="flexc">查看详情</p>
           </div>
         </div>
-      </div>
+      </div> -->
 
       <div class="jishi-box">
         <div class="jishi ali-c jus-b">
@@ -154,14 +154,24 @@
 </template>
 
 <script>
-
+import {post} from '@/utils'
 export default {
 
   data () {
     return {
       tabList:['技师','服务评价','门店信息'],
       tabIndex:0,
+      isP:false,
+      shopDetail:{}
     }
+  },
+  onPageScroll(e) {
+    
+  },
+  onShow(){
+    console.log(this.$mp.query)
+    this.getDetail()
+
   },
   computed: {
     tabStyle(){
@@ -169,14 +179,41 @@ export default {
     }
   },
   methods: {
+    scroll(el){
+      wx.pageScrollTo({
+        selector:el,
+        duration: 300
+      })
+    },
+    getDetail(){
+      post('Shop/ReadShop',{
+        Lat:wx.getStorageSync('location').lat,
+        Lng:wx.getStorageSync('location').lng,
+        ShopId:this.$mp.query.id
+      }).then(res=>{
+        if(res.code===0){
+          this.shopDetail = res.data
+        }
+      })
+    },
     cliTab(index){
       this.tabIndex = index
+      if(index===0){
+        this.scroll('.jishi-box')
+      }else if(index===1){
+        this.scroll('.server-box')
+      }else if(index===2){
+        this.scroll('.info')
+      }
     },
   },
 }
 </script>
 
 <style scoped lang='scss'>
+.p-top{
+  padding-top:92rpx 
+}
 .server-list-box{
   .list-box{
     background-color: #fff;
@@ -223,6 +260,10 @@ export default {
     background-color: #fff;
     margin-top: 20rpx;
     height: 98rpx;
+    width: 100vw;
+    position: fixed;
+    bottom: 0;
+    box-shadow: 0rpx 8rpx 8rpx 8rpx rgba(0, 0, 0, 0.1)
   }
 .info{
   background-color: #fff;
@@ -426,7 +467,8 @@ export default {
   position: relative;
   height: 92rpx;
   background-color: #fff;
-  position: relative;
+  // position: sticky;
+  top: 0;
   border-bottom: 1rpx solid #ededed;
   div{
     color: #999;

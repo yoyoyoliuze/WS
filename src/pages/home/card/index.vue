@@ -3,11 +3,11 @@
       <div class="swiper_bb">
         <img src="/static/images/icons/bg1.png" alt="" class="img_bg">
         <swiper class="swiper-box" display-multiple-items='1' interval='3000' previous-margin="60" next-margin="60" @change="swiperChange">
-          <swiper-item class="swiper-item" v-for="(item,index) in 3" :key="index">
+          <swiper-item class="swiper-item" v-for="(item,index) in data" :key="index">
             <div class="card" :class="swiperIndex==index?'active_swiper':'quite'">
-                <img src="/static/images/icons/yin.png" alt="" v-if="index==0">
-                <img src="/static/images/icons/jin.png" alt="" v-if="index==1">
-                <img src="/static/images/icons/si.png" alt="" v-if="index==2">
+                <img src="/static/images/icons/yin.png" alt="" v-if="item.Id==1">
+                <img src="/static/images/icons/jin.png" alt="" v-if="item.Id==5">
+                <img src="/static/images/icons/si.png" alt="" v-if="item.Id==8">
                 <!-- <div class="card_detail flex flexWrap">
                     <p class="font30 fb">金卡</p>
                     <p class="font30 fb">￥18800元</p>
@@ -15,6 +15,16 @@
                     <p class="font24 mt2">6.8折</p>
                 </div> -->
                 <div class="card_detailb">
+                    <div class="font30 flex new_f1 justifyContentBetween">
+                        <p>{{item.GradeName}}</p>
+                        <p>￥{{item.BuyPrice}}元</p>
+                    </div>
+                    <div class="flex new_f2 justifyContentBetween">
+                        <p>项目折扣</p>
+                        <p>{{item.Discount}}折</p>
+                    </div>
+                </div>
+                <!-- <div class="card_detailb">
                   <div class="top jus-b">
                     <div class="ali-c left">
                       <img src="/static/images/ava.png" alt="">
@@ -40,7 +50,7 @@
                     </div>
                     <p class="flexc" @click="switchPath('/pages/myson/recharge/main')">充值</p>
                   </div>
-                </div>
+                </div> -->
             </div>
           </swiper-item>
         </swiper>
@@ -50,7 +60,7 @@
               <img src="/static/images/detail_bg.png" alt="" class="img">
               <div class="card_main boxSize">
                   <p class="font30">根据身份不同享有不同的特权</p>
-                  <p class="font30 mt1">金卡会员专项权益：</p>
+                  <p class="font30 mt1">{{detail.GradeName}}会员专项权益：</p>
                   <div class="flex flexWrap font24 mt2">
                       <p class="card_item">
                           <i class="card_pill"></i>
@@ -82,13 +92,16 @@ import '@/style/bb.scss'
 
 export default {
   
-  onShow(){
-  },
-
   data () {
     return {
       swiperIndex:0,
+      data:[],
+      Id:0,
+      detail:{}
     }
+  },
+  onShow(){
+    this.getData()
   },
   methods: {
     //轮播滑动时，获取当前的轮播id
@@ -96,11 +109,37 @@ export default {
       console.log(e)
       const that = this;
       this.swiperIndex=e.mp.detail.current
+      this.Id = this.data[e.mp.detail.current].Id
+      this.getDetail()
     },
     switchPath(url){
       wx.navigateTo({
         url
       })
+    },
+    getData(){
+      post('User/VipGoodsList',{}).then(res=>{
+        if(res.code==0){
+          this.data = res.data
+          this.Id = res.data[0].Id
+          this.getDetail()
+        }
+      })
+    },
+    getDetail(){
+      post('User/VipGoodsxq',{
+        GradeId:this.Id
+      }).then(res=>{
+        console.log(res.data.Content.indexOf('↵'))
+          if(res.data.Content.indexOf('↵')!=-1){
+            // item.Content =  item.Content.split('↵')
+            this.$set(res.data,'Content',res.data.Content.split('↵'))
+          }
+           console.log(res.data)
+           this.detail = res.data
+      })
+     
+      
     }
     
   },
@@ -241,6 +280,15 @@ export default {
       transition: all 0.2s ease-in 0s;
     }
   }
+  .new_f1,.new_f2{
+    padding:0 40rpx;
+    color:#a1782c;
+    margin-top:30rpx;
+  }
+  .new_f1{
+    margin-top:60rpx;
+  }
+  
   // ._swiper-item{
   //   transform:translateY(15%)!important;
   // }

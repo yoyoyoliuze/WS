@@ -9,7 +9,7 @@
           <p class="bottom ali-c">您当前正在开通金卡会员服务，开通后会享受相应权益，会员服务为虚拟产品购买后不会过期，不支持退款。</p>
         </div>
       </div>
-      <div class="pay ali-c jus-b">
+      <div class="pay ali-c jus-b gou">
         <div class="ali-c">
           <img src="/static/images/weixin.png" alt="">
           <p>微信支付</p>

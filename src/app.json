@@ -37,6 +37,10 @@
       "root":"pages/member/",
       "pages":[
         "editinfo/main",
+        "card/main",
+        "cika/main",
+        "ticket/main",
+        "right/main",
         "set/main"
       ]
     },

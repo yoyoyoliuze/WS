@@ -53,11 +53,11 @@
       <img mode='aspectFill' class="two" src="/static/images/index_shop_bg.png" alt="" @click="goUrl('/pages/home/school/main')">
     </div>
     <div class="shop">
-      <div class="list" v-for="(item, index) in shopList" :key="index">
+      <div class="list" v-for="(item, index) in shopList" :key="index"  @click="goUrl('/pages/other/chose/main',item.ShopId)">
         <p class="one">{{item.ShopNick}}</p>
         <div class="two ali-c jus-b">
           <div class="ali-c">
-            <span>纹绣</span>
+            <span v-for="(ite, ind) in item.MapReservation" :key="ind">{{ite}}</span>
           </div>
           <p v-if="item.Distance>0">{{item.Distance}}km</p>
           <p v-if="item.Distance==0">小于1km</p>
@@ -65,8 +65,8 @@
         <div class="thr ali-c jus-b">
           <div class="left">
             <div class="a ali-c">
-              <span>奖</span>
-              <p>邀请好友奖励10元</p>
+              <span>营业时间</span>
+              <p>{{item.BusinessHours}}</p>
             </div>
             <div class="b ali-c">
               <img src="/static/images/address_y.png" alt="">
@@ -149,10 +149,10 @@ export default {
             Lng:longitude
           }).then(res=>{
             if(res.code===0){
-              
               _this.shopList = res.data
               _this.shopList.forEach(item => {
                 item.Distance = item.Distance.toFixed(2)
+                item.MapReservation = item.MapReservation.split(',');
               });
             }
           })

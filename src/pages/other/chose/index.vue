@@ -8,15 +8,15 @@
         </div>
         <div class="flex chose_main justifyContentBetween">
             <p class="flex flexColumn flexAlignCenter">
-                <img src="/static/images/icons/fu.png" alt="" class="av_icon active">
+                <img src="/static/images/icons/fu.png" @click="cliImg(0)" alt="" class="av_icon" :class="{'active':active===0}">
                 <span class="ch_name fb">预约服务</span>
             </p>
             <p class="flex flexColumn flexAlignCenter">
-                <img src="/static/images/icons/ji.png" alt="" class="av_icon">
+                <img src="/static/images/icons/ji.png" @click="cliImg(1)" alt="" class="av_icon" :class="{'active':active===1}">
                 <span class="ch_name fb">预约技师</span>
             </p>
         </div>
-        <div class="ch_btn">确定</div>
+        <div class="ch_btn" @click="goUrl()">确定</div>
     </div>
   </div>
 </template>
@@ -28,7 +28,7 @@ import '@/style/bb.scss'
 export default {
   data () {
     return {
-      
+      active:0
     }
   },
   onShow(){
@@ -39,6 +39,14 @@ export default {
   },
 
   methods: {
+    cliImg(index){
+      this.active = index
+    },
+    goUrl(){
+      wx.redirectTo({
+        url:'/pages/myson/shopDetail/main?id='+this.$mp.query.id+'&server='+this.active
+      })
+    },
     setBarTitle() {
         wx.setNavigationBarTitle({
             title: "选择服务"
