@@ -1,36 +1,37 @@
 <template>
   <div>
-      <div class="list pw3">
-          <div class="cc_item">
-              <img src="/static/images/icons/c1.png" alt="" class="cc_img">
-              <div class="cc_main flex justifyContentBetween flexAlignCenter">
-                  <p class="font30">会员次卡</p>
-                  <div class="cc_right">
-                      <p>服务项目-{{data.Name}}</p>
-                      <p class="font22 mt1">剩余次数5/10</p>
-                      <p class="flex justifyContentBetween font22 mt1">
-                        <span>次卡权益</span>
-                        <span class="cc_use">立即使用</span>
-                      </p>
-                  </div>
-              </div>
-          </div>
-      </div>
-      <div class="mt5 pw3">
-          <div class="font24 fb">使用须知</div>
+      <div class="mt2 pp3 bg_fff">
+          <div class="font24 fb">详情介绍</div>
           <div>
               <p class="flex mt2 flexAlignCenter">
                   <i class="bo_cc"></i>
-                  <span class="mr1 font24">仅限做雕花甲服务项目时方可使用</span>
+                  <span class="mr1 font24">所属门店：{{data.ShopName}}</span>
               </p>
               <p class="flex mt2 flexAlignCenter">
                   <i class="bo_cc"></i>
-                  <span class="mr1 font24">有效期至2020-12-28</span>
+                  <span class="mr1 font24">项目类型：{{data.ProTypeName}}</span>
               </p>
           </div>
       </div>
-      <div class="mt5 pw3">
-          <div class="font24 fb">注意事项</div>
+      <div class="mt2 pp3 bg_fff">
+          <div class="font24 fb">次卡说明</div>
+          <div>
+              <p class="flex mt2 flexAlignCenter">
+                  <i class="bo_cc"></i>
+                  <span class="mr1 font24">次卡名称：会员次卡——{{data.Name}}</span>
+              </p>
+              <p class="flex mt2 flexAlignCenter">
+                  <i class="bo_cc"></i>
+                  <span class="mr1 font24">次卡面额：{{data.Denomination}}元</span>
+              </p>
+              <p class="flex mt2 flexAlignCenter">
+                  <i class="bo_cc"></i>
+                  <span class="mr1 font24">可做次数：10次</span>
+              </p>
+          </div>
+      </div>
+      <div class="mt2 pp3 bg_fff">
+          <div class="font24 fb">使用说明</div>
           <div>
               <p class="flex mt2 flexAlignCenter">
                   <i class="bo_cc"></i>
@@ -69,6 +70,8 @@ export default {
     getData(){
       post('Coupon/VipCardxq',{
         Id:this.Id
+      }).then(res=>{
+        this.data = res.data
       })
     }
   },

@@ -163,7 +163,7 @@
 					"scene": null
 				},
 				{
-					"id": -1,
+					"id": 16,
 					"name": "项目详情",
 					"pathName": "pages/other/serdetail/main",
 					"query": "",
@@ -227,6 +227,13 @@
 					"id": -1,
 					"name": "pages/myson/jiesuan/main",
 					"pathName": "pages/myson/jiesuan/main",
+					"query": "",
+					"scene": null
+				},
+				{
+					"id": -1,
+					"name": "次卡详情",
+					"pathName": "pages/member/cikadetail/main",
 					"query": "",
 					"scene": null
 				}
