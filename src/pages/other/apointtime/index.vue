@@ -11,7 +11,7 @@
         </div>
       </div>
       <div  class="bg_fff pp3 flex justifyContentBetween">
-          <div><span class="cr">1</span> 个项目，服务时长<span class="cr">{{time}}分钟</span> </div>
+          <div><span class="cr">{{submitPro.proNum}}</span> 个项目，服务时长<span class="cr">{{submitPro.time}}分钟</span> </div>
           <div class="btn_next" @click="submit">下一步</div>
       </div>
   </div>
@@ -24,21 +24,17 @@ export default {
 
   data () {
     return {
-      shopID:'',
-      time:0,//服务时间
-      proNum:1,
+      submitPro:{},
       data:[]
     }
   },
   onLoad(options){
-    this.shopID = options.shopID;
-    this.time = options.time||0;//服务时间
-    this.proNum = options.proNum||1;//服务时间
+    this.submitPro = wx.getStorageSync('submitPro');
     this.getData();
   },
   methods:{
     getData(){
-      post('Order/TakeOutMake',{ShopId:this.shopID}).then(res=>{
+      post('Order/TakeOutMake',{ShopId:this.submitPro.shopId}).then(res=>{
         const list = res.data.datelist;
         list.map(item=>{
           const title = item.value.replace(/-/g,'/');
@@ -69,6 +65,10 @@ export default {
         })
         list[0].active = true;
         this.data = list;
+      }).catch(err=>{
+        setTimeout(()=>{
+          wx.navigateBack();
+        },1500)
       })
     },
     onClick(index){
@@ -83,8 +83,11 @@ export default {
     submit(){
       this.data.map((item,i)=>{
         if(item.active === true){
-           wx.navigateTo({
-             url:`/pages/other/yusuccess/main?shopID=${this.shopID}&date=${item.value}&getDay=${item.title}`
+          this.submitPro.date = item.value;
+          this.submitPro.getDay = item.getDay;
+          wx.setStorageSync('submitPro',this.submitPro)
+           wx.redirectTo({
+             url:`/pages/other/yusuccess/main`
            })
         }
       })

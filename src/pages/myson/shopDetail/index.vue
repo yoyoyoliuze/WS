@@ -5,19 +5,19 @@
         <div class="main">
           <p class="name">{{shopDetail.ShopNick}}</p>
           <div class="flex-warp ali-c tag">
-            <span>纹绣</span>
+            <span v-for="(tab,tabIndex) in shopDetail.tabs" :key="tabIndex">{{tab}}</span>
           </div>
           <div class="ali-c jus-b map">
             <div class="left"> 
               <div class="ali-c one">
                 <img class="a" src="/static/images/detail/time.png" alt="">
-                <span>11:00~23:00</span>
+                <span>{{shopDetail.BusinessHours}}</span>
                 <img class="b" src="/static/images/detail/phone1.png" alt="">
-                <span>0755-5462303</span>
+                <span>{{shopDetail.Phone}}</span>
               </div>
               <div class="ali-c two">
                 <img src="/static/images/detail/address1.png" alt="">
-                <span>深圳市龙华区民治大道辉华大厦正门口</span>
+                <span>{{shopDetail.Address}}</span>
               </div>
             </div>
             <div class="right">
@@ -25,34 +25,38 @@
               <p>地图找店</p>
             </div>
           </div>
-          <p class="ali-c jian"><span class="flexc">减</span>新用户首单满30减3</p>
-          <p class="ali-c jian"><span class="flexc">奖</span>邀请好友奖励10元</p>
+          <!-- <p class="ali-c jian"><span class="flexc">减</span>新用户首单满30减3</p>
+          <p class="ali-c jian"><span class="flexc">奖</span>邀请好友奖励10元</p> -->
         </div>
       </div>
 
       <div class="tab flex">
-        <div class="flex1 flexc" :class="{'active':tabIndex==index}" v-for="(item, index) in tabList" :key="index" @click="cliTab(index)">{{item}}</div>
+        <div class="flex1 flexc" :class="{'active':tabIndex==index}" v-for="(item, index) in tabList" :key="index" 
+          @click="cliTab(index)">{{item}}</div>
         <span :style="'left:'+tabStyle+'rpx'"></span>
       </div>
 
-      <!-- <div class="server-list-box">
-        <div class="tit jus-b ali-c">
-          <span>美甲</span>
-          <img src="/static/images/more.png" alt="">
-        </div>
-        <div class="list-box flex-wrap jus-b">
-          <div class="list" v-for="(item, index) in 3" :key="index">
-            <div class="box">
-              <p>彩绘指甲</p>
-              <p>(服务时长：半小时)</p>
-              <p>298元</p>
+      <div class="serverBox">
+          <div class="server-list-box"  v-for="(pro, index) in proList" :key="index" v-show="pro.list.length>0">
+            <div class="tit jus-b ali-c" @click="pro.status = !pro.status">
+              <span>{{pro.Name}}({{pro.list.length}})</span>
+              <img src="/static/images/more.png" alt="" :style="pro.status?'transform: rotate(90deg);':''">
             </div>
-            <p class="flexc">查看详情</p>
+            <div class="list-box flex-wrap jus-b" v-show="pro.status">
+              <div class="list" v-for="(item, itemIndex) in pro.list" :key="itemIndex">
+                <div class="box" :style="item.status?'border: solid 4rpx #cc9f68;':''" @click="item.status = !item.status">
+                  <img src="/static/images/icons/gou.png" class="gou" alt="" v-show="item.status">
+                  <p>{{item.Name}}</p>
+                  <p >(服务时长：{{item.HourNum*60}})</p>
+                  <p>{{item.Price}}元</p>
+                </div>
+                <p class="flexc" @click="goProDetail(item.Id)">查看详情</p>
+              </div>
+            </div>
           </div>
-        </div>
-      </div> -->
+      </div>
 
-      <div class="jishi-box">
+      <div class="jishi-box" v-if="false">
         <div class="jishi ali-c jus-b">
           <div class="ali-c left">
             <img class="ava" src="/static/images/ava.png" alt="">
@@ -149,7 +153,14 @@
       </div>
 
       <div class="kefu flexc">联系客服（10:00~18:00）</div>
-
+      
+      <div class="pp3 flex justifyContentBetween fixed bg_fff mt2">
+          <div> 
+            <span><span class="cr">{{allNum}}个</span>项目</span>  
+            <span class="cen_text"> 服务时长<span class="cr">{{totalTime}}分钟</span></span>
+          </div>
+          <div class="btn_yu" @click="yysubmit">立即预约</div>
+      </div>
   </div>
 </template>
 
@@ -162,20 +173,61 @@ export default {
       tabList:['技师','服务评价','门店信息'],
       tabIndex:0,
       isP:false,
-      shopDetail:{}
+      shopDetail:{},
+      type:0,//0--服务；1--技师
+      proList:[],
+      artiftcerList:[],
     }
   },
   onPageScroll(e) {
     
   },
-  onShow(){
-    console.log(this.$mp.query)
+  onLoad(options){
+    this.shopId = options.id;
+    this.type = options.server;//0--服务；1--技师
+    if(options.server==0){
+      this.tabList.splice(0,1,'服务')
+    }
     this.getDetail()
-
+    this.getClassify()
+    // Promise.all([this.getProList(),this.getClassify()]).then(()=>{
+    //   this.setData();
+    // })
   },
   computed: {
     tabStyle(){
       return ((750/this.tabList.length)*this.tabIndex)+(((750/this.tabList.length)-50)/2)
+    },
+    // 选择的服务项目数量
+    allNum(){
+      let num =0;
+      this.proList.map(item=>{
+          item.list.map(list=>{
+            if(list.status){
+              num+=1;
+            }
+          })
+      })
+      return num;
+    },
+    // 选择服务项目的总时长
+    totalTime(){
+      let time =0;
+      this.proList.map(item=>{
+          item.list.map(list=>{
+            if(list.status){
+              time+=(list.HourNum*60);
+            }
+          })
+      })
+      return time;
+    }
+  },
+  watch:{
+    proList(){
+      this.proList.map(item=>{
+        
+      })
     }
   },
   methods: {
@@ -189,11 +241,58 @@ export default {
       post('Shop/ReadShop',{
         Lat:wx.getStorageSync('location').lat,
         Lng:wx.getStorageSync('location').lng,
-        ShopId:this.$mp.query.id
+        ShopId:this.shopId
       }).then(res=>{
         if(res.code===0){
-          this.shopDetail = res.data
+          const data= res.data;
+          data.tabs = data.MapReservation.split(',');
+          this.shopDetail = data;
         }
+      })
+    },
+    // 获取分类
+    getClassify(){
+     post('Goods/TypeList',{Type:0}).then(res=>{
+        res.data.map((item,index)=>{
+          item.list=[];
+          if(index===0){
+            item.status = true;
+          }else{
+            item.status = false;
+          }
+        })
+        this.proList = res.data;
+        this.getProList();
+      })
+    },
+    // 项目列表
+    getProList(){
+      post('Goods/GoodsList',{
+        Page:1,
+        PageSize:100,
+        ShopId:this.shopId
+      }).then(res=>{
+        const data = res.data;
+        this.proList.map(classify=>{
+          // classify.list=[];
+          data.map(pro=>{
+            if(pro.TypeId===classify.Id){
+              pro.status = false;
+              classify.list.push(pro)
+            }
+          })
+        })
+        console.log(this.proList)
+      })
+    },
+    // 技师列表
+    getArtificerList(){
+      post('Shop/GetShopArtificerList',{
+        Page:1,
+        PageSize:0,
+        ShopId:this.shopId
+      }).then(res=>{
+        this.artiftcerList = res.data;
       })
     },
     cliTab(index){
@@ -206,15 +305,43 @@ export default {
         this.scroll('.info')
       }
     },
+    // 预约订单提交
+    yysubmit(){
+      let proId=[];
+      this.proList.map(item=>{
+          item.list.map(list=>{
+            if(list.status){
+              proId.push(list.Id)
+            }
+          })
+      })
+       wx.setStorageSync('submitPro',
+        {
+          proId:proId.join(','),
+          shopId:this.shopId,
+          time:this.totalTime,
+          proNum:proId.length
+        })
+        wx.navigateTo({
+            url:`/pages/other/apointtime/main`
+        })
+    },
+    goProDetail(id){
+      wx.navigateTo({
+        url:"/pages/other/serdetail/main?id="+id
+      })
+    }
   },
 }
 </script>
 
 <style scoped lang='scss'>
-.p-top{
-  padding-top:92rpx 
-}
+  .p-top{
+    padding-top:92rpx 
+  }
 .server-list-box{
+  border-bottom: 1rpx solid #ededed;
+  padding-bottom:20rpx;
   .list-box{
     background-color: #fff;
     padding: 0 70rpx;
@@ -240,15 +367,22 @@ export default {
         width: 274rpx;
         height: 151rpx;
         border-radius: 10rpx;
-        border: solid 1rpx #cc9f68;
+        border: solid 4rpx #e8e8e8;
         margin-bottom: 10rpx;
+        position:relative;
+      }
+      .gou{
+        width:50rpx;
+        height:50rpx;
+        position:absolute;
+        right:-2rpx;
+        top:-2rpx;
       }
     }
   }
   .tit{
     height: 88rpx;
     background-color: #fff;
-    border-bottom: 1rpx solid #ededed;
     padding: 0 30rpx;
     img{
       width: 13rpx;
@@ -261,9 +395,23 @@ export default {
     margin-top: 20rpx;
     height: 98rpx;
     width: 100vw;
-    position: fixed;
-    bottom: 0;
+    // position: fixed;
+    // bottom: 0;
     box-shadow: 0rpx 8rpx 8rpx 8rpx rgba(0, 0, 0, 0.1)
+  }
+  .fixed{
+    position:fixed;
+    bottom:0;
+    left:0;
+    width:100%;
+    box-sizing:border-box;
+    border-top:1rpx solid #e8e8e8;
+  .btn_yu{
+    color:#ffffff;background: #cc9f68;
+    padding:0 25rpx;
+    font-size:24rpx;
+    height:50rpx;line-height: 50rpx;
+  }
   }
 .info{
   background-color: #fff;
@@ -321,8 +469,10 @@ export default {
     }
   }
 }
-.server-box{
+.serverBox{
   background-color: #fff;
+}
+.server-box{
   margin-top: 20rpx;
   padding: 0 30rpx;
   .btn-box{
@@ -487,10 +637,16 @@ export default {
   }
 }
 .top{
-  height: 440rpx;
+  height: 350rpx;
   width: 100vw;
   box-sizing: border-box;
   position: relative;
+  .main{
+    .name{
+      font-size:35rpx;
+      line-height:3;
+    }
+  }
   .jian{
     color: #fff;
     font-size: 22rpx;

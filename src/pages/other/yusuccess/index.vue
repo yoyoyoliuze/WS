@@ -12,8 +12,8 @@
                 </p>
               </div>
               <div class="cf flex flexColumn flexAlignCenter">
-                <p class="font30">{{date}}</p>
-                <p class="font24 mt2">星期{{getDay}}</p>
+                <p class="font30">{{submitPro.date}}</p>
+                <p class="font24 mt2">星期{{submitPro.getDay}}</p>
               </div>
           </div>
           <!-- <div class="text_right cf font24 card_num">预约号：JS001</div> -->
@@ -84,7 +84,7 @@
           </div>
         </div>
         <div class="rights">
-          <div>共计{{data.AllNumber}}个项目总时长1小时</div>
+          <div>共计{{data.AllNumber}}个项目总时长{{data.totalTime}}分钟</div>
           <div>项目总额：<span>¥{{data.TotalPrice}}</span></div>
         </div>
     </div>
@@ -154,24 +154,27 @@
         </div>
         <div class="msk_btn" @click="couponConfirm">完成</div>
     </div> 
-      
+    <pay :total="data.AllPrice" :orderNumber="orderNumber" v-if="payStatus" 
+      @onClose="payStatus = false" payMode="0"
+      @success="payconfirm"
+      >
+    </pay>
   </div>
 </template>
 
 <script>
 
 import '@/style/bb.scss'
+import pay from '@/components/pay.vue'
 import {post,valPhone} from '@/utils/index'
 export default {
+  components:{pay},
   data () {
     return {
       UserId:'',
       Token:'',
-      // shopID:'',
-      proID:'',//预约的产品id
+      submitPro:{},//预约的产品
       payType:0,
-      date:'',
-      getDay:'',
       data:{},
       shop:{},
       showCoupon:false,
@@ -180,24 +183,20 @@ export default {
       name:'',
       phone:'',
       remark:'',
+      orderNumber:'',//订单号
+      payStatus:false,
     }
   },
   onLoad(options){
     this.setBarTitle();
-    // this.shopID = options.shopID;
-    this.proID = wx.getStorageSync('submitProID');//字符串，多个项目用逗号分隔，
-    this.date = options.date;//服务日期
-    this.getDay = options.getDay;//服务周几
+    this.submitPro = wx.getStorageSync('submitPro');//要预约的产品，
+    wx.setStorageSync('submitPro',{});
     this.getData();
   },
   onShow(){
         this.UserId=wx.getStorageSync('userId');
         this.Token=wx.getStorageSync('token');
   },
-  components: {
-   
-  },
-
   methods: {
     setBarTitle() {
         wx.setNavigationBarTitle({
@@ -208,14 +207,18 @@ export default {
       post('Order/ConfirmMakeOrder',{
         UserId:wx.getStorageSync('userId'),
         Token:wx.getStorageSync('token'),
-        ProIdList:this.proID,
-        MakeTime:this.date,
+        ProIdList:this.submitPro.proId,
+        MakeTime:this.submitPro.date,
         CouponId:useCouponId||0,//-1:请选择优惠券;0:默认自动匹配优惠券;>0:使用的优惠券
       }).then(res=>{
-        console.log(res)
         const data = res.data;
         this.data = data;
         this.shop =data.ShopData;
+        let time =0;
+        data.ProData.map(item=>{
+            time+=(item.HourNum*60)
+        })
+        data.totalTime = time;
         if(data.CouponId>0){
           data.UseCouponList.map(item=>{
             if(item.Id ===data.CouponId){
@@ -257,14 +260,35 @@ export default {
       post('Order/SubmitMakeOrder',{
         UserId:this.UserId,
         Token:this.Token,
-        ProIdList:this.proID,
-        MakeTime:this.date,
+        ProIdList:this.submitPro.proId,
+        MakeTime:this.submitPro.date,
         CouponId:this.selectCouponItem.Id||'',
         ContactName:this.name,
         Tel:this.phone,
         Remark:this.remark
       }).then(res=>{
-        console.log(res)
+        this.orderNumber = res.data;
+        this.payStatus = true;
+      })
+    },
+    // 确认支付-type--支付类型0--微信支付.1--余额支付;paw--支付密码
+    payconfirm(type,paw){
+      console.log(type,paw)
+      if(type*1===1){
+        post('Order/PaymentOrder',{
+          UserId:this.UserId,
+          Token:this.Token,
+          OrderNo:this.orderNumber,
+          Password:paw
+        }).then(res=>{
+          this.paySuccess();
+        })  
+      }
+    },
+    // 支付成功
+    paySuccess(){
+      wx.navigateTo({
+        url:'/pages/orderson/orderDetail/main?orderNo='+this.orderNumber
       })
     }
   },

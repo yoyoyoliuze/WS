@@ -59,8 +59,9 @@
           <div class="ali-c">
             <span v-for="(ite, ind) in item.MapReservation" :key="ind">{{ite}}</span>
           </div>
-          <p v-if="item.Distance>0">{{item.Distance}}km</p>
-          <p v-if="item.Distance==0">小于1km</p>
+          <p v-if="item.Distance>0" class="Distance">{{item.Distance}}km</p>
+          <p v-if="item.Distance==0" class="Distance">小于1km</p>
+          <p v-if="item.Distance!=0&&item.Distance<1" class="Distance">{{item.Distance*1000}}m</p>
         </div>
         <div class="thr ali-c jus-b">
           <div class="left">
@@ -139,7 +140,7 @@ export default {
     getShopList(){
       let _this = this
       wx.getLocation({
-        type: 'wgs84',
+        type: 'gcj02',
         success (res) {
           const latitude = res.latitude;
           const longitude = res.longitude;
@@ -310,7 +311,7 @@ export default {
     overflow: hidden;
     .list{
       display: inline-block;
-      margin-right: 20rpx;
+      margin:0 15rpx;
       img{
         width: 280rpx;
         height: 200rpx;
@@ -425,5 +426,9 @@ export default {
   img{
     width:100%;height:100%;
   }
+}
+.Distance{
+  font-size:20rpx;
+  color:#999;
 }
 </style>

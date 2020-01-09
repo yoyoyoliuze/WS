@@ -69,7 +69,7 @@ export default {
     color:#666666;
   }
   .av_icon{
-    width:250rpx;height:250rpx;border-radius:50%;
+    width:250rpx;height:250rpx;border-radius:50%;border:5rpx solid #fff;
   }
   .av_icon.active{
     border:5rpx solid #cc9f68;
