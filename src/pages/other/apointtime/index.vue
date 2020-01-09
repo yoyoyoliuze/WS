@@ -11,8 +11,8 @@
         </div>
       </div>
       <div  class="bg_fff pp3 flex justifyContentBetween">
-          <div><span class="cr">1</span> 个项目，服务时长<span class="cr">{{time}}分钟</span> </div>
-          <div class="btn_next">下一步</div>
+          <div><span class="cr">{{submitPro.proNum}}</span> 个项目，服务时长<span class="cr">{{submitPro.time}}分钟</span> </div>
+          <div class="btn_next" @click="submit">下一步</div>
       </div>
   </div>
 </template>
@@ -24,29 +24,51 @@ export default {
 
   data () {
     return {
-      shopID:'',
-      time:0,//服务时间
-      proNum:1,
+      submitPro:{},
       data:[]
     }
   },
   onLoad(options){
-    this.shopID = options.shopID;
-    this.time = options.time||0;//服务时间
-    this.proNum = options.proNum||1;//服务时间
+    this.submitPro = wx.getStorageSync('submitPro');
     this.getData();
   },
   methods:{
     getData(){
-      post('Order/TakeOutMake',{ShopId:this.shopID}).then(res=>{
+      post('Order/TakeOutMake',{ShopId:this.submitPro.shopId}).then(res=>{
         const list = res.data.datelist;
         list.map(item=>{
           const title = item.value.replace(/-/g,'/');
-          item.title = new Date(title).getDay();
+          switch(new Date(title).getDay()){
+            case 0:
+              item.title ='日';
+              break;
+            case 1:
+              item.title ='一';
+              break;
+            case 2:
+              item.title ='二';
+              break;
+            case 3:
+              item.title ='三';
+              break;
+            case 4:
+              item.title ='四';
+              break;
+            case 5:
+              item.title ='五';
+              break;
+            case 6:
+              item.title ='六';
+              break;
+          }
           item.active = false;
         })
         list[0].active = true;
         this.data = list;
+      }).catch(err=>{
+        setTimeout(()=>{
+          wx.navigateBack();
+        },1500)
       })
     },
     onClick(index){
@@ -55,6 +77,18 @@ export default {
            item.active = false;
         }else{
            item.active = true;
+        }
+      })
+    },
+    submit(){
+      this.data.map((item,i)=>{
+        if(item.active === true){
+          this.submitPro.date = item.value;
+          this.submitPro.getDay = item.getDay;
+          wx.setStorageSync('submitPro',this.submitPro)
+           wx.redirectTo({
+             url:`/pages/other/yusuccess/main`
+           })
         }
       })
     }

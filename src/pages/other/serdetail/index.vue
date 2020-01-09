@@ -125,8 +125,14 @@ export default {
     },
     // 预约
     submit(){
+        wx.setStorageSync('submitPro',{
+          proId:this.ID,
+          shopId:this.data.ShopData.ShopId,
+          time:this.data.HourNum*60,
+          proNum:1
+        })
         wx.navigateTo({
-            url:`/pages/other/apointtime/main?shopID=${this.data.ShopData.ShopId}&time=${data.HourNum*60}`
+            url:`/pages/other/apointtime/main`
         })
     }
   },
