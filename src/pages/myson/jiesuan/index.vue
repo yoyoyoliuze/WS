@@ -18,7 +18,7 @@
               </div>
               <input type="radio" name="payType" :checked="payType==1" value="1" />
             </label>
-            <label class="flex-between payitem" >
+            <label class="flex-between payitem">
               <div class="flex-center">
                 <img src="/static/images/icons/ye_c.png" class="payimg3" />
                 <span class="ml2">余额</span>
@@ -113,6 +113,12 @@ export default {
       wx.showToast({
         title:'支付成功！'
       })
+      setTimeout(()=>{
+        //普通订单去个人中心我的订单
+        wx.switchTab({
+          url:'/pages/mine/main'
+        })
+      },1500)
     },
     // 输入密码
     editPaw() {
@@ -156,10 +162,18 @@ export default {
               title:"支付成功！"
           })
           setTimeout(()=>{
+            let payUrl = ''
+            if(this.type == 2){ //次卡支付成功去往我的次卡
+              wx.reLaunch({
+                url:"/pages/member/ticket/main"
+              })
+            }else{
+              wx.switchTab({
+                url:"/pages/mine/main"
+              })
+            }
             //普通订单去个人中心我的订单
-            wx.redirectTo({
-              url:'/pages/mine/main'
-            })
+            
           },1500)
         }).catch(err=>{ 
             this.isShow = false

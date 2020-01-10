@@ -43,6 +43,7 @@
         "ticket/main",
         "right/main",
         "setPwd/main",
+        "cardBuy/main",
         "set/main"
       ]
     },

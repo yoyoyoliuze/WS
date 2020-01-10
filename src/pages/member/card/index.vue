@@ -14,10 +14,10 @@
                 <div class="card_detailb">
                   <div class="top jus-b">
                     <div class="ali-c left">
-                      <img src="/static/images/ava.png" alt="">
+                      <img :src="data.Avatar" alt="">
                       <div>
-                        <p>巴啦啦小魔仙</p>
-                        <span class="ca">我要升级</span>
+                        <p>{{data.NickName}}</p>
+                        <span class="ca">{{data.GradeName}}</span>
                       </div>
                     </div>
                     <div class="jus-e right" @click="switchPath('/pages/myson/consume/main')">
@@ -27,12 +27,12 @@
                   <div class="bottom ali-c jus-b">
                     <div class="ali-c">
                       <div>
-                        <p><span>￥</span>18800</p>
+                        <p><span>￥</span>{{data.Wallet}}</p>
                         <span>余额</span>
                       </div>
-                      <div>
-                        <p>6.8<span>折</span></p>
-                        <span>余额</span>
+                      <div v-if="data.IsVip">
+                        <p>{{data.Discount}}<span>折</span></p>
+                        <span>项目折扣</span>
                       </div>
                     </div>
                     <p class="flexc ca" @click="switchPath('/pages/myson/recharge/main')">充值</p>
@@ -40,6 +40,7 @@
                 </div>
             </div>
       </div>
+      <div class="btn" @click="switchPath('/pages/home/card/main')">立即开通</div>
   </div>
 </template>
 
@@ -51,12 +52,15 @@ export default {
   
   data () {
     return {
-      swiperIndex:0,
-      data:[]
+      data:{},
+      userId:"",
+      token:"",
     }
   },
   onShow(){
-    
+    this.userId = wx.getStorageSync("userId");
+    this.token = wx.getStorageSync("token");
+    this.getData()
   },
 
   methods: {
@@ -71,6 +75,16 @@ export default {
         url
       })
     },
+    getData(){//查询会员状态
+      post('User/QueryVipInfo',{
+        UserId: this.userId,
+        Token: this.token
+      }).then(res=>{
+        if(res.code==0){
+          this.data = res.data
+        }
+      })
+    }
     
     
   },
@@ -166,5 +180,15 @@ export default {
   }
   .ca{
     color:#1a1a1a!important;
+  }
+  .b_card{
+    min-height: 100vh
+  }
+  .btn{
+    background: #a1782c;color:#ffffff;
+    text-align: center;
+    position: fixed;
+    bottom:0;height:88rpx;line-height: 88rpx;
+    bottom:0;width:750rpx;
   }
 </style>

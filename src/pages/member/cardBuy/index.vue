@@ -14,7 +14,7 @@
                     <p class="font24 mt2">项目折扣</p>
                     <p class="font24 mt2">6.8折</p>
                 </div> -->
-                <div class="card_detailb">
+                <!-- <div class="card_detailb">
                     <div class="font30 flex new_f1 justifyContentBetween">
                         <p>{{item.GradeName}}</p>
                         <p>￥{{item.BuyPrice}}元</p>
@@ -23,8 +23,8 @@
                         <p>项目折扣</p>
                         <p>{{item.Discount}}折</p>
                     </div>
-                </div>
-                <!-- <div class="card_detailb">
+                </div> -->
+                <div class="card_detailb">
                   <div class="top jus-b">
                     <div class="ali-c left">
                       <img src="/static/images/ava.png" alt="">
@@ -50,7 +50,7 @@
                     </div>
                     <p class="flexc ca" @click="switchPath('/pages/myson/recharge/main')">充值</p>
                   </div>
-                </div> -->
+                </div>
             </div>
           </swiper-item>
         </swiper>
@@ -101,6 +101,7 @@ export default {
     }
   },
   onShow(){
+    
     this.getData()
   },
   methods: {
