@@ -168,16 +168,18 @@ export default {
     buy(){
       let num = 0
       let id = 0
+      let price = 0
       this.data.map(item=>{
         item.Info.map(item2=>{
           if(item2.sonShow){
               num++;
               id = item2.Id
+              price = item2.Denomination
           }
         })
       })
       if(num>0){
-        wx.navigateTo({url:'/pages/myson/jiesuan/main'})
+        wx.navigateTo({url:'/pages/myson/jiesuan/main?id='+id+'&price='+price+"&type=2"})
       }else{
         wx.showToast({
           title:"请选择购买的项目~",icon:"none"
