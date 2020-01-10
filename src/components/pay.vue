@@ -33,7 +33,7 @@
         />
         <text>选择支付方式</text>
       </div>
-      <div>
+      <div class="gou">
         <radio-group @change="changes">
           <label class="flex-between payitem" v-if="payMode==='wx'||payMode==='none'">
             <div class="flex-center">

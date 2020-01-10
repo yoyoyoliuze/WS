@@ -39,8 +39,11 @@
         "editinfo/main",
         "card/main",
         "cika/main",
+        "cikadetail/main",
         "ticket/main",
         "right/main",
+        "setPwd/main",
+        "cardBuy/main",
         "set/main"
       ]
     },

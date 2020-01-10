@@ -25,14 +25,14 @@ export default {
     return {
       info:{},
       list:[
-        {title:'客户电话',url:'/pages/myson2/setPwd/main'},
-        {title:'用户须知',url:'/pages/myson2/changePwd/main'},
-        {title:'用户授权 ',url:'/pages/myson2/changePwd/main'}
+        {title:'客户电话',url:''},
+        {title:'用户须知',url:''},
+        {title:'用户授权 ',url:''},
+        {title:'支付密码 ',url:'/pages/member/setPwd/main'}
       ]
     }
   },
   methods: {
-    
     switchPath(url){
       wx.navigateTo({
         url

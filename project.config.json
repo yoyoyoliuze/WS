@@ -107,8 +107,8 @@
 					"scene": null
 				},
 				{
-					"id": -1,
-					"name": "会员卡",
+					"id": 8,
+					"name": "首页充值会员卡",
 					"pathName": "pages/home/card/main",
 					"query": "",
 					"scene": null
@@ -163,7 +163,7 @@
 					"scene": null
 				},
 				{
-					"id": -1,
+					"id": 16,
 					"name": "项目详情",
 					"pathName": "pages/other/serdetail/main",
 					"query": "",
@@ -210,7 +210,7 @@
 					"scene": null
 				},
 				{
-					"id": -1,
+					"id": 23,
 					"name": "我的次卡",
 					"pathName": "pages/member/ticket/main",
 					"query": "",
@@ -228,6 +228,39 @@
 					"name": "pages/myson/jiesuan/main",
 					"pathName": "pages/myson/jiesuan/main",
 					"query": "",
+					"scene": null
+				},
+				{
+					"id": -1,
+					"name": "次卡详情",
+					"pathName": "pages/member/cikadetail/main",
+					"query": "",
+					"scene": null
+				},
+				{
+					"id": -1,
+					"name": "设置支付密码",
+					"pathName": "pages/member/setPwd/main",
+					"query": "",
+					"scene": null
+				},
+				{
+					"id": 28,
+					"name": "会员中心",
+					"pathName": "pages/member/cardBuy/main",
+					"query": "",
+					"scene": null
+				},
+				{
+					"id": -1,
+					"name": "会员充值",
+					"pathName": "pages/myson/recharge/main",
+					"scene": null
+				},
+				{
+					"id": -1,
+					"name": "个人中心",
+					"pathName": "pages/mine/main",
 					"scene": null
 				}
 			]

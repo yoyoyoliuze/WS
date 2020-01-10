@@ -48,13 +48,13 @@
         <div class="card">
           <p class="tit ali-c">我的服务</p>
           <div class="icon-box icon-boxb flex-wrap ali-c">
-            <div class="icon flexc" @click="switchPath('/pages/home/card/main',$event)">
+            <div class="icon flexc" @click="switchPath('/pages/member/card/main',$event)">
               <div>
                 <img src="/static/images/my_icon_4.png" alt="">
                 <p>会员卡</p>
               </div>
             </div>
-            <div class="icon flexc" @click="switchPath('/pages/home/card/main',$event)">
+            <div class="icon flexc" @click="switchPath('/pages/member/ticket/main',$event)">
               <div>
                 <img src="/static/images/my_icon_9.png" alt="">
                 <p>会员次卡</p>

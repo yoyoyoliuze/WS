@@ -1,44 +1,52 @@
 <template>
   <div>
       <div class="tab flex">
-        <div class="flex1 flexc" :class="{'active':tabIndex==index}" v-for="(item, index) in tabList" :key="index" @click="cliTab(index)">{{item}}</div>
+        <div class="flex1 flexc" :class="{'active':Status==item.Id}" v-for="(item, index) in tabList" :key="index" @click="cliTab(item,index)">{{item.Name}}</div>
         <span :style="'left:'+tabStyle+'rpx'"></span>
       </div>
-      <div class="pp3 bg_fff mt2 flex justifyContentBetween flexAlignCenter">
+      <div class="pp3 bg_fff mt2 flex justifyContentBetween flexAlignCenter" @click="switchPath('/pages/member/cika/main')">
           <div class="flex flexAlignCenter">
               <img src="/static/images/my_icon_9.png" alt="" class="cc_car">
               <span class="mr2">次卡中心</span>
           </div>
           <img src="/static/images/icons/more.png" alt="" class="icon_right">
       </div>
-      <div class="list pw3">
-          <div class="cc_item" v-for="(item,index) in 4" :key="index">
-              <img src="/static/images/icons/c1.png" alt="" class="cc_img">
-              <!-- <img src="/static/images/icons/c2.png" alt="" class="cc_img"> -->
-              <div class="cc_main flex justifyContentBetween flexAlignCenter">
-                  <p class="font30">会员此卡</p>
-                  <div class="cc_right">
-                      <p>服务项目-雕花甲</p>
-                      <p class="font22 mt1">剩余次数5/10</p>
-                      <p class="flex justifyContentBetween font22 mt1">
-                        <span>次卡权益</span>
-                        <span class="cc_use" :class="index==3?'active':''">立即使用</span>
-                      </p>
-                  </div>
-              </div>
-          </div>
-      </div>
+      <scroll-view scroll-y @scrolltolower="loadMore" class="certlistBox">
+        <div class="list pw3" v-if="list.length>0">
+            <div class="cc_item" v-for="(item,index) in list" :key="index">
+                <img src="/static/images/icons/c1.png" alt="" class="cc_img" v-if="Status==1">
+                <img src="/static/images/icons/c2.png" alt="" class="cc_img" v-if="Status==3">
+                <div class="cc_main flex justifyContentBetween flexAlignCenter">
+                    <p class="font30">会员次卡</p>
+                    <div class="cc_right">
+                        <p>服务项目-{{item.Title}}</p>
+                        <p class="font22 mt1">剩余次数{{item.CardNum}}/{{item.UseNum}}</p>
+                        <p class="flex justifyContentBetween font22 mt1">
+                          <span>次卡权益</span>
+                          <span class="cc_use" :class="item.Enable==2?'active':''" @tap="useCard(item)">立即使用</span>
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div style="padding:200rpx 0;text-align:center" v-else>暂无数据</div>
+      </scroll-view>
   </div>
 </template>
 
 <script>
+import {post} from '@/utils/index';
 export default {
 
   data () {
     return {
-      tabList:['可使用','已失效'],
+      tabList:[{Id:1,Name:"可使用"},{Id:3,Name:"已失效"}],
       tabIndex:0,
-      
+      userId:"",
+      token:"", 
+      Status:1,//0-全部  1-可用 2-已使用 3-已核销
+      list:[]
+
     }
   },
   computed: {
@@ -47,7 +55,10 @@ export default {
     }
   },
   onShow(){
-    
+    this.list = []
+    this.userId = wx.getStorageSync("userId")
+    this.token = wx.getStorageSync("token")
+    this.getData()
   },
   methods: {
     goUrl(url,param){
@@ -55,12 +66,60 @@ export default {
           url:url+'?id='+param
         })
     },
-    cliServer(index){
-      this.serverIndex = index
+    switchPath(path){
+        wx.navigateTo({
+          url:path
+        })
     },
-    cliTab(index){
+    cliTab(item,index){
+      this.Status = item.Id
       this.tabIndex = index
+      this.getData()
     },
+    getData(){
+      post('User/SubCardList',{
+        UserId:this.userId,
+        Token:this.token,
+        Status:this.Status,
+        Page:1
+      }).then(res=>{
+          if(res.code==0){
+            this.list = res.data
+          }
+      })
+    },
+    //立即使用服务次卡
+    useCard(item){
+      if(item.Enable==2){ //已失效
+        wx.showToast({
+          title:"该服务已失效~",
+          icon:"none"
+        })
+      }else{
+        if(item.ProductId==0&&item.ShopId==0){
+          wx.switchTab({
+              url:`/pages/index/main`
+          })
+        }else if(item.ProductId==0){ //去往店铺详情
+          wx.navigateTo({
+              url:`/pages/other/serdetail/main?id=`+item.ShopId
+          })
+        }else if(item.ShopId==0){ //去产品详情
+          wx.navigateTo({
+              url:`/pages/other/serdetail/main?id=`+item.ProductId
+          })
+        }
+        // wx.setStorageSync('submitPro',{
+        //   proId:item.ProductId,
+        //   shopId:item.ShopId,
+        //   time:60,
+        //   proNum:1
+        // })
+        // wx.navigateTo({
+        //     url:`/pages/other/apointtime/main`
+        // })
+      }
+    }
   },
 }
 </script>
@@ -110,6 +169,11 @@ export default {
 }
 .icon_right{
   width:13rpx;height:24rpx;
+}
+.certlistBox {
+  height: calc(100vh - 200rpx);
+  overflow: hidden;
+  overflow-y: auto;
 }
 
 
