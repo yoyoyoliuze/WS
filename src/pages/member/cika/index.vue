@@ -24,7 +24,7 @@
                         <div class="flex flexColumn flexAlignCenter">
                             <p>{{item2.Name}}</p>
                             <p class="font24">（服务次数：10次）</p>
-                            <p class="cr">{{item2.Denomination}}元</p>
+                            <p class="cr">{{item2.MeetConditions}}元</p>
                         </div>
                         <div class="dd_see" :class="item2.sonShow?'active_btn':''" @tap="seeDetail(item2)">查看详情</div>
                       </div>  

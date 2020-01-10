@@ -23,7 +23,7 @@
                         <p class="font22 mt1">剩余次数{{item.CardNum}}/{{item.UseNum}}</p>
                         <p class="flex justifyContentBetween font22 mt1">
                           <span>次卡权益</span>
-                          <span class="cc_use" :class="item.Enable==2?'active':''">立即使用</span>
+                          <span class="cc_use" :class="item.Enable==2?'active':''" @tap="useCard(item)">立即使用</span>
                         </p>
                     </div>
                 </div>
@@ -87,6 +87,38 @@ export default {
             this.list = res.data
           }
       })
+    },
+    //立即使用服务次卡
+    useCard(item){
+      if(item.Enable==2){ //已失效
+        wx.showToast({
+          title:"该服务已失效~",
+          icon:"none"
+        })
+      }else{
+        if(item.ProductId==0&&item.ShopId==0){
+          wx.switchTab({
+              url:`/pages/index/main`
+          })
+        }else if(item.ProductId==0){ //去往店铺详情
+          wx.navigateTo({
+              url:`/pages/other/serdetail/main?id=`+item.ShopId
+          })
+        }else if(item.ShopId==0){ //去产品详情
+          wx.navigateTo({
+              url:`/pages/other/serdetail/main?id=`+item.ProductId
+          })
+        }
+        // wx.setStorageSync('submitPro',{
+        //   proId:item.ProductId,
+        //   shopId:item.ShopId,
+        //   time:60,
+        //   proNum:1
+        // })
+        // wx.navigateTo({
+        //     url:`/pages/other/apointtime/main`
+        // })
+      }
     }
   },
 }
