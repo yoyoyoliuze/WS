@@ -87,16 +87,23 @@ export default {
     async submit(){
       console.log(this.payType,"this.payType")
       if(this.payType==1){ //微信支付
-        post('Order/WeiXinSmallSubCard',{
+      //会员卡跟次卡接口不同
+      let objUrl = ''
+      if(this.type==1){
+        objUrl = 'Order/WeiXinSmallVipGoods'
+      }else{
+         objUrl = 'Order/WeiXinSmallSubCard'
+      }
+      const res = await post(objUrl,{
           UserId:this.userId,
           Token:this.token,
           Id:this.Id*1
-        }).then(res=>{
-            if(res.code==0){
-              const pay = await wx_pay(res.data.JsParam)
-              this.paySuccess(pay)
-            }
         })
+        if(res.code==0){
+          const pay = await wx_pay(res.data.JsParam)
+          this.paySuccess(pay)
+        }
+       
       }else{
         //余额支付
         this.isShow = true
@@ -132,7 +139,13 @@ export default {
         })
     },
     async success(){
-      post('Order/SubCardPay',{
+      let objUrl = ''
+      if(this.type==1){
+        objUrl = 'Order/VipGoodsPay'
+      }else{
+         objUrl = 'Order/SubCardPay'
+      }
+      post(objUrl,{
           UserId: this.userId,
           Token: this.token,
           Id:this.Id,

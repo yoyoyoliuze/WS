@@ -24,33 +24,6 @@
                         <p>{{item.Discount}}折</p>
                     </div>
                 </div>
-                <!-- <div class="card_detailb">
-                  <div class="top jus-b">
-                    <div class="ali-c left">
-                      <img src="/static/images/ava.png" alt="">
-                      <div>
-                        <p>巴啦啦小魔仙</p>
-                        <span>金卡会员</span>
-                      </div>
-                    </div>
-                    <div class="jus-e right" @click="switchPath('/pages/myson/consume/main')">
-                      <p>消费流水</p>
-                    </div>
-                  </div>
-                  <div class="bottom ali-c jus-b">
-                    <div class="ali-c">
-                      <div>
-                        <p><span>￥</span>18800</p>
-                        <span>余额</span>
-                      </div>
-                      <div>
-                        <p>6.8<span>折</span></p>
-                        <span>余额</span>
-                      </div>
-                    </div>
-                    <p class="flexc" @click="switchPath('/pages/myson/recharge/main')">充值</p>
-                  </div>
-                </div> -->
             </div>
           </swiper-item>
         </swiper>
@@ -82,7 +55,7 @@
               </div>
           </div>
       </div>
-      <div class="btn_fix" @click="switchPath('/pages/myson/jiesuan/main')">立即升级会员</div>
+      <div class="btn_fix" @click="submit">立即升级会员</div>
   </div>
 </template>
 
@@ -138,8 +111,16 @@ export default {
            console.log(res.data)
            this.detail = res.data
       })
-     
-      
+    },
+    submit(){
+      console.log(this.swiperIndex)
+      let info = {}
+      this.data.map((item,index)=>{
+        if(index==this.swiperIndex){
+          info = item
+        }
+      })
+      wx.navigateTo({url:'/pages/myson/jiesuan/main?id='+info.Id+'&price='+info.BuyPrice+"&type=1"})
     }
     
   },

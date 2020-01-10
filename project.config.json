@@ -107,8 +107,8 @@
 					"scene": null
 				},
 				{
-					"id": -1,
-					"name": "会员卡",
+					"id": 8,
+					"name": "首页充值会员卡",
 					"pathName": "pages/home/card/main",
 					"query": "",
 					"scene": null
