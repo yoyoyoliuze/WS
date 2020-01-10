@@ -227,7 +227,7 @@ export default {
           })
         }
         this.couponList = data.UseCouponList;
-      })
+      }),this.getData;
     },
     // 选择优惠券
     couponConfirm(){
@@ -262,6 +262,7 @@ export default {
         Token:this.Token,
         ProIdList:this.submitPro.proId,
         MakeTime:this.submitPro.date,
+        ArtId:this.submitPro.artId||'',
         CouponId:this.selectCouponItem.Id||'',
         ContactName:this.name,
         Tel:this.phone,

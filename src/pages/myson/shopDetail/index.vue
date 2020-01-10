@@ -1,7 +1,7 @@
 <template>
-  <div style="padding-bottom:100rpx" :class="{'p-top':isP}">
+  <div :style="type==0?'padding-bottom:100rpx':''" :class="{'p-top':isP}">
       <div class="top">
-        <img class="bg" src="/static/images/ava.png" alt="">
+        <img class="bg" :src="shopDetail.Logo" alt="" mode="aspectFill">
         <div class="main">
           <p class="name">{{shopDetail.ShopNick}}</p>
           <div class="flex-warp ali-c tag">
@@ -35,8 +35,8 @@
           @click="cliTab(index)">{{item}}</div>
         <span :style="'left:'+tabStyle+'rpx'"></span>
       </div>
-
-      <div class="serverBox">
+      <!-- 服务项目 -->
+      <div class="serverBox" v-if="type==0">
           <div class="server-list-box"  v-for="(pro, index) in proList" :key="index" v-show="pro.list.length>0">
             <div class="tit jus-b ali-c" @click="pro.status = !pro.status">
               <span>{{pro.Name}}({{pro.list.length}})</span>
@@ -44,10 +44,10 @@
             </div>
             <div class="list-box flex-wrap jus-b" v-show="pro.status">
               <div class="list" v-for="(item, itemIndex) in pro.list" :key="itemIndex">
-                <div class="box" :style="item.status?'border: solid 4rpx #cc9f68;':''" @click="item.status = !item.status">
+                <div class="box" :style="item.status?'border: solid 4rpx #cc9f68;color:#ff3333;':''" @click="item.status = !item.status">
                   <img src="/static/images/icons/gou.png" class="gou" alt="" v-show="item.status">
                   <p>{{item.Name}}</p>
-                  <p >(服务时长：{{item.HourNum*60}})</p>
+                  <p >(服务时长：{{item.HourNum*60}}分钟)</p>
                   <p>{{item.Price}}元</p>
                 </div>
                 <p class="flexc" @click="goProDetail(item.Id)">查看详情</p>
@@ -55,26 +55,30 @@
             </div>
           </div>
       </div>
-
-      <div class="jishi-box" v-if="false">
-        <div class="jishi ali-c jus-b">
+      <!-- 技师 -->
+      <div class="jishi-box" v-if="type==1">
+        <div class="jishi ali-c jus-b" v-for="(item,index) in artiftcerList" :key="index" 
+          @click.stop="goArtDetail(item.ArtId)">
           <div class="ali-c left">
-            <img class="ava" src="/static/images/ava.png" alt="">
+            <img class="ava" :src="item.ArtificerPic" alt="">
             <div>
               <div class="ali-c one">
-                <p>巴啦啦小魔仙</p>
-                <span class="flexc">店长</span>
+                <p>{{item.Name}}</p>
+                <span class="flexc">{{item.LvlName}}</span>
               </div>
-              <p class="two">13553206236</p>
+              <p class="two">{{item.Mobile}}</p>
               <div class="ali-c thr">
                 <img src="/static/images/my_icon_7.png" alt="">
                 <span>好评率</span>
-                <span>100%</span>
+                <span>{{item.FeedbackRate}}%</span>
               </div>
             </div>
           </div>
-          <div class="right flexc">预约</div>
+          <div class="right flexc" @click.self="yyArtiftcer(item.ArtId)">预约</div>
+          <!-- <div class="right flexc" v-if="item.IsRest">预约</div>
+          <div class="right flexc rest" v-else>休息中</div> -->
         </div>
+        <div class="notData" v-if="artiftcerList.length<1">该店铺没有绑定技师哦~</div>
       </div>
 
       <div class="server-box">
@@ -152,9 +156,9 @@
         </div>
       </div>
 
-      <div class="kefu flexc">联系客服（10:00~18:00）</div>
+      <div class="kefu flexc">联系客服（{{shopDetail.BusinessHours}}）</div>
       
-      <div class="pp3 flex justifyContentBetween fixed bg_fff mt2">
+      <div class="pp3 flex justifyContentBetween fixed bg_fff mt2" v-if="type==0">
           <div> 
             <span><span class="cr">{{allNum}}个</span>项目</span>  
             <span class="cen_text"> 服务时长<span class="cr">{{totalTime}}分钟</span></span>
@@ -188,11 +192,12 @@ export default {
     if(options.server==0){
       this.tabList.splice(0,1,'服务')
     }
-    this.getDetail()
-    this.getClassify()
-    // Promise.all([this.getProList(),this.getClassify()]).then(()=>{
-    //   this.setData();
-    // })
+    this.getDetail();
+    if(options.server==0){
+      this.getClassify();
+    }else{
+      this.getArtificerList();
+    }
   },
   computed: {
     tabStyle(){
@@ -223,20 +228,7 @@ export default {
       return time;
     }
   },
-  watch:{
-    proList(){
-      this.proList.map(item=>{
-        
-      })
-    }
-  },
   methods: {
-    scroll(el){
-      wx.pageScrollTo({
-        selector:el,
-        duration: 300
-      })
-    },
     getDetail(){
       post('Shop/ReadShop',{
         Lat:wx.getStorageSync('location').lat,
@@ -305,6 +297,12 @@ export default {
         this.scroll('.info')
       }
     },
+    scroll(el){
+      wx.pageScrollTo({
+        selector:el,
+        duration: 300
+      })
+    },
     // 预约订单提交
     yysubmit(){
       let proId=[];
@@ -326,9 +324,28 @@ export default {
             url:`/pages/other/apointtime/main`
         })
     },
+    // 预约技师
+    yyArtiftcer(artId){
+       wx.setStorageSync('submitPro',
+        {
+          proId:'',
+          artId,
+          shopId:this.shopId,
+          time:0,
+          proNum:0
+        })
+      wx.navigateTo({
+        url:"/pages/other/yuyue/main"
+      })
+    },
     goProDetail(id){
       wx.navigateTo({
-        url:"/pages/other/serdetail/main?id="+id
+        url:"/pages/myson/serdetail/main?id="+id
+      })
+    },
+    goArtDetail(id){
+      wx.navigateTo({
+        url:"/pages/myson/jishiDetail/main?artId="+id
       })
     }
   },
@@ -574,6 +591,9 @@ export default {
       border-radius: 6rpx;
       color: #fff;
     }
+    .rest{
+      background-color:#ccc;
+    }
     .left{
       .ava{
         width: 120rpx;
@@ -587,7 +607,7 @@ export default {
 	        font-weight: bold;
         }
         span{
-          width: 60rpx;
+          padding:0 10rpx;
           height: 32rpx;
           background-color: #cc9f68;
           border-radius: 4rpx;
@@ -726,5 +746,9 @@ export default {
     color: #fff;
     padding: 40rpx 30rpx;
   }
+}
+.notData{
+  color:#999;
+  text-align:center;
 }
 </style>

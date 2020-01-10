@@ -4,38 +4,38 @@
         <div class="top">
           <div class="ava flexc">
             <div>
-              <img src="/static/images/ava.png" alt="">
+              <img :src="artInfo.ArtificerPic" alt="">
               <div class="flexc">
-                <p>sadnjk</p>
-                <span class="flexc">店长</span>
+                <p>{{artInfo.Name}}</p>
+                <span class="flexc">{{artInfo.LvlName}}</span>
               </div>
             </div>
           </div>
           <div class="pinglun flex">
           <div class="flex1 flexc">
             <div>
-              <p>98%</p>
+              <p>{{artInfo.FeedbackRate}}%</p>
               <span>好评率</span>
             </div>
           </div>
           <div class="flex1 flexc">
             <div>
-              <p>365</p>
+              <p>{{artInfo.MakeNum}}</p>
               <span>被预约</span>
             </div>
           </div>
           <div class="flex1 flexc">
             <div class="thr">
-              <p>12</p>
+              <p>{{artInfo.FollowNum}}</p>
               <span>关注</span>
             </div>
           </div>
         </div>
         </div>
         <div class="call ali-c jus-b">
-          <p>万色印象万众城店</p>
+          <p v-if="artInfo.ShopData">{{artInfo.ShopData.ShopNick}}</p>
           <div>
-            <img src="/static/images/detail/phone.png" alt="">
+            <img src="/static/images/detail/phone.png" alt="" @click="call">
             <img src="/static/images/detail/address.png" alt="">
             <img src="/static/images/detail/love.png" alt="">
           </div>
@@ -113,48 +113,42 @@
 
       <div class="info">
         <p class="tit">技师特长</p>
-        <div class="list ali-c">
+        <div class="list line ali-c" v-for="(val,key,index) in speciality" :key="index">
           <span class="dian"></span>
-          <p>纹绣</p>
-          <span class="text">(纹眉、纹眉、纹眼线)</span>
-        </div>
-        <div class="list ali-c">
-          <span class="dian"></span>
-          <p>纹绣</p>
-          <span class="text">(纹眉、纹眉、纹眼线)</span>
-        </div>
-        <div class="list ali-c">
-          <span class="dian"></span>
-          <p>纹绣</p>
-          <span class="text">(纹眉、纹眉、纹眼线)</span>
+          <p>{{key}}</p>
+          <span class="text">{{val}}</span>
         </div>
       </div>
 
       <div class="jishi">
         <div class="tit ali-c"><p>技师图片</p></div>
-        <scroll-view scroll-x enable-flex class="jishi-img ali-c">
-          <div class="ali-c" v-for="(item, index) in imgList" :key="index">
-            <img mode='aspectFill' src="/static/images/jishi.png" alt="">
+        <scroll-view scroll-x enable-flex class="jishi-img">
+          <div class="item"  v-for="(item, index) in artInfo.PicData" :key="index">
+            <img :src="item.PicUrl" alt="" >
           </div>
+            <!-- <img mode='aspectFill' :src="item.PicUrl" alt=""  
+              v-for="(item, index) in artInfo.PicData" :key="index"> -->
         </scroll-view>
       </div>
       
       <div class="bottom ali-c jus-b">
         <p>前面有3人，约等待60分钟</p>
-        <div class="flexc">预约</div>
+        <div class="flexc" @click="submit">预约</div>
       </div>
   </div>
 </template>
 
 <script>
-
+import {post,callPhone} from '@/utils/index'
 export default {
-
+  name:'技师详情',
   data () {
     return {
       tabList:['服务评价','技师特长','Ta的作品'],
       tabIndex:0,
-      imgList:[,,,,,,]
+      artInfo:{},
+      artId:'',
+      speciality:{},//专长
     }
   },
   computed: {
@@ -162,9 +156,39 @@ export default {
       return ((750/this.tabList.length)*this.tabIndex)+(((750/this.tabList.length)-50)/2)
     }
   },
+  onLoad(options){
+    this.artId = options.artId;
+    this.getArtInfo();
+  },
   methods: {
+    // 获取技师信息
+    getArtInfo(){
+      post('Shop/GetShopArtificerxq',{
+          ArtId:this.artId
+      }).then(res=>{
+        this.artInfo = res.data;
+        this.speciality = JSON.parse(res.data.Speciality);
+      })
+    },
+    // 提交
+    submit(){
+       wx.setStorageSync('submitPro',
+        {
+          proId:'',
+          artId:this.artId,
+          shopId:this.artInfo.ShopId,
+          time:0,
+          proNum:0
+        })
+      wx.navigateTo({
+        url:"/pages/other/yuyue/main"
+      })
+    },
     cliTab(index){
       this.tabIndex = index
+    },
+    call(){
+      callPhone(this.artInfo.Mobile)
     },
   },
 }
@@ -194,12 +218,13 @@ export default {
 }
 .jishi{
   background-color: #fff;
-  padding:  0 0 30rpx 30rpx;
+  padding:  0 0 30rpx 0;
   margin-top: 20rpx;
   .tit{
     height: 88rpx;
     font-size: 32rpx;
     font-weight: 900;
+    padding:0 30rpx;
     span{
       width: 5rpx;
       height: 28rpx;
@@ -210,14 +235,20 @@ export default {
   }
   .jishi-img{
     height: 180rpx;
-
+    width:100%;
+    display:flex;
+    .item{
+      width: 180rpx;
+      height: 180rpx;
+      margin-left:30rpx;
+      &:last-child{
+      padding-right:30rpx;
+      }
+    }
     img{
-      display: inline-block;
       width: 180rpx;
       height: 180rpx;
       border-radius: 8rpx;
-      margin-right: 20rpx;
-      
     }
   }
 }
@@ -268,7 +299,8 @@ export default {
       margin-right: 20rpx;
     }
     span{
-      width: 60rpx;
+      // width: 60rpx;
+      padding:0 10rpx;
       height: 32rpx;
       background-color: #cc9f68;
       border-radius: 4rpx;
@@ -295,7 +327,7 @@ export default {
   .list{
     margin-left: 20rpx;
     height: 88rpx;
-    border-left: 2rpx solid #cccccc;
+    // border-left: 2rpx solid #cccccc;
     .dian{
       width: 16rpx;
       height: 16rpx;
@@ -304,11 +336,30 @@ export default {
       margin-right: 20rpx;
       background-color: #fff;
       position: relative;
-      left: -11rpx;
+      left: -10rpx;
     }
     .text{
       margin-left: 10rpx;
       color: #999
+    }
+  }
+  .line{
+    position:relative;
+    &:before{
+      position:absolute;
+      left:-1rpx;
+      top:50%;
+      width:2rpx;
+      height:80rpx;
+      content:'';
+      display:block;
+      background:#cccccc;
+    }
+    &:last-child{
+      &:before{
+        width:0;
+        height:0;
+      }
     }
   }
   
@@ -478,5 +529,4 @@ export default {
     background-color: #cc9f68
   }
 }
-
 </style>

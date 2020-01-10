@@ -428,6 +428,12 @@ export function get_time_diff(time) {
 
   return diff;
 }
+// 拨打电话
+export function callPhone(phone){
+  wx.makePhoneCall({
+    phoneNumber:phone,
+  })
+}
 // module.exports = {
 //   dateUtils: dateUtils,
 // }
