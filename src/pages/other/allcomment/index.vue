@@ -1,68 +1,65 @@
 <template>
   <div>
      <div class="bg_fff pw3 flex flexWrap all_title">
-        <p class="item_col active"><span>全部</span><span>(523)</span></p>
-        <p class="item_col"><span>有图</span><span>(523)</span></p>
-        <p class="item_col"><span>满意</span><span>(523)</span></p>
-        <p class="item_col"><span>一般</span><span>(523)</span></p>
-        <p class="item_col"><span>不满意</span><span>(523)</span></p>
+        <p class="item_col" :class="{'active':type===0}" @click="onTabs(0)"><span>全部</span><span>({{comment.CommentCount}})</span></p>
+        <p class="item_col" :class="{'active':type===1}" @click="onTabs(1)"><span>有图</span><span>({{comment.PicNum}})</span></p>
+        <p class="item_col" :class="{'active':type===2}" @click="onTabs(2)"><span>满意</span><span>({{comment.TallNum}})</span></p>
+        <p class="item_col" :class="{'active':type===3}" @click="onTabs(3)"><span>一般</span><span>({{comment.HitNum}})</span></p>
+        <p class="item_col" :class="{'active':type===4}" @click="onTabs(4)"><span>不满意</span><span>({{comment.LowNum}})</span></p>
      </div>
      <div class="mt2 pw3 bg_fff">
-        <div class="p3 flex coll_item">
+        <div class="p3 flex coll_item" v-for="(item,index) in commentList" :key="index">
             <div class="ava_box justifyContentBetween">
-                <img src="/static/images/ava.png" alt="" class="ava">
+                <img :src="item.Avatar" alt="" class="ava">
             </div>
             <div class="flex1">
                 <div class="flex justifyContentBetween">
-                    <p><span class="fb">Franke</span><span class="font24 cg">(13553265236)</span></p>
+                    <p><span class="fb">{{item.NickName}}</span><span class="font24 cg">({{item.Mobile}})</span></p>
                     <p class="tag_lo">
-                        <img src="/static/images/icons/s1.png" alt="" class="ss">
-                        <img src="/static/images/icons/s3.png" alt="" class="ss" style="display:none">
-                        <span class="col_tag">满意</span>
+                        <img v-if="item.Rank==3" src="/static/images/icons/s1.png" alt="" class="ss">
+                        <img v-if="item.Rank==2" src="/static/images/icons/s2.png" alt="" class="ss">
+                        <img v-if="item.Rank==1" src="/static/images/icons/s3.png" alt="" class="ss">
+                        <span class="col_tag">{{item.Rank==1?'不满意':item.Rank==2?'一般':'满意'}}</span>
                     </p>
                 </div>
-                <div>美甲做的很好看，而且很实话，物美价廉的感觉，很喜欢。</div>
+                <div>{{item.ContentText}}</div>
                 <div class="cg font24 flex justifyContentBetween mt1">
-                  <p>技师：Alisa</p>
-                  <p>2019-11-21</p>
-                </div>
-            </div>
-        </div>
-        <div class="p3 flex coll_item">
-            <div class="ava_box justifyContentBetween">
-                <img src="/static/images/ava.png" alt="" class="ava">
-            </div>
-            <div class="flex1">
-                <div class="flex justifyContentBetween">
-                    <p><span class="fb">Franke</span><span class="font24 cg">(13553265236)</span></p>
-                    <p class="tag_lo">
-                        <img src="/static/images/icons/s2.png" alt="" class="ss">
-                        <span class="col_tag">一般</span>
-                    </p>
-                </div>
-                <div>美甲做的很好看，而且很实话，物美价廉的感觉，很喜欢。</div>
-                <div class="cg font24 flex justifyContentBetween mt1">
-                  <p>技师：Alisa</p>
-                  <p>2019-11-21</p>
+                  <p>技师：{{item.ArtName}}</p>
+                  <p>{{item.AddTime}}</p>
                 </div>
             </div>
         </div>
      </div>
+      <div class="notData" v-if="commentList.length<1">暂无数据</div>
+      <div class="notData" v-if="notData&&page!=1">已经到底了</div>
       
   </div>
 </template>
 
 <script>
 
-import '@/style/bb.scss'
-
+import '@/style/bb.scss';
+import {post} from "@/utils/index";
 export default {
   data () {
     return {
-      
+      shopId:'',
+      artId:'',
+      comment:{},
+      commentList:[],
+      type:0,
+      page:1,
+      pageSize:12,
+      notData:false,
     }
   },
-  onShow(){
+  onLoad(options){
+    this.shopId = options.shopId||'';
+    this.artId = options.artId||'';
+    this.page=1;
+    this.notData = false;
+    this.getComment();
+    this.getCommentList();
     this.setBarTitle()
   },
   components: {
@@ -75,10 +72,52 @@ export default {
             title: "全部评价"
         });
     },
+    getComment(){
+      post('Order/OrderCommentHz',{
+        ArtId:this.artId,
+        ShopId:this.shopId
+      }).then(res=>{
+        this.comment = res.data;
+      })
+    },
+    getCommentList(){
+      post('Order/OrderCommentList',{
+        ArtId:this.artId,
+        ShopId:this.shopId,
+        Type:this.type,
+        Page:this.page,
+        PageSize:this.pageSize,
+      }).then(res=>{
+        if(this.page===1){
+          this.commentList = [];
+          this.notData = false;
+        }
+        const data = res.data;
+        this.commentList.push(...res.data);
+        if(data.length<this.pageSize){
+          this.notData = true;
+        }
+      })
+    },
+    // 切换分类
+    onTabs(type){
+      this.type = type;
+      this.page=1;
+      this.getCommentList()
+    }
   },
-
-  created () {
-    // let app = getApp()
+  onPullDownRefresh(){
+    this.page=1;
+    this.notData = false;
+    this.getComment();
+    this.getCommentList();
+    wx.stopPullDownRefresh();
+  },
+  onReachBottom(){
+    if(!this.notData){
+      this.page+=1;
+      this.getCommentList();
+    }
   }
 }
 </script>
@@ -123,5 +162,10 @@ export default {
       margin-left:-10rpx;
       border-radius:0 15rpx 15rpx 0;
     }
+  }
+  .notData{
+    color:#999;
+    text-align:center;
+    line-height:3;
   }
 </style>

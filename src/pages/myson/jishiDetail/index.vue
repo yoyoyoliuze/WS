@@ -71,44 +71,47 @@
       <div class="server-box">
         <!-- <p class="tit">服务评价</p> -->
         <div class="server flex">
-          <div class="flex1 flexc">
+          <div class="flex1 flexc" v-if="comment.CommentCount">
             <div>
-              <p>98%</p>
+              <p>{{comment.GoodRate}}</p>
               <span>好评率</span>
             </div>
           </div>
           <div class="flex1 flexc">
             <div>
-              <p>1532</p>
+              <p>{{comment.CommentCount}}</p>
               <span>评论</span>
             </div>
           </div>
         </div>
-        <div class="comment jus-b">
-          <img class="left" src="/static/images/ava.png" alt="">
+        <div class="comment jus-b" v-if="comment.CommentCount&&comment.CommentList&&comment.CommentList[0]">
+          <img class="left" :src="comment.CommentList[0].Avatar" alt="">
           <div class="right">
             <div class="one jus-b">
               <div class="name ali-c">
-                <p>巴啦啦小魔仙</p>
-                <span>(13257927518)</span>
+                <p>{{comment.CommentList[0].NickName}}</p>
+                <span>({{comment.CommentList[0].Mobile}})</span>
               </div>
               <div class="ava ali-c jus-b">
-                <img src="/static/images/icons/s1.png" alt="">
-                <span>满意</span>
+                <img v-if="comment.CommentList[0].Rank==3" src="/static/images/icons/s1.png" alt="">
+                <img v-if="comment.CommentList[0].Rank==2" src="/static/images/icons/s2.png" alt="">
+                <img v-if="comment.CommentList[0].Rank==1" src="/static/images/icons/s3.png" alt="">
+                <span>{{comment.CommentList[0].Rank==1?'不满意':comment.CommentList[0].Rank==2?'一般':'满意'}}</span>
               </div>
             </div>
             <div class="text">
-              美甲做的很好看，而且很实话，物美价廉的感觉，很喜欢。
+              {{comment.CommentList[0].ContentText}}
             </div>
             <div class="ali-c jus-b time">
-              <p>技师：Alisa</p>
-              <p>2019-11-21</p>
+              <p>技师：{{comment.CommentList[0].ArtName}}</p>
+              <p>{{comment.CommentList[0].AddTime}}</p>
             </div>
           </div>
         </div>
-        <div class="btn-box flexc">
-          <p class="flexc">查看全部评价</p>
+        <div class="btn-box flexc" v-if="comment.CommentCount">
+          <p class="flexc" @click="goComment">查看全部评价</p>
         </div>
+        <div class="notData" v-if="!comment.CommentCount">暂无评价</div>
       </div>
 
       <div class="info">
@@ -149,6 +152,7 @@ export default {
       artInfo:{},
       artId:'',
       speciality:{},//专长
+      comment:{}
     }
   },
   computed: {
@@ -159,6 +163,7 @@ export default {
   onLoad(options){
     this.artId = options.artId;
     this.getArtInfo();
+    this.getComment();
   },
   methods: {
     // 获取技师信息
@@ -168,6 +173,15 @@ export default {
       }).then(res=>{
         this.artInfo = res.data;
         this.speciality = JSON.parse(res.data.Speciality);
+      })
+    },
+    // 获取评论
+    getComment(){
+      post('Order/OrderCommentHz',{
+        ArtId:this.artId,
+        ShopId:''
+      }).then(res=>{
+        this.comment = res.data;
       })
     },
     // 提交
@@ -190,6 +204,11 @@ export default {
     call(){
       callPhone(this.artInfo.Mobile)
     },
+    goComment(){
+      wx.navigateTo({
+        url:"/pages/other/allcomment/main?artId="+this.artId
+      })
+    }
   },
 }
 </script>
@@ -528,5 +547,9 @@ export default {
     width: 50rpx;
     background-color: #cc9f68
   }
+}
+.notData{
+  color:#999;
+  text-align:center;
 }
 </style>
