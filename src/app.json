@@ -1,9 +1,9 @@
 {
   "pages": [
     "pages/index/main",
-    "pages/order/main",
     "pages/mine/main",
     "pages/login/main",
+    "pages/order/main",
     "pages/login/register/main"
   ],
   "permission": {

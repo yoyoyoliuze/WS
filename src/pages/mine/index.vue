@@ -18,23 +18,23 @@
       </div>
       <div class="card-box">
         <div class="card">
-          <p class="tit ali-c">我的预约</p>
+          <p class="tit ali-c" @click="goto('/pages/order/main')">我的预约</p>
           <div class="icon-box flex-wrap ali-c">
-            <div class="icon flexc" @click="switchPath('/pages/myson/focus/main',$event)">
+            <div class="icon flexc" @click="goto('/pages/order/main',$event)">
               <div>
                 <img src="/static/images/my_icon_1.png" alt="">
                 <p>待服务</p>
                 <span class="flexc">2</span>
               </div>
             </div>
-            <div class="icon flexc" @click="switchPath('/pages/myson/focus/main',$event)">
+            <div class="icon flexc" @click="goto('/pages/order/main',$event)">
               <div>
                 <img src="/static/images/my_icon_2.png" alt="">
                 <p>已服务</p>
                 <span class="flexc">2</span>
               </div>
             </div>
-            <div class="icon flexc" @click="switchPath('/pages/myson/focus/main',$event)">
+            <div class="icon flexc" @click="goto('/pages/order/main',$event)">
               <div>
                 <img src="/static/images/my_icon_3.png" alt="">
                 <p>已取消</p>
@@ -109,7 +109,13 @@ export default {
   },
   methods: {
     switchPath(path){
+      console.log(path,"1111")
         wx.navigateTo({
+          url:path
+        })
+    },
+    goto(path){
+      wx.switchTab({
           url:path
         })
     },

@@ -262,6 +262,13 @@
 					"name": "个人中心",
 					"pathName": "pages/mine/main",
 					"scene": null
+				},
+				{
+					"id": -1,
+					"name": "我的预约",
+					"pathName": "pages/order/main",
+					"query": "",
+					"scene": null
 				}
 			]
 		}

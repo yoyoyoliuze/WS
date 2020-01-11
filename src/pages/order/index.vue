@@ -2,68 +2,76 @@
   <div>
       <div class="top-box flexc">
         <div class="top flex" :class="serverIndex==0?'leftShadow':'rightShadow'">
-          <div class="flex1 flexc" :class="{'active':serverIndex==index}" v-for="(item, index) in serverList" :key="index" @click="cliServer(index)">{{item}}</div>
+          <div class="flex1 flexc" :class="{'active':serverIndex==index}" v-for="(item, index) in serverList" :key="index" @click="cliServer(item,index)">{{item.Name}}</div>
           <span :style="serverIndex==1?'left:220rpx':''"></span>
         </div>
       </div>
       <div class="tab flex">
-        <div class="flex1 flexc" :class="{'active':tabIndex==index}" v-for="(item, index) in tabList" :key="index" @click="cliTab(index)">{{item}}</div>
+        <div class="flex1 flexc" :class="{'active':tabIndex==index1}" v-for="(item2, index1) in tabList" :key="index1" @click="cliTab(item2,index1)">{{item2.Name}}</div>
         <span :style="'left:'+tabStyle+'rpx'"></span>
       </div>
-      <div class="list" @click="goUrl('/pages/orderson/orderDetail/main','')">
-        <div class="tit ali-c">待服务</div>
-        <div class="main">
-          <div class="time-box ali-c">
-            <div class="flex1 flexc">
-              <div>
-                <p>js001</p>
-                <span>预约序号</span>
+      <div class="order_list" v-if="list.length>0">
+        <div class="list" v-for="(item1,key) in list" :key="key">
+          <div class="tit ali-c" @click="toDetail(item1)">待服务</div>
+          <div class="main">
+            <div class="time-box ali-c" @click="toDetail(item1)">
+              <div class="flex1 flexc">
+                <div>
+                  <p>{{item1.MakeNum}}</p>
+                  <span>预约序号</span>
+                </div>
+              </div>
+              <div style="width:50%" class="flexc">
+                <div>
+                  <p>{{item1.MakeDate}}</p>
+                  <span>预约日期</span>
+                </div>
+              </div>
+              <div class="flex1 flexc">
+                <div>
+                  <p>16:30</p>
+                  <span>开始时间</span>
+                </div>
               </div>
             </div>
-            <div style="width:50%" class="flexc">
-              <div>
-                <p>2019-12-20</p>
-                <span>预约日期</span>
+            <div class="address ali-c jus-b" @click="toDetail(item1)">
+              <div class="ali-c left">
+                <p>{{item1.ShopData.ShopName}}</p>
+                <img src="/static/images/more.png" alt="">
               </div>
+              <img class="right" src="/static/images/address_r.png" alt="">
             </div>
-            <div class="flex1 flexc">
-              <div>
-                <p>16:30</p>
-                <span>开始时间</span>
-              </div>
+            <div class="heji" @click="toDetail(item1)">
+              <div class="ali-c jus-b"><p>技师</p><span>{{item1.ArtData.ArtName}}</span></div>
+              <div class="ali-c jus-b"><p>电话</p><span>{{item1.ArtData.ArtTel}}</span></div>
+              <div class="ali-c jus-b"><p>服务项目</p><span>{{item1.serInfo.serve}}</span></div>
+              <div class="ali-c jus-b"><p>合计</p><span>￥{{item1.serInfo.total}}</span></div>
             </div>
-          </div>
-          <div class="address ali-c jus-b">
-            <div class="ali-c left">
-              <p>万色印象万众城店</p>
-              <img src="/static/images/more.png" alt="">
+            <div class="btn-box jus-e ali-c">
+              <p class="flexc" @tap="menuItem(item1)">{{item1.StatueSTR=='已服务'?'评价':(item1.StatueSTR=='待服务'?'取消预约':'重新预约')}}</p>
             </div>
-            <img class="right" src="/static/images/address_r.png" alt="">
-          </div>
-          <div class="heji">
-            <div class="ali-c jus-b"><p>技师</p><span>Alisa</span></div>
-            <div class="ali-c jus-b"><p>电话</p><span>13257927518</span></div>
-            <div class="ali-c jus-b"><p>服务项目</p><span>每家</span></div>
-            <div class="ali-c jus-b"><p>合计</p><span>￥48</span></div>
-          </div>
-          <div class="btn-box jus-e ali-c">
-            <p class="flexc">取消预约</p>
           </div>
         </div>
       </div>
+      <div v-else style="padding:200rpx 0;text-align:center">暂无数据</div>
   </div>
 </template>
 
 <script>
-import {switchPath} from '@/utils'
+import {switchPath,post} from '@/utils'
 export default {
 
   data () {
     return {
-      serverList:['预约技师','预约服务'],
+      serverList:[{Id:1,Name:'预约技师'},{Id:2,Name:'预约服务'}],
       serverIndex:0,
-      tabList:['待服务','已服务','已取消'],
+      tabList:[{Id:1,Name:'待服务'},{Id:2,Name:'已服务'},{Id:3,Name:'已取消'}],
       tabIndex:0,
+      Type:1,//0-全部 1-预约服务 2-预约技师
+      Status:1,//0-全部状态 1-待服务 2-已服务 3-已取消
+      userId:"",
+      token:"",
+      list:[]
       
     }
   },
@@ -73,7 +81,10 @@ export default {
     }
   },
   onShow(){
-    
+    this.list =[]
+    this.userId = wx.getStorageSync("userId")
+    this.token = wx.getStorageSync("token")
+    this.getList()
   },
   methods: {
     goUrl(url,param){
@@ -81,12 +92,67 @@ export default {
           url:url+'?id='+param
         })
     },
-    cliServer(index){
+    cliServer(item,index){
+      console.log(index,"111")
       this.serverIndex = index
+      this.Type = item.Id
+      this.getList()
     },
-    cliTab(index){
+    cliTab(item,index){
       this.tabIndex = index
+      this.Status = item.Id
+      this.getList()
     },
+    getList(){
+      post('Order/OrderList',{
+        UserId:this.userId,
+        Token:this.token,
+        Page:1,
+        Type:this.Type,
+        Status:this.Status
+      }).then(res=>{
+        if(res.code==0){
+          res.data.map(item=>{
+            let serInfo = {serve:[],total:0}
+            this.$set(item,"serInfo",serInfo)
+            item.OrderDetails.map(item2=>{
+                serInfo.serve.push(item2.ProductName)
+                serInfo.total+=item2.ActualPay
+            })
+            this.$set(item.serInfo,"serve",item.serInfo.serve.join(" | "))
+          })
+          this.list = res.data
+          // console.log(this.list,"list+++++++++")
+        }
+      })
+    },
+    //订单重新预约等操作
+    menuItem(item){
+      if(item.StatueSTR=='已服务'){//去往评价页面
+        this.goUrl('/pages/myson/pingjia/main',item.OrderNumber)
+      }else if(item.StatueSTR=='待服务'){//取消预约
+        this.cancleOrder(item)
+      }else{ //重新预约
+        this.goUrl('/pages/index/main')
+      }
+    },
+    cancleOrder(item){
+      post('Order/CancelOrders',{
+        UserId:this.userId,
+        Token:this.token,
+        OrderNo:item.OrderNumber,
+      }).then(res=>{
+        if(res.code==0){
+          wx.showToast({title:"订单取消成功~"})
+          this.getList()
+        }
+      })
+    },
+    toDetail(item){
+      wx.navigateTo({
+        url:'/pages/orderson/orderDetail/main?OrderNo='+item.OrderNumber
+      })
+    }
   },
 }
 </script>
