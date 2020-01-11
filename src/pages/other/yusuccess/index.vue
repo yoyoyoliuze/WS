@@ -155,7 +155,7 @@
         <div class="msk_btn" @click="couponConfirm">完成</div>
     </div> 
     <pay :total="data.AllPrice" :orderNumber="orderNumber" v-if="payStatus" 
-      @onClose="payStatus = false" payMode="0"
+      @onClose="payStatus = false" 
       @success="payconfirm"
       >
     </pay>
