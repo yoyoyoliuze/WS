@@ -55,10 +55,11 @@
               <img src="/static/images/icons/yh.png" alt="" class="icon2">
               <span class="ml1">优惠劵</span>
           </div>
-          <div class="cg ml1">{{selectCouponItem.MeetConditions?"满"+selectCouponItem.MeetConditions:""}}{{selectCouponItem.DiscountType==1?'减'+selectCouponItem.Denomination:'打'+selectCouponItem.Denomination*10+'折'}}</div>
+          <div class="cg ml1" v-if="selectCouponItem.Id!=-1">{{selectCouponItem.MeetConditions?"满"+selectCouponItem.MeetConditions:""}}{{selectCouponItem.DiscountType==1?'减'+selectCouponItem.Denomination:'打'+selectCouponItem.Denomination*10+'折'}}</div>
+          <div class="cg ml1" v-else>不使用优惠券</div>
         </div>
         <div class="flex flexAlignCenter">
-            <span class="cr">-{{selectCouponItem.DiscountType==1?selectCouponItem.Denomination:selectCouponItem.Denomination*10+'折'}}</span>
+            <span class="cr" v-if="selectCouponItem.Id!=-1">-{{selectCouponItem.DiscountType==1?selectCouponItem.Denomination:selectCouponItem.Denomination*10+'折'}}</span>
             <img src="/static/images/icons/more.png" alt="" class="right ml1">
         </div>
     </div>
@@ -144,9 +145,12 @@
         <div class="pp3 couponList">
             <radio-group  class="gou">
               <label class="flex-between payitem" v-for="(item,index) in couponList" :key="index" @click="couponChange(item)">
-                <div class="flex-center">
+                <div class="flex-center" v-if="item.Id!=-1">
                   <span>{{item.DiscountType==1?'满减劵':item.DiscountType==2?'折扣券':''}}</span>
                   <span class="ml2"> {{item.MeetConditions?"满"+item.MeetConditions:""}}{{item.DiscountType==1?'减'+item.Denomination:'打'+item.Denomination*10+'折'}}</span>
+                </div>
+                <div class="flex-center" v-else>
+                  <span>不使用优惠券</span>
                 </div>
                 <input type="radio" name="payType" :checked="item.Id===selectCouponItem.Id" value="0" />
               </label>
@@ -155,7 +159,7 @@
         <div class="msk_btn" @click="couponConfirm">完成</div>
     </div> 
     <pay :total="data.AllPrice" :orderNumber="orderNumber" v-if="payStatus" 
-      @onClose="payStatus = false" payMode="0"
+      @onClose="closePay" 
       @success="payconfirm"
       >
     </pay>
@@ -166,7 +170,7 @@
 
 import '@/style/bb.scss'
 import pay from '@/components/pay.vue'
-import {post,valPhone} from '@/utils/index'
+import {post,valPhone,wx_pay} from '@/utils/index'
 export default {
   components:{pay},
   data () {
@@ -179,9 +183,14 @@ export default {
       shop:{},
       showCoupon:false,
       couponList:[],//优惠券列表
-      selectCouponItem:{},
-      name:'',
-      phone:'',
+      selectCouponItem:{
+          Denomination: 0,
+          DiscountType: 0,
+          Id: -1,
+          MeetConditions: 0
+      },
+      name:'1',
+      phone:'15014010111',
       remark:'',
       orderNumber:'',//订单号
       payStatus:false,
@@ -202,6 +211,16 @@ export default {
         wx.setNavigationBarTitle({
             title: "预约确定"
         });
+    },
+    init(){
+        this.showCoupon = false;
+        this.payStatus = false;
+        this.selectCouponItem={
+          Denomination: 0,
+          DiscountType: 0,
+          Id: -1,
+          MeetConditions: 0
+        }
     },
     getData(useCouponId){
       post('Order/ConfirmMakeOrder',{
@@ -226,8 +245,14 @@ export default {
             }
           })
         }
+        data.UseCouponList.unshift({
+          Denomination: 0,
+          DiscountType: 0,
+          Id: -1,
+          MeetConditions: 0
+        })
         this.couponList = data.UseCouponList;
-      })
+      }),this.getData;
     },
     // 选择优惠券
     couponConfirm(){
@@ -262,6 +287,7 @@ export default {
         Token:this.Token,
         ProIdList:this.submitPro.proId,
         MakeTime:this.submitPro.date,
+        ArtId:this.submitPro.artId||'',
         CouponId:this.selectCouponItem.Id||'',
         ContactName:this.name,
         Tel:this.phone,
@@ -283,13 +309,46 @@ export default {
         }).then(res=>{
           this.paySuccess();
         })  
+      }else if(type*1===0){
+        post('Order/ConfirmWeiXinSmallPay',{
+          UserId:this.UserId,
+          Token:this.Token,
+          OrderNo:this.orderNumber,
+          WxOpenid: wx.getStorageSync("openId"),
+          WxCode:wx.getStorageSync("wxCode")
+        }).then(res=>{
+          console.log(JSON.parse(res.data.JsParam))
+          wx_pay(res.data.JsParam).then(pay=>{
+            console.log(pay,'pay')
+            this.paySuccess();
+          })
+        }) 
       }
     },
     // 支付成功
     paySuccess(){
-      wx.navigateTo({
-        url:'/pages/orderson/orderDetail/main?orderNo='+this.orderNumber
+      wx.showToast({
+        title:'支付成功'
       })
+      this.payStatus = false;
+      setTimeout(()=>{
+        wx.redirectTo({
+          url:'/pages/orderson/orderDetail/main?orderNo='+this.orderNumber
+        })
+      },1500)
+    },
+    // 取消付款
+    closePay(){
+      this.payStatus = false;
+      wx.showToast({
+        title:'支付失败，订单已创建',
+        icon:'none'
+      })
+      setTimeout(()=>{
+        wx.redirectTo({
+          url:'/pages/orderson/orderDetail/main?orderNo='+this.orderNumber
+        })
+      },1500)
     }
   },
 

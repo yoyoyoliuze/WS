@@ -3,7 +3,7 @@
       <div class="md_card">
           <img src="/static/images/icons/bg6.png" alt="" class="bg6">
           <div class="ff_card">
-              <img src="/static/images/icons/bg11.png" alt="" class="bg11">
+              <img src="/static/images/icons/bg11.jpg" alt="" class="bg11">
               <div class="ff_size">
                   <p class="font30">会员次卡</p>
                   <p class="font24 mt2">选择任一服务项目，即可专享服务 项目10次，线上线下预约做服务均 可用次卡抵消</p>

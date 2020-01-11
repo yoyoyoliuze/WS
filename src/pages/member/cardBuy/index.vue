@@ -5,9 +5,9 @@
         <swiper class="swiper-box" display-multiple-items='1' interval='3000' previous-margin="60" next-margin="60" @change="swiperChange">
           <swiper-item class="swiper-item" v-for="(item,index) in data" :key="index">
             <div class="card" :class="swiperIndex==index?'active_swiper':'quite'">
-                <img src="/static/images/icons/yin.png" alt="" v-if="item.Id==1">
-                <img src="/static/images/icons/jin.png" alt="" v-if="item.Id==5">
-                <img src="/static/images/icons/si.png" alt="" v-if="item.Id==8">
+                <img src="/static/images/icons/yin.jpg" alt="" v-if="item.Id==1">
+                <img src="/static/images/icons/jin.jpg" alt="" v-if="item.Id==5">
+                <img src="/static/images/icons/si.jpg" alt="" v-if="item.Id==8">
                 <!-- <div class="card_detail flex flexWrap">
                     <p class="font30 fb">金卡</p>
                     <p class="font30 fb">￥18800元</p>
@@ -57,7 +57,7 @@
       </div>
       <div class="pp3 mt5">
           <div class="card_br">
-              <img src="/static/images/detail_bg.png" alt="" class="img">
+              <img src="/static/images/detail_bg.jpg" alt="" class="img">
               <div class="card_main boxSize">
                   <p class="font30">根据身份不同享有不同的特权</p>
                   <p class="font30 mt1">{{detail.GradeName}}会员专项权益：</p>

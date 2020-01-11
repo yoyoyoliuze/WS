@@ -28,7 +28,7 @@
       <div class="mt2 bg_fff pw3" v-if="data.ShopData">
           <div class="flex p2 bor_bill justifyContentBetween flexAlignCenter">
               <p class="flex flexAlignCenter">
-                  <img src="/static/images/jishi.png" alt="" class="shop_ava">
+                  <img :src="data.ShopData.Logo" alt="" class="shop_ava">
                   <span class="mr2">{{data.ShopData.ShopNick}}</span>
               </p>
               <img src="/static/images/icons/phone.png" alt="" class="phone" @click="callPhone">
@@ -41,18 +41,6 @@
       <div class="mt2 bg_fff">
         <div class="pp3 text_center">产品介绍</div>
         <div v-html="ContentDetail"></div>
-        <!-- <img src="/static/images/s1.png" alt="" class="pic" mode="widthFix">
-        <img src="/static/images/s2.png" alt="" class="pic" mode="widthFix">
-        <img src="/static/images/s3.png" alt="" class="pic" mode="widthFix">
-        <img src="/static/images/s4.png" alt="" class="pic" mode="widthFix">
-        <img src="/static/images/s5.png" alt="" class="pic" mode="widthFix">
-        <img src="/static/images/s6.png" alt="" class="pic" mode="widthFix">
-        <img src="/static/images/s7.png" alt="" class="pic" mode="widthFix">
-        <img src="/static/images/s8.png" alt="" class="pic" mode="widthFix">
-        <img src="/static/images/s9.png" alt="" class="pic" mode="widthFix">
-        <img src="/static/images/s10.png" alt="" class="pic" mode="widthFix">
-        <img src="/static/images/s11.png" alt="" class="pic" mode="widthFix">
-        <img src="/static/images/s12.png" alt="" class="pic" mode="widthFix"> -->
       </div>
       <div class="fix_btn" @click="submit">立即预约</div>
   </div>

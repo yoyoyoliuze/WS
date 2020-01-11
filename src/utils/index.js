@@ -428,6 +428,21 @@ export function get_time_diff(time) {
 
   return diff;
 }
+// 拨打电话
+export function callPhone(phone){
+  wx.makePhoneCall({
+    phoneNumber:phone,
+  })
+}
+// 打开地图位置
+export function openLocation(location){
+    wx.openLocation({
+        latitude:location.lat*1,
+        longitude:location.lng*1,
+        name:location.name,
+        address:location.address
+    })
+}
 // module.exports = {
 //   dateUtils: dateUtils,
 // }
