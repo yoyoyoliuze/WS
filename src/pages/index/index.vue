@@ -131,6 +131,7 @@ export default {
     }
   },
   onShow(){
+    // wx.setStorageSync('statu',1)//清楚个人中心页面缓存
     this.getHotList()
     this.getBannerList()
     this.getModalMask()

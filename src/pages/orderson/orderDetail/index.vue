@@ -1,60 +1,64 @@
 <template>
-  <div style="padding-bottom:100rpx">
+  <div style="padding-bottom:100rpx" v-if="hasData">
       <div class="top flexc">
-        <span :class="move?'move':''">已服务</span>
+        <span :class="move?'move':''">{{data.StatueSTR}}</span>
       </div>
       <div class="shop ali-c jus-b">
         <div class="ali-c jus-b">
-          <img class="left" src="/static/images/yuyue.png" alt="">
-          <p>万色印象万众城店</p>
+          <img class="left" :src="data.ShopData.Logo" alt="">
+          <p>{{data.ShopData.ShopName}}</p>
         </div>
         <img class="right" src="/static/images/address_r.png" alt="">
       </div>
       <div class="jus-box">
-        <div class="ali-c jus-b"><p>预约序号</p><span>FW001</span></div>
-        <div class="ali-c jus-b"><p>预约日期</p><span>2019-12-120</span></div>
+        <div class="ali-c jus-b"><p>预约序号</p><span>{{data.MakeNum}}</span></div>
+        <div class="ali-c jus-b"><p>预约日期</p><span>{{data.MakeDate}}</span></div>
         <div class="ali-c jus-b"><p>开始时间</p><span>16:30</span></div>
       </div>
       <div class="jus-box">
-        <div class="ali-c jus-b"><p>服务项目</p><span>美甲</span></div>
-        <div class="ali-c jus-b"><p>服务时长</p><span>1小时</span></div>
-        <div class="ali-c jus-b"><p>单价</p><span>¥68</span></div>
-        <div class="ali-c jus-b"><p>折扣</p><span>-¥20</span></div>
-        <div class="ali-c jus-b"><p>优惠券</p><span>-¥20</span></div>
+        <div class="ali-c jus-b"><p>服务项目</p><span>{{data.serInfo.serve}}</span></div>
+        <div class="ali-c jus-b"><p>服务时长</p><span>{{data.MakeHour}}小时</span></div>
+        <div class="ali-c jus-b"><p>总金额</p><span>¥{{data.TotalAmount}}</span></div>
+        <div class="ali-c jus-b"><p>折扣</p><span>-¥{{data.YhPrice}}</span></div>
+        <div class="ali-c jus-b"><p>优惠券</p><span>-¥{{data.ZkPrice}}</span></div>
       </div>
       <div class="ali-c jus-e heji">
-        <span>合计:￥48</span>
+        <span>支付金额:￥{{data.Total}}</span>
       </div>
       <div class="jishi">
         <div class="tit ali-c"><span></span><p>技师图片</p></div>
         <scroll-view scroll-x enable-flex class="jishi-img ali-c">
-          <div class="ali-c" v-for="(item, index) in imgList" :key="index">
-            <img mode='aspectFill' src="/static/images/jishi.png" alt="">
+          <div class="ali-c" v-if="data.PicData.length>0">
+            <img mode='aspectFill' :src="item.PicUrl" alt="" v-for="(item, index) in data.PicData" :key="index">
           </div>
         </scroll-view>
       </div>
       <div class="info">
         <div class="tit ali-c"><span></span><p>订单信息</p></div>
-        <p>订单编号：</p>
-        <p>创建时间：</p>
-        <p>支付时间：</p>
-        <p>取消时间：</p>
+        <p>订单编号：{{data.OrderNumber}}</p>
+        <p>创建时间：{{data.OrderTime}}</p>
+        <p>支付时间：{{data.OrderTime}}</p>
+        <p>取消时间：{{data.OrderTime}}</p>
 
       </div>
       <div class="end jus-e ali-c">
-        <p class="flexc">评价</p>
+        <p class="flexc" @tap="menuItem">{{data.StatueSTR=='已服务'?'评价':(data.StatueSTR=='待服务'?'取消预约':'重新预约')}}</p>
       </div>
   </div>
 </template>
 
 <script>
-
+import {post} from '@/utils'
 export default {
 
   data () {
     return {
       move:false,
-      imgList:[,,,,,,,,]
+      userId:"",
+      token:"",
+      OrderNo:"",
+      data:{},
+      hasData:false,//是否开始渲染数据
     }
   },
   onUnload(){
@@ -64,6 +68,58 @@ export default {
     setTimeout(() => {
       this.move = true
     }, 300);
+    this.userId = wx.getStorageSync("userId")
+    this.token = wx.getStorageSync("token")
+    this.OrderNo = this.$mp.query.OrderNo
+    this.getData()
+  },
+  methods:{
+    getData(){
+      post('Order/OrderDetails',{
+        UserId:this.userId,
+        Token:this.token,
+        OrderNo:this.OrderNo,
+      }).then(res=>{
+        if(res.code==0){
+          let serInfo = {serve:[],total:0}
+          this.$set(res.data,"serInfo",serInfo)
+          res.data.OrderDetails.map(item2=>{
+              serInfo.serve.push(item2.ProductName)
+              serInfo.total+=item2.ActualPay
+          })
+          this.$set(res.data.serInfo,"serve",res.data.serInfo.serve.join(" | "))
+          this.data = res.data
+          this.hasData = true
+          console.log(this.data,"data.ShopData")
+        } 
+      })
+    },
+    //订单重新预约等操作
+    menuItem(){
+      if(data.StatueSTR=='已服务'){//去往评价页面
+        wx.navigateTo({
+          url:'/pages/index/main?OrderNo='+data.OrderNumber
+        })
+      }else if(data.StatueSTR=='待服务'){//取消预约
+        this.cancleOrder()
+      }else{ //重新预约
+        wx.navigateTo({
+          url:'/pages/index/main'
+        })
+      }
+    },
+    cancleOrder(){
+      post('Order/CancelOrders',{
+        UserId:this.userId,
+        Token:this.token,
+        OrderNo:data.OrderNumber,
+      }).then(res=>{
+        if(res.code==0){
+          wx.showToast({title:"订单取消成功~"})
+          this.getData()
+        }
+      })
+    },
   }
 }
 </script> 
