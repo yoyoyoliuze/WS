@@ -8,11 +8,11 @@
         </div>
         <div class="flex chose_main justifyContentBetween">
             <p class="flex flexColumn flexAlignCenter">
-                <img src="/static/images/icons/fu.png" @click="cliImg(0)" alt="" class="av_icon" :class="{'active':active===0}">
+                <img src="/static/images/icons/fu.jpg" @click="cliImg(0)" alt="" class="av_icon" :class="{'active':active===0}">
                 <span class="ch_name fb">预约服务</span>
             </p>
             <p class="flex flexColumn flexAlignCenter">
-                <img src="/static/images/icons/ji.png" @click="cliImg(1)" alt="" class="av_icon" :class="{'active':active===1}">
+                <img src="/static/images/icons/ji.jpg" @click="cliImg(1)" alt="" class="av_icon" :class="{'active':active===1}">
                 <span class="ch_name fb">预约技师</span>
             </p>
         </div>

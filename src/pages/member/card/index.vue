@@ -2,9 +2,9 @@
   <div class="bg_fff b_card">
       <div class="swiper_bb">
             <div class="card">
-                <img src="/static/images/icons/yin.png" alt="">
-                <!-- <img src="/static/images/icons/jin.png" alt="" v-if="index==1">
-                <img src="/static/images/icons/si.png" alt="" v-if="index==2"> -->
+                <img src="/static/images/icons/yin.jpg" alt="">
+                <!-- <img src="/static/images/icons/jin.jpg" alt="" v-if="index==1">
+                <img src="/static/images/icons/si.jpg" alt="" v-if="index==2"> -->
                 <!-- <div class="card_detail flex flexWrap">
                     <p class="font30 fb">金卡</p>
                     <p class="font30 fb">￥18800元</p>

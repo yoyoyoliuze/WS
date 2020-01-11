@@ -50,7 +50,7 @@
           <img mode='aspectFill' src="/static/images/index_card.png" alt="">
         </div>
       </div>
-      <img mode='aspectFill' class="two" src="/static/images/index_shop_bg.png" alt="" @click="goUrl('/pages/home/school/main')">
+      <img mode='aspectFill' class="two" src="/static/images/index_shop_bg.jpg" alt="" @click="goUrl('/pages/home/school/main')">
     </div>
     <div class="shop">
       <div class="list" v-for="(item, index) in shopList" :key="index"  @click="goUrl('/pages/other/chose/main',item.ShopId)">

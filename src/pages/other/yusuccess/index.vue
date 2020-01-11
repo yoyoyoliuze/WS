@@ -332,7 +332,7 @@ export default {
       })
       this.payStatus = false;
       setTimeout(()=>{
-        wx.navigateTo({
+        wx.redirectTo({
           url:'/pages/orderson/orderDetail/main?orderNo='+this.orderNumber
         })
       },1500)
@@ -345,7 +345,7 @@ export default {
         icon:'none'
       })
       setTimeout(()=>{
-        wx.navigateTo({
+        wx.redirectTo({
           url:'/pages/orderson/orderDetail/main?orderNo='+this.orderNumber
         })
       },1500)

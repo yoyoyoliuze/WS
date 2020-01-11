@@ -1,6 +1,6 @@
 <template>
   <div class="bg_fff" style="min-height:100vh"> 
-      <img src="/static/images/yuyue.png" alt="" class="cr_bg">
+      <img src="/static/images/yuyue.jpg" alt="" class="cr_bg">
       <div class="pw3 bg_fff">
           <div class="flex p3 co_bd">
               <span>课程</span>
