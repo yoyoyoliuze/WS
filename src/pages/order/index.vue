@@ -82,6 +82,15 @@ export default {
   },
   onShow(){
     this.list =[]
+    console.log(wx.getStorageSync("statu"),"333statu")
+    if(wx.getStorageSync("statu")){
+      this.Status = wx.getStorageSync("statu")
+      this.tabList.map((item,i)=>{
+        if(wx.getStorageSync("statu")==item.Id){
+          this.tabIndex = i
+        }
+      })
+    }
     this.userId = wx.getStorageSync("userId")
     this.token = wx.getStorageSync("token")
     this.getList()
@@ -154,6 +163,9 @@ export default {
       })
     }
   },
+  onHide(){
+    wx.setStorageSync('statu',1)//清楚个人中心页面缓存
+  }
 }
 </script>
 

@@ -28,8 +28,8 @@
       <div class="jishi">
         <div class="tit ali-c"><span></span><p>技师图片</p></div>
         <scroll-view scroll-x enable-flex class="jishi-img ali-c">
-          <div class="ali-c" v-if="imgList.length>0">
-            <img mode='aspectFill' src="/static/images/jishi.png" alt="" v-for="(item, index) in imgList" :key="index">
+          <div class="ali-c" v-if="data.PicData.length>0">
+            <img mode='aspectFill' :src="item.PicUrl" alt="" v-for="(item, index) in data.PicData" :key="index">
           </div>
         </scroll-view>
       </div>
@@ -54,7 +54,6 @@ export default {
   data () {
     return {
       move:false,
-      imgList:[,,,,,,,,],
       userId:"",
       token:"",
       OrderNo:"",
@@ -90,7 +89,6 @@ export default {
           })
           this.$set(res.data.serInfo,"serve",res.data.serInfo.serve.join(" | "))
           this.data = res.data
-          this.imgList.push(res.data.ArtData)
           this.hasData = true
           console.log(this.data,"data.ShopData")
         } 
