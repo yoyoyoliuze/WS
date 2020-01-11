@@ -434,6 +434,15 @@ export function callPhone(phone){
     phoneNumber:phone,
   })
 }
+// 打开地图位置
+export function openLocation(location){
+    wx.openLocation({
+        latitude:location.lat*1,
+        longitude:location.lng*1,
+        name:location.name,
+        address:location.address
+    })
+}
 // module.exports = {
 //   dateUtils: dateUtils,
 // }
