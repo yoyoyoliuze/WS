@@ -201,12 +201,14 @@
 					"id": -1,
 					"name": "会员卡卡片",
 					"pathName": "pages/member/card/main",
+					"query": "",
 					"scene": null
 				},
 				{
 					"id": -1,
 					"name": "会员此卡",
 					"pathName": "pages/member/cika/main",
+					"query": "",
 					"scene": null
 				},
 				{
@@ -224,8 +226,8 @@
 					"scene": null
 				},
 				{
-					"id": -1,
-					"name": "pages/myson/jiesuan/main",
+					"id": 25,
+					"name": "结算台",
 					"pathName": "pages/myson/jiesuan/main",
 					"query": "",
 					"scene": null
@@ -255,18 +257,27 @@
 					"id": -1,
 					"name": "会员充值",
 					"pathName": "pages/myson/recharge/main",
+					"query": "",
 					"scene": null
 				},
 				{
 					"id": -1,
 					"name": "个人中心",
 					"pathName": "pages/mine/main",
+					"query": "",
 					"scene": null
 				},
 				{
 					"id": -1,
 					"name": "我的预约",
 					"pathName": "pages/order/main",
+					"query": "",
+					"scene": null
+				},
+				{
+					"id": -1,
+					"name": "消费流水",
+					"pathName": "pages/myson/consume/main",
 					"query": "",
 					"scene": null
 				}
