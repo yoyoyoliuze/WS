@@ -2,7 +2,7 @@
   <div class="bg_fff b_card">
       <div class="swiper_bb">
         <img src="/static/images/icons/bg1.png" alt="" class="img_bg">
-        <swiper class="swiper-box" display-multiple-items='1' interval='3000' previous-margin="60" next-margin="60" @change="swiperChange">
+        <swiper class="swiper-box" display-multiple-items='1' interval='3000' previous-margin="60" next-margin="60" @change="swiperChange" :current="swiperIndex">
           <swiper-item class="swiper-item" v-for="(item,index) in data" :key="index">
             <div class="card" :class="swiperIndex==index?'active_swiper':'quite'">
                 <img src="/static/images/icons/yin.jpg" alt="" v-if="item.Id==1">
@@ -60,24 +60,21 @@
               <img src="/static/images/detail_bg.jpg" alt="" class="img">
               <div class="card_main boxSize">
                   <p class="font30">根据身份不同享有不同的特权</p>
-                  <p class="font30 mt1">{{detail.GradeName}}会员专项权益：</p>
-                  <div class="flex flexWrap font24 mt2">
-                      <p class="card_item">
+                  <p class="font30">{{detail.GradeName}}会员专项权益：</p>
+                  <div v-if="discount.length>0" class="mt1 font24">{{discount}}</div>
+                  <div class="flex flexWrap font24 mt1" v-if="hasDisInfo">
+                      <p class="card_item" v-for="(item,index) in mainInfoList" :key="index">
+                          <i class="card_pill"></i>
+                          <span>{{item}}</span>
+                      </p>
+                      <!-- <p class="card_item">
                           <i class="card_pill"></i>
                           <span>优先预约服务</span>
                       </p>
                       <p class="card_item">
                           <i class="card_pill"></i>
                           <span>优先预约服务</span>
-                      </p>
-                      <p class="card_item">
-                          <i class="card_pill"></i>
-                          <span>优先预约服务</span>
-                      </p>
-                      <p class="card_item">
-                          <i class="card_pill"></i>
-                          <span>优先预约服务</span>
-                      </p>
+                      </p> -->
                   </div>
               </div>
           </div>
@@ -94,10 +91,13 @@ export default {
   
   data () {
     return {
-      swiperIndex:0,
+      swiperIndex:1,
       data:[],
       Id:0,
-      detail:{}
+      detail:{},
+      discount:"",
+      mainInfoList:[],
+      hasDisInfo:true,
     }
   },
   onShow(){
@@ -121,7 +121,7 @@ export default {
       post('User/VipGoodsList',{}).then(res=>{
         if(res.code==0){
           this.data = res.data
-          this.Id = res.data[0].Id
+          this.Id = this.data[this.swiperIndex].Id
           this.getDetail()
         }
       })
@@ -130,13 +130,21 @@ export default {
       post('User/VipGoodsxq',{
         GradeId:this.Id
       }).then(res=>{
-        console.log(res.data.Content.indexOf('↵'))
-          if(res.data.Content.indexOf('↵')!=-1){
+        res.data.Content = res.data.Content.replace(/(\r\n|\n|\r)/gm, "<br />")
+        // console.log(res.data.Content,"333333")
+          if(res.data.Content.indexOf('<br />')!=-1){
             // item.Content =  item.Content.split('↵')
-            this.$set(res.data,'Content',res.data.Content.split('↵'))
+            this.$set(res.data,'Content',res.data.Content.split('<br />'))
+            this.hasDisInfo = true
+            this.discount = res.data.Content[0]
+            this.mainInfoList = res.data.Content.slice(1)
+            
+          }else{
+            this.discount = res.data.Content
+            this.hasDisInfo =false
           }
-           console.log(res.data)
-           this.detail = res.data
+           console.log(res.data,"222222222")
+          this.detail = res.data
       })
     },
     submit(){
@@ -170,7 +178,7 @@ export default {
     .card_main{
       background: #ffffff;border-radius:15rpx;
       position: absolute;top:90rpx;left:30rpx;width:630rpx;height:320rpx;
-      padding:50rpx 30rpx;
+      padding:30rpx;
     }
     .card_pill{
       display: inline-block;width:15rpx;height:15rpx;border-radius: 50%;background: #cc9f68;

@@ -62,7 +62,7 @@
                   <p class="font30">根据身份不同享有不同的特权</p>
                   <p class="font30 mt1">{{detail.GradeName}}会员专项权益：</p>
                   <div class="flex flexWrap font24 mt2">
-                      <p class="card_item">
+                      <p class="card_item" >
                           <i class="card_pill"></i>
                           <span>优先预约服务</span>
                       </p>
@@ -107,7 +107,6 @@ export default {
   methods: {
     //轮播滑动时，获取当前的轮播id
     swiperChange(e) {
-      console.log(e)
       const that = this;
       this.swiperIndex=e.mp.detail.current
       this.Id = this.data[e.mp.detail.current].Id
@@ -131,17 +130,16 @@ export default {
       post('User/VipGoodsxq',{
         GradeId:this.Id
       }).then(res=>{
-        console.log(res.data.Content.indexOf('↵'))
-          if(res.data.Content.indexOf('↵')!=-1){
-            // item.Content =  item.Content.split('↵')
-            this.$set(res.data,'Content',res.data.Content.split('↵'))
+        res.data.Content( replace(/(\r\n|\n|\r)/gm, "<br/>")) 
+          if(res.data.Content.indexOf('<br/>')!=-1){
+            this.$set(res.data,'Content',res.data.Content.split('<br/>'))
           }
-           console.log(res.data)
+           
            this.detail = res.data
       })
     },
     submit(){
-      console.log(this.swiperIndex)
+      // console.log(this.swiperIndex)
       let info = {}
       this.data.map((item,index)=>{
         if(index==this.swiperIndex){

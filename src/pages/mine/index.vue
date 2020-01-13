@@ -24,21 +24,21 @@
               <div>
                 <img src="/static/images/my_icon_1.png" alt="">
                 <p>待服务</p>
-                <span class="flexc">2</span>
+                <span class="flexc" v-if="hasNum">{{memberInfo.num_dfw}}</span>
               </div>
             </div>
             <div class="icon flexc" @click="goto(2)">
               <div>
                 <img src="/static/images/my_icon_2.png" alt="">
                 <p>已服务</p>
-                <span class="flexc">2</span>
+                <!-- <span class="flexc">2</span> -->
               </div>
             </div>
             <div class="icon flexc" @click="goto(3)">
               <div>
                 <img src="/static/images/my_icon_3.png" alt="">
                 <p>已取消</p>
-                <span class="flexc">2</span>
+                <!-- <span class="flexc">2</span> -->
               </div>
             </div>
           </div>
@@ -99,7 +99,8 @@ export default {
       isLogin:false,
       memberInfo:{},
       userId:"",
-      token:""
+      token:"",
+      hasNum:false
     }
   },
   onShow(){
@@ -110,7 +111,7 @@ export default {
   },
   methods: {
     switchPath(path){
-      console.log(path,"1111")
+      // console.log(path,"1111")
         wx.navigateTo({
           url:path
         })
@@ -130,6 +131,13 @@ export default {
       }).then(res=>{
         if(res.code==0){
           this.memberInfo = res.data
+          if(this.memberInfo.num_dfw>0){
+            this.hasNum = true
+            if(this.memberInfo.num_dfw>9){
+              this.memberInfo.num_dfw = `${this.memberInfo.num_dfw.toString().slice(0,1)}+`
+            }
+          }
+          
         }
       })
     }
