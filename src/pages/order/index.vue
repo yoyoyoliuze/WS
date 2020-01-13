@@ -63,7 +63,7 @@ export default {
 
   data () {
     return {
-      serverList:[{Id:1,Name:'预约技师'},{Id:2,Name:'预约服务'}],
+      serverList:[{Id:1,Name:'预约服务'},{Id:2,Name:'预约技师'}],
       serverIndex:0,
       tabList:[{Id:1,Name:'待服务'},{Id:2,Name:'已服务'},{Id:3,Name:'已取消'}],
       tabIndex:0,
@@ -113,6 +113,13 @@ export default {
       this.getList()
     },
     getList(){
+      console.log({
+        UserId:this.userId,
+        Token:this.token,
+        Page:1,
+        Type:this.Type,
+        Status:this.Status
+      },"请求参数")
       post('Order/OrderList',{
         UserId:this.userId,
         Token:this.token,
@@ -131,7 +138,7 @@ export default {
             this.$set(item.serInfo,"serve",item.serInfo.serve.join(" | "))
           })
           this.list = res.data
-          // console.log(this.list,"list+++++++++")
+          console.log(this.list,"list+++++++++")
         }
       })
     },
