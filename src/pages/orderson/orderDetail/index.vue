@@ -8,7 +8,7 @@
           <img class="left" :src="data.ShopData.Logo" alt="">
           <p>{{data.ShopData.ShopName}}</p>
         </div>
-        <img class="right" src="/static/images/address_r.png" alt="">
+        <img class="right" src="/static/images/address_r.png" alt="" @tap="openLoca">
       </div>
       <div class="jus-box">
         <div class="ali-c jus-b"><p>预约序号</p><span>{{data.MakeNum}}</span></div>
@@ -48,7 +48,7 @@
 </template>
 
 <script>
-import {post} from '@/utils'
+import {post,openLocation} from '@/utils'
 export default {
 
   data () {
@@ -120,6 +120,9 @@ export default {
         }
       })
     },
+    openLoca(){
+      openLocation()
+    }
   }
 }
 </script> 
