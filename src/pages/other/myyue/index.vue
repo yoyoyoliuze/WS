@@ -96,13 +96,11 @@ export default {
       shopInfo:{},
       artInfo:{},
       orderNo:'',
-      type:0,//0-店铺；1-技师
     }
   },
   onLoad(options){
     this.setBarTitle();
     this.orderNo = options.orderNo;
-    this.type = options.type||0;
     this.getData();
   },
   components: {
