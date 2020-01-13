@@ -1,35 +1,31 @@
 <template>
   <div class="pp3">
       <div class="">
-          <div class="font35 fb">17:00-18:00</div>
-          <div class="font24 flex justifyContentBetween mt1">
+          <div class="font35 fb">{{info.MakeTime}}</div>
+          <!-- <div class="font24 flex justifyContentBetween mt1">
               <p>2019.11.27 (周三)</p>
               <p>预约号：JS001</p>
-          </div>
+          </div> -->
       </div>
       <!--这是服务-->
-      <div class="bg_fff mt2 yu_main" style="display:none">
+      <div class="bg_fff mt2 yu_main" v-if="!info.ServiceMode">
           <div class="flex">
-              <img src="/static/images/ava.png" alt="" class="ava">
+              <img :src="shopInfo.Logo"  alt="" class="ava">
               <div class="flex1 main_r">
                   <div class="flex justifyContentBetween flexAlignCenter">
                       <div>
                           <p class="font22">预约门店</p>
-                          <p class="fb mt1">万色印象罗湖店</p>
-                          <p class="mt1 fb">0755-5462530</p>
+                          <p class="fb mt1">{{shopInfo.ShopName}}</p>
+                          <p class="mt1 fb">{{shopInfo.Phone}}</p>
                       </div>
-                      <img src="/static/images/icons/phone.png" alt="" class="phone">
+                      <img src="/static/images/icons/phone.png" alt="" class="phone" @click="call">
                   </div>
                   <div class="mt2"> 
                       <p class="font22">预约服务</p>
                       <div class="flex flexWrap">
-                          <div class="sse_item">
-                            <p>彩绘指甲</p>
-                            <p class="cr mt1">298元</p>
-                          </div>
-                          <div class="sse_item">
-                            <p>彩绘指甲</p>
-                            <p class="cr mt1">298元</p>
+                          <div class="sse_item" v-for="(item,index) in info.OrderDetails" :key="index">
+                            <p>{{item.ProductName}}</p>
+                            <p class="cr mt1">{{item.ActualPay}}元</p>
                           </div>
                       </div>
                   </div>
@@ -37,54 +33,50 @@
                       <p class="font22">订单信息</p>
                       <div class="flex mt1 justifyContentBetween">
                           <p>支付方式</p>
-                          <p>微信支付</p>
+                          <p>到店支付</p>
                       </div>
                       <div class="flex mt1 justifyContentBetween">
                           <p>支付金额 </p>
-                          <p>¥596.00</p>
+                          <p>¥{{info.TotalAmount}}</p>
                       </div>
                   </div>
               </div>
           </div>
-          <div class="can_cel">取消预约</div>
+          <div class="can_cel" @click="cancleOrder">取消预约</div>
       </div>
       <!--这是技师-->
-      <div class="bg_fff mt2 yu_main">
+      <div class="bg_fff mt2 yu_main" v-else>
           <div class="flex">
-              <img src="/static/images/ava.png" alt="" class="ava">
+              <img :src="artInfo.ArtPic" alt="" class="ava">
               <div class="flex1 main_r">
                   <div class="mt2"> 
                       <p class="font22">预约技师</p>
-                      <div class="fb font30">Alisa</div>
+                      <div class="fb font30">{{artInfo.ArtName}}</div>
                   </div>
                   <div class="mt2"> 
                       <p class="font22">预约服务</p>
                       <div class="flex flexWrap">
-                          <div class="sse_item">
-                            <p>彩绘指甲</p>
-                            <p class="cr mt1">298元</p>
-                          </div>
-                          <div class="sse_item">
-                            <p>彩绘指甲</p>
-                            <p class="cr mt1">298元</p>
+                          <div class="sse_item" v-for="(item,index) in info.OrderDetails" :key="index">
+                            <p>{{item.ProductName}}</p>
+                            <p class="cr mt1">{{item.ActualPay}}元</p>
                           </div>
                       </div>
                   </div>
                   <div class="flex justifyContentBetween flexAlignCenter mt2">
                       <div>
                           <p class="font22">预约门店</p>
-                          <p class="fb mt1">万色印象罗湖店</p>
-                          <p class="mt1 fb">0755-5462530</p>
+                          <p class="fb mt1">{{shopInfo.ShopName}}</p>
+                          <p class="mt1 fb">{{shopInfo.Phone}}</p>
                       </div>
                       <img src="/static/images/icons/phone.png" alt="" class="phone">
                   </div>
                   <div class="mt2">
                       <p class="font22">备注</p>
-                      <div class="mt1">我的指甲比软，做的时候注意一下</div>
+                      <div class="mt1">{{info.Remarks}}</div>
                   </div>
               </div>
           </div>
-          <div class="can_cel">取消预约</div>
+          <div class="can_cel" @click="cancleOrder">取消预约</div>
       </div>
       
               
@@ -96,15 +88,22 @@
 <script>
 
 import '@/style/bb.scss'
-
+import {post,callPhone} from '@/utils'
 export default {
   data () {
     return {
-      
+      info:{},
+      shopInfo:{},
+      artInfo:{},
+      orderNo:'',
+      type:0,//0-店铺；1-技师
     }
   },
-  onShow(){
-    this.setBarTitle()
+  onLoad(options){
+    this.setBarTitle();
+    this.orderNo = options.orderNo;
+    this.type = options.type||0;
+    this.getData();
   },
   components: {
    
@@ -115,6 +114,55 @@ export default {
         wx.setNavigationBarTitle({
             title: "我的预约"
         });
+    },
+    getData(){
+      post('Order/OrderDetails',{
+        UserId:wx.getStorageSync("userId"),
+        Token:wx.getStorageSync("token"),
+        OrderNo:this.orderNo,
+      }).then(res=>{
+        if(res.code==0){
+          this.info = res.data;
+          this.shopInfo = res.data.ShopData;
+          this.artInfo = res.data.ArtData;
+
+          let serInfo = {serve:[],total:0}
+          this.$set(res.data,"serInfo",serInfo)
+          res.data.OrderDetails.map(item2=>{
+              serInfo.serve.push(item2.ProductName)
+              serInfo.total+=item2.ActualPay
+          })
+          this.$set(res.data.serInfo,"serve",res.data.serInfo.serve.join(" | "))
+          this.data = res.data
+          this.hasData = true
+          console.log(this.data,"data.ShopData")
+        } 
+      })
+    },
+    // 拨打电话
+    call(){
+      callPhone(this.info.Tel)
+    },
+    // 取消订单
+    cancleOrder(){
+      const that =this;
+      wx.showModal({
+        title:'是否取消该订单',
+        success(ret){
+          if(ret.confirm){
+              post('Order/CancelOrders',{
+                UserId:wx.getStorageSync("userId"),
+                Token:wx.getStorageSync("token"),
+                OrderNo:that.orderNo,
+              }).then(res=>{
+                if(res.code==0){
+                  wx.showToast({title:"订单取消成功~"})
+                  wx.navigateBack();
+                }
+              })
+          }
+        }
+      })
     },
   },
 
@@ -153,7 +201,7 @@ export default {
   }
   .can_cel{
     width:505rpx;height:80rpx;line-height: 80rpx;
-    text-align: center;color:#f00;background: #ececec;
+    text-align: center;color:#cc9f68;background: #ececec;
     margin:80rpx auto 20rpx;border-radius:15rpx;
   }
 </style>
