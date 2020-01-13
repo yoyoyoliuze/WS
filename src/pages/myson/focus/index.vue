@@ -1,7 +1,7 @@
 <template>
   <div>
     <div v-if="list.length>0">
-        <div class="list" v-for="(item,index) in list" :key="index">
+        <div class="list" v-for="(item,index) in list" :key="index" @click="goArt(item)">
           <div class="top ali-c">
             <img class="left" src="/static/images/ava.png" alt="">
             <div class="right">
@@ -38,11 +38,15 @@ export default {
   data () {
     return {
       list:[],
+      page:1,
+      pageSize:12,
     }
   },
-  onShow(){
+  onLoad(){
     this.userId = wx.getStorageSync("userId")
     this.token = wx.getStorageSync("token")
+    this.page=1;
+    this.list=[];
     this.getData()
   },
   methods: {
@@ -50,14 +54,25 @@ export default {
       post('User/MemberCollections',{
         UserId:this.userId,
         Token:this.token,
-        Page:1,
-        Type:1,//0产品 1商家 2技师
+        Page:this.page,
+        PageSize:this.pageSize,
+        Type:2,//0产品 1商家 2技师
       }).then(res=>{
         if(res.code==0){
-          this.list = res.data
+          this.list.push(...res.data);
         }
       })
+    },
+    goArt(item){
+      console.log(item)
+      wx.navigateTo({
+        url:'/pages/myson/jishiDetail/main?artId='
+      })
     }
+  },
+  onReachBottom(){
+    this.page+=1;
+    this.getData();
   }
 }
 </script>

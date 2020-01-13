@@ -20,7 +20,7 @@
                 <span>{{shopDetail.Address}}</span>
               </div>
             </div>
-            <div class="right">
+            <div class="right" @click="goLocation">
               <img src="/static/images/detail/map.png" alt="">
               <p>地图找店</p>
             </div>
@@ -159,7 +159,7 @@
         </div>
       </div>
 
-      <div class="kefu flexc">联系客服（{{shopDetail.BusinessHours}}）</div>
+      <div class="kefu flexc" @click="call">联系客服（{{shopDetail.BusinessHours}}）</div>
       
       <div class="pp3 flex justifyContentBetween fixed bg_fff mt2" v-if="type==0">
           <div> 
@@ -172,7 +172,7 @@
 </template>
 
 <script>
-import {post} from '@/utils'
+import {post,openLocation,callPhone} from '@/utils'
 export default {
 
   data () {
@@ -366,6 +366,12 @@ export default {
       wx.navigateTo({
         url:"/pages/other/allcomment/main?shopId="+this.shopId
       })
+    },
+    goLocation(){
+        openLocation({lat:this.shopDetail.Lat,lng:this.shopDetail.Lng})
+    },
+    call(){
+      callPhone(this.shopDetail.Phone)
     }
   },
 }
