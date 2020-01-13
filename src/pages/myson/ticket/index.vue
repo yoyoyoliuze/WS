@@ -5,17 +5,19 @@
         <span :style="'left:'+tabStyle+'rpx'"></span>
       </div>
       <scroll-view scroll-y @scrolltolower="loadMore" class="certlistBox">
-        <div class="list jus-b" v-if="list.length>0">
-          <div class="left">
-            <p>{{item.Title}}</p>
-            <span>有效期至{{item.EndTime}}</span>
-            <div class="flexc use">{{item.DiscountType==0?'减满券':'折扣券'}}</div>
-          </div>
-          <div class="right flexc">
-            <div>
-              <p>{{item.Denomination}}<span>{{item.Denomination>0?'元':'折'}}</span></p>
-              <span v-if="item.MeetConditions>0">满{{item.MeetConditions}}可使用</span>
-              <span v-else>全场通用</span>
+        <div v-if="list.length>0">
+          <div class="list jus-b" v-for="(item,key) in list" :key="key">
+            <div class="left">
+              <p>{{item.Title}}</p>
+              <span>有效期至{{item.EndTime}}</span>
+              <div class="flexc cc9f" :class="Status==1?'use':''">{{item.DiscountType==1?'减满券':(item.DiscountType==2?'折扣券':'无')}}</div>
+            </div>
+            <div class="right flexc">
+              <div>
+                <p>{{item.Denomination}}<span>{{item.Denomination>1?'元':'折'}}</span></p>
+                <span v-if="item.MeetConditions>0">满{{item.MeetConditions}}可使用</span>
+                <span v-else>全场通用</span>
+              </div>
             </div>
           </div>
         </div>
@@ -30,7 +32,7 @@ export default {
 
   data () {
     return {
-      tabList:[{Id:1,Name:'未使用'},{Id:2,Name:'未使用'},{Id:3,Name:'未使用'}],
+      tabList:[{Id:1,Name:'未使用'},{Id:2,Name:'已使用'},{Id:3,Name:'已失效'}],
       tabIndex:0,
       userId:"",
       token:"",
@@ -108,9 +110,6 @@ export default {
   background-color: #fff;
   overflow: hidden;
   position: relative;
-  .use{
-    background-color: #d4d5d6!important
-  }
   .left{
     width: 460rpx;
     padding: 60rpx 0 0 35rpx;
@@ -119,16 +118,19 @@ export default {
       font-size: 20rpx;
       color: #999;
     }
-    div{
+    .cc9f{
       width: 128rpx;
 	    height: 40rpx;
-	    background-color: #cc9f68;
+	    background-color: #d4d5d6;
       border-radius: 0 0 24px 0;
       position: absolute;
       top: 0;
       left: 0;
       font-size: 24rpx;
       color: #fff
+    }
+    .use{
+      background-color: #cc9f68;
     }
   }
   .right{
