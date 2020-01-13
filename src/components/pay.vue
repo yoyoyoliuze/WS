@@ -120,7 +120,7 @@ export default {
       showPayStatus:1, //支付密码状态 1--支付；2--选择支付方式；3--填写支付密码
       payType: 0,// 0--微信支付；1--余额支付；2--到店付款
       password:'',
-      forgetPasswordUrl:'/pages/mine/setPwd/main',//忘记密码跳转url
+      forgetPasswordUrl:'/pages/member/setPwd/main',//忘记密码跳转url
     };
   },
   onLoad() {

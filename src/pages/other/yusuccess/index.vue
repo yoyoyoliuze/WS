@@ -81,7 +81,7 @@
             <p>折扣金额：</p>￥{{data.zkPrice}}
           </div>
           <div v-if="data.ServiceFee">
-           <p>服务费：</p>￥{{data.ServiceFee}}
+           <p>服务费：</p>{{data.ServiceFee*100}}%
           </div>
         </div>
         <div class="rights">
@@ -101,41 +101,6 @@
     <!--技师独有-->
     <div class="btn" style="display:none">立即预约</div>
 
-    <!--服务弹层-->
-    <div class="mask" v-if="false"></div>
-    <div class="modal_mask" v-if="false">
-        <div class="flex ms_title fb">
-          <img src="/static/images/icons/left.png" alt="" class="left">
-          选择支付方式
-        </div>
-        <div class="pp3">
-            <radio-group @change="changes" class="gou">
-              <label class="flex-between payitem">
-                <div class="flex-center">
-                  <img src="/static/images/icons/shop_c.png" class="payimg1" />
-                  <span class="ml2">到店支付</span>
-                </div>
-                <input type="radio" name="payType" :checked="payType==0" value="0" />
-              </label>
-              <label class="flex-between payitem" >
-                <div class="flex-center">
-                  <img src="/static/images/icons/wx_c.png" class="payimg2" />
-                  <span class="ml2">微信</span>
-                </div>
-                <input type="radio" name="payType" :checked="payType==1" value="1" />
-              </label>
-              <label class="flex-between payitem" >
-                <div class="flex-center">
-                  <img src="/static/images/icons/ye_c.png" class="payimg3" />
-                  <span class="ml2">余额</span>
-                </div>
-                <input type="radio" name="payType" :checked="payType==2" value="2" />
-              </label>
-            </radio-group>
-        </div>
-        <div class="msk_btn">确定</div>
-        
-    </div> 
     <div class="mask" v-if="showCoupon" @click="couponClose"></div>
     <div class="modal_mask" v-if="showCoupon">
         <div class="flex ms_title fb">
