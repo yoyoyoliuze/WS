@@ -63,7 +63,10 @@ export default {
           wx.showToast({
             title:'领取成功！'
           })
-          this.getData()
+          setTimeout(()=>{
+            this.getData()
+          },1500)
+          
         }
       })
     }

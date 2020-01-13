@@ -1,32 +1,43 @@
 <template>
   <div>
       <div class="tab flex">
-        <div class="flex1 flexc" :class="{'active':tabIndex==index}" v-for="(item, index) in tabList" :key="index" @click="cliTab(index)">{{item}}</div>
+        <div class="flex1 flexc" :class="{'active':tabIndex==index}" v-for="(item, index) in tabList" :key="index" @click="cliTab(index)">{{item.Name}}</div>
         <span :style="'left:'+tabStyle+'rpx'"></span>
       </div>
-      <div class="list jus-b">
-        <div class="left">
-          <p>满100元减20元券</p>
-          <span>有效期至2020-01-12</span>
-          <div class="flexc use">减满券</div>
-        </div>
-        <div class="right flexc">
-          <div>
-            <p>20<span>元</span></p>
-            <span>满100可使用</span>
+      <scroll-view scroll-y @scrolltolower="loadMore" class="certlistBox">
+        <div v-if="list.length>0">
+          <div class="list jus-b" v-for="(item,key) in list" :key="key">
+            <div class="left">
+              <p>{{item.Title}}</p>
+              <span>有效期至{{item.EndTime}}</span>
+              <div class="flexc cc9f" :class="Status==1?'use':''">{{item.DiscountType==1?'减满券':(item.DiscountType==2?'折扣券':'无')}}</div>
+            </div>
+            <div class="right flexc">
+              <div>
+                <p>{{item.Denomination}}<span>{{item.Denomination>1?'元':'折'}}</span></p>
+                <span v-if="item.MeetConditions>0">满{{item.MeetConditions}}可使用</span>
+                <span v-else>全场通用</span>
+              </div>
+            </div>
           </div>
         </div>
-      </div>
+        <div style="padding:200rpx 0;text-align:center;" v-else>暂无数据</div>
+      </scroll-view>
   </div>
 </template>
 
 <script>
+import {post} from '@/utils'
 export default {
 
   data () {
     return {
-      tabList:['未使用','已使用','已失效'],
+      tabList:[{Id:1,Name:'未使用'},{Id:2,Name:'已使用'},{Id:3,Name:'已失效'}],
       tabIndex:0,
+      userId:"",
+      token:"",
+      Status:1,//1-未使用 2-已使用  3-已过期
+      list:[]
       
     }
   },
@@ -36,7 +47,10 @@ export default {
     }
   },
   onShow(){
-    
+    this.list = []
+    this.userId = wx.getStorageSync("userId")
+    this.token = wx.getStorageSync("token")
+    this.getDate()
   },
   methods: {
     goUrl(url,param){
@@ -44,12 +58,23 @@ export default {
           url:url+'?id='+param
         })
     },
-    cliServer(index){
-      this.serverIndex = index
-    },
     cliTab(index){
       this.tabIndex = index
+      this.Status = this.tabList[index].Id
+      this.getDate()
     },
+    getDate(){
+      post('User/CouponList',{
+        UserId:this.userId,
+        Token:this.token,
+        Page:1,
+        Status:this.Status
+      }).then(res=>{
+        if(res.code==0){
+          this.list = res.data
+        }
+      })
+    }
   },
 }
 </script>
@@ -85,9 +110,6 @@ export default {
   background-color: #fff;
   overflow: hidden;
   position: relative;
-  .use{
-    background-color: #d4d5d6!important
-  }
   .left{
     width: 460rpx;
     padding: 60rpx 0 0 35rpx;
@@ -96,16 +118,19 @@ export default {
       font-size: 20rpx;
       color: #999;
     }
-    div{
+    .cc9f{
       width: 128rpx;
 	    height: 40rpx;
-	    background-color: #cc9f68;
+	    background-color: #d4d5d6;
       border-radius: 0 0 24px 0;
       position: absolute;
       top: 0;
       left: 0;
       font-size: 24rpx;
       color: #fff
+    }
+    .use{
+      background-color: #cc9f68;
     }
   }
   .right{
@@ -142,6 +167,11 @@ export default {
     width: 50rpx;
     background-color: #cc9f68
   }
+}
+.certlistBox {
+  height: calc(100vh - 100rpx);
+  overflow: hidden;
+  overflow-y: auto;
 }
 
 </style>
