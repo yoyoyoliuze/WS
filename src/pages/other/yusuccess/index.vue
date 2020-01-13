@@ -299,7 +299,19 @@ export default {
     },
     // 确认支付-type--支付类型0--微信支付.1--余额支付;paw--支付密码
     payconfirm(type,paw){
-      console.log(type,paw)
+      if(type*1===2){
+        post('Order/OrderOfflinePay',{
+          UserId:this.UserId,
+          Token:this.Token,
+          OrderNo:this.orderNumber,
+          Password:paw
+        }).then(res=>{
+           this.payStatus = false;
+            wx.redirectTo({
+              url:`/pages/other/myyue/main?orderNo=${this.orderNumber}`
+            })
+        })  
+      }else 
       if(type*1===1){
         post('Order/PaymentOrder',{
           UserId:this.UserId,
@@ -327,28 +339,28 @@ export default {
     },
     // 支付成功
     paySuccess(){
-      wx.showToast({
-        title:'支付成功'
-      })
+      // wx.showToast({
+      //   title:'支付成功'
+      // })
       this.payStatus = false;
-      setTimeout(()=>{
+      // setTimeout(()=>{
         wx.redirectTo({
-          url:'/pages/orderson/orderDetail/main?orderNo='+this.orderNumber
+          url:`/pages/other/success/main?orderNo=${this.orderNumber}&status=${true}&price=${this.data.AllPrice}`
         })
-      },1500)
+      // },1500)
     },
     // 取消付款
     closePay(){
       this.payStatus = false;
-      wx.showToast({
-        title:'支付失败，订单已创建',
-        icon:'none'
-      })
-      setTimeout(()=>{
+      // wx.showToast({
+      //   title:'支付失败，订单已创建',
+      //   icon:'none'
+      // })
+      // setTimeout(()=>{
         wx.redirectTo({
-          url:'/pages/orderson/orderDetail/main?orderNo='+this.orderNumber
+          url:`/pages/other/success/main?orderNo=${this.orderNumber}&price=${this.data.AllPrice}`
         })
-      },1500)
+      // },1500)
     }
   },
 

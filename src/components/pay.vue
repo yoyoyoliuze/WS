@@ -17,7 +17,7 @@
       <div class="flex-between maskitem" @click="showPayStatus=2">
         <div class="fontclolr">付款方式</div>
         <div>
-          <text class="wx">{{payType*1?'余额':'微信'}}</text>
+          <text class="wx">{{payType*1===1?'会员余额':payType*1===0?'微信支付':'到店支付'}}</text>
           <img src="http://jrwd.wtvxin.com/upload/images/icons/right.png" class="right" />
         </div>
       </div>
@@ -35,17 +35,24 @@
       </div>
       <div class="gou">
         <radio-group @change="changes">
+          <label class="flex-between payitem" v-if="payMode==='none'">
+            <div class="flex-center">
+              <img src="/static/images/icons/shop_c.png" class="payimg" />
+              到店支付
+            </div>
+            <input type="radio" name="payType" :checked="payType==2" value="2" />
+          </label>
           <label class="flex-between payitem" v-if="payMode==='wx'||payMode==='none'">
             <div class="flex-center">
-              <img src="http://jrwd.wtvxin.com/upload/images/icons/wx_f.png" class="payimg" />
-              微信
+              <img src="/static/images/icons/wx_c.png" class="payimg" />
+              微信支付
             </div>
             <input type="radio" name="payType" :checked="payType==0" value="0" />
           </label>
           <label class="flex-between payitem"  v-if="payMode==='balance'||payMode==='none'">
             <div class="flex-center">
-              <img src="http://jrwd.wtvxin.com/upload/images/icons/rmbbg.png" class="payimg" />
-              余额
+              <img src="/static/images/icons/ye_c.png" class="payimg" />
+              会员余额
             </div>
             <input type="radio" name="payType" :checked="payType==1" value="1" />
           </label>
@@ -87,7 +94,7 @@
 // onClose --关闭弹窗
 // success -- 点击支付或者输入支付密码后。
 // -------接收：
-//            payType---  Number支付类型；0--微信支付.1--余额支付
+//            payType---  Number支付类型；0--微信支付.1--余额支付；2--到店付款
 //            password--- string支付密码
 
 
@@ -111,7 +118,7 @@ export default {
     return {
       focusflag: true, //支付密码获取焦点
       showPayStatus:1, //支付密码状态 1--支付；2--选择支付方式；3--填写支付密码
-      payType: 0,// 0--微信支付.1--余额支付
+      payType: 0,// 0--微信支付；1--余额支付；2--到店付款
       password:'',
       forgetPasswordUrl:'/pages/mine/setPwd/main',//忘记密码跳转url
     };
