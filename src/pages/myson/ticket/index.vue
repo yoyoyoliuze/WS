@@ -1,32 +1,41 @@
 <template>
   <div>
       <div class="tab flex">
-        <div class="flex1 flexc" :class="{'active':tabIndex==index}" v-for="(item, index) in tabList" :key="index" @click="cliTab(index)">{{item}}</div>
+        <div class="flex1 flexc" :class="{'active':tabIndex==index}" v-for="(item, index) in tabList" :key="index" @click="cliTab(index)">{{item.Name}}</div>
         <span :style="'left:'+tabStyle+'rpx'"></span>
       </div>
-      <div class="list jus-b">
-        <div class="left">
-          <p>满100元减20元券</p>
-          <span>有效期至2020-01-12</span>
-          <div class="flexc use">减满券</div>
-        </div>
-        <div class="right flexc">
-          <div>
-            <p>20<span>元</span></p>
-            <span>满100可使用</span>
+      <scroll-view scroll-y @scrolltolower="loadMore" class="certlistBox">
+        <div class="list jus-b" v-if="list.length>0">
+          <div class="left">
+            <p>{{item.Title}}</p>
+            <span>有效期至{{item.EndTime}}</span>
+            <div class="flexc use">{{item.DiscountType==0?'减满券':'折扣券'}}</div>
+          </div>
+          <div class="right flexc">
+            <div>
+              <p>{{item.Denomination}}<span>{{item.Denomination>0?'元':'折'}}</span></p>
+              <span v-if="item.MeetConditions>0">满{{item.MeetConditions}}可使用</span>
+              <span v-else>全场通用</span>
+            </div>
           </div>
         </div>
-      </div>
+        <div style="padding:200rpx 0;text-align:center;" v-else>暂无数据</div>
+      </scroll-view>
   </div>
 </template>
 
 <script>
+import {post} from '@/utils'
 export default {
 
   data () {
     return {
-      tabList:['未使用','已使用','已失效'],
+      tabList:[{Id:1,Name:'未使用'},{Id:2,Name:'未使用'},{Id:3,Name:'未使用'}],
       tabIndex:0,
+      userId:"",
+      token:"",
+      Status:1,//1-未使用 2-已使用  3-已过期
+      list:[]
       
     }
   },
@@ -36,7 +45,10 @@ export default {
     }
   },
   onShow(){
-    
+    this.list = []
+    this.userId = wx.getStorageSync("userId")
+    this.token = wx.getStorageSync("token")
+    this.getDate()
   },
   methods: {
     goUrl(url,param){
@@ -44,12 +56,23 @@ export default {
           url:url+'?id='+param
         })
     },
-    cliServer(index){
-      this.serverIndex = index
-    },
     cliTab(index){
       this.tabIndex = index
+      this.Status = this.tabList[index].Id
+      this.getDate()
     },
+    getDate(){
+      post('User/CouponList',{
+        UserId:this.userId,
+        Token:this.token,
+        Page:1,
+        Status:this.Status
+      }).then(res=>{
+        if(res.code==0){
+          this.list = res.data
+        }
+      })
+    }
   },
 }
 </script>
@@ -142,6 +165,11 @@ export default {
     width: 50rpx;
     background-color: #cc9f68
   }
+}
+.certlistBox {
+  height: calc(100vh - 100rpx);
+  overflow: hidden;
+  overflow-y: auto;
 }
 
 </style>
