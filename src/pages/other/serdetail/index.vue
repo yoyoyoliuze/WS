@@ -40,7 +40,7 @@
       </div>
       <div class="mt2 bg_fff">
         <div class="pp3 text_center">产品介绍</div>
-        <div v-html="ContentDetail"></div>
+        <div v-html="data.ContentDetail"></div>
       </div>
       <div class="fix_btn" @click="submit">立即预约</div>
   </div>

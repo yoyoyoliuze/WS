@@ -9,12 +9,12 @@
       <div class="search ali-c jus-b">
         <div class="left ali-c">
           <img src="/static/images/search.png" alt="">
-          <input type="text" placeholder="请输入发型师或门店名称" placeholder-style='color:#999'>
+          <input type="text" placeholder="请输入发型师或门店名称" v-model="searchText" placeholder-style='color:#999' confirm-type="search" @confirm="search">
         </div>
-        <div class="right">
+        <!-- <div class="right">
           <img src="/static/images/map.png" alt="">
           <p>地图找店</p>
-        </div>
+        </div> -->
       </div>
     </div>
     <div class="hot">
@@ -127,7 +127,8 @@ export default {
       bannerList:[],
       startPic:'',
       hotList:[],
-      shopList:[]
+      shopList:[],
+      searchText:'',//搜索
     }
   },
   onShow(){
@@ -191,6 +192,10 @@ export default {
       wx.navigateTo({
         url:url+'?id='+id
       })
+    },
+    // 搜索门店
+    search(){
+      console.log(this.searchText)
     }
   }
   
@@ -367,7 +372,8 @@ export default {
     position: relative;
     top: -40rpx;
     .left{
-      width: 560rpx;
+      // width: 560rpx;
+      width: 650rpx;
       height: 64rpx;
       border-radius: 32rpx;
       border: solid 1rpx #cccccc;
@@ -375,6 +381,9 @@ export default {
         width: 28rpx;
         height: 28rpx;
         margin: 0 15rpx 0 30rpx;
+      }
+      input{
+        width:550rpx;
       }
     }
     .right{
