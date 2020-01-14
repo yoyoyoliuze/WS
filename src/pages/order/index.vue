@@ -48,7 +48,9 @@
               <div class="ali-c jus-b"><p>合计</p><span>￥{{item1.serInfo.total}}</span></div>
             </div>
             <div class="btn-box jus-e ali-c">
-              <p class="flexc" @tap="menuItem(item1)">{{item1.StatueSTR=='已服务'?'评价':(item1.StatueSTR=='待服务'?'取消预约':'重新预约')}}</p>
+              <p class="flexc tt_item" @tap="menuItem(item1)" v-if="item1.IsComment==1">评价</p>
+              <p class="flexc tt_item" @tap="menuItem(item1)" v-if="item1.IsCancel==1">取消预约</p>
+              <p class="flexc tt_item" @tap="menuItem(item1)" v-else>重新预约</p>
             </div>
           </div>
         </div>
@@ -145,7 +147,9 @@ export default {
     //订单重新预约等操作
     menuItem(item){
       if(item.StatueSTR=='已服务'){//去往评价页面
-        this.goUrl('/pages/myson/pingjia/main',item.OrderNumber)
+        wx.navigateTo({
+          url:'/pages/myson/pingjia/main?OrderNo='+item.OrderNumber
+        })
       }else if(item.StatueSTR=='待服务'){//取消预约
         this.cancleOrder(item)
       }else{ //重新预约
@@ -303,6 +307,9 @@ export default {
       border-radius: 32rpx;
     }
   }
+}
+.tt_item{
+  margin-left:20rpx;
 }
 
 </style>

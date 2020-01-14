@@ -42,7 +42,9 @@
 
       </div>
       <div class="end jus-e ali-c">
-        <p class="flexc" @tap="menuItem">{{data.StatueSTR=='已服务'?'评价':(data.StatueSTR=='待服务'?'取消预约':'重新预约')}}</p>
+        <p class="flexc tt_item" @tap="menuItem(item1)" v-if="data.IsComment==1">评价</p>
+        <p class="flexc tt_item" @tap="menuItem(item1)" v-if="data.IsCancel==1">取消预约</p>
+        <p class="flexc tt_item" @tap="menuItem(item1)" v-else>重新预约</p>
       </div>
   </div>
 </template>
@@ -98,7 +100,7 @@ export default {
     menuItem(){
       if(data.StatueSTR=='已服务'){//去往评价页面
         wx.navigateTo({
-          url:'/pages/index/main?OrderNo='+data.OrderNumber
+          url:'/pages/myson/pingjia/main?OrderNo='+data.OrderNumber
         })
       }else if(data.StatueSTR=='待服务'){//取消预约
         this.cancleOrder()
