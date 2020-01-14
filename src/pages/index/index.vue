@@ -35,14 +35,14 @@
     </div>
     <div class="school">
       <div class="one ali-c jus-b">
-        <div class="left ali-c jus-b"  @click="goUrl('/pages/myson/ticket/main')">
+        <div class="left ali-c jus-b" @click="goUrl('/pages/myson/ticket/main')">
           <div>
             <p>优惠券</p>
             <span>会员可享受特权哦</span>
           </div>
           <img src="/static/images/index_you.png" alt="">
         </div>
-        <div class="right ali-c jus-b">
+        <div class="right ali-c jus-b" @click="goUrl('/pages/home/card/main')">
           <div>
             <p>充值卡</p>
             <span>会员可享受特权哦</span>

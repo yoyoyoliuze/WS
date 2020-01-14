@@ -115,13 +115,13 @@ export default {
       this.getList()
     },
     getList(){
-      console.log({
-        UserId:this.userId,
-        Token:this.token,
-        Page:1,
-        Type:this.Type,
-        Status:this.Status
-      },"请求参数")
+      // console.log({
+      //   UserId:this.userId,
+      //   Token:this.token,
+      //   Page:1,
+      //   Type:this.Type,
+      //   Status:this.Status
+      // },"请求参数")
       post('Order/OrderList',{
         UserId:this.userId,
         Token:this.token,
@@ -140,20 +140,22 @@ export default {
             this.$set(item.serInfo,"serve",item.serInfo.serve.join(" | "))
           })
           this.list = res.data
-          console.log(this.list,"list+++++++++")
+          // console.log(this.list,"list+++++++++")
         }
       })
     },
     //订单重新预约等操作
     menuItem(item){
-      if(item.StatueSTR=='已服务'){//去往评价页面
+      if(item.IsComment==1){//去往评价页面
         wx.navigateTo({
           url:'/pages/myson/pingjia/main?OrderNo='+item.OrderNumber
         })
-      }else if(item.StatueSTR=='待服务'){//取消预约
+      }else if(item.IsCancel==1){//取消预约
         this.cancleOrder(item)
       }else{ //重新预约
-        this.goUrl('/pages/index/main')
+        wx.switchTab({
+          url:'/pages/index/main'
+        })
       }
     },
     cancleOrder(item){
@@ -164,7 +166,9 @@ export default {
       }).then(res=>{
         if(res.code==0){
           wx.showToast({title:"订单取消成功~"})
-          this.getList()
+          setTimeout(()=>{
+            this.getList()
+          },1500)
         }
       })
     },

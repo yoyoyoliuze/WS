@@ -174,7 +174,7 @@ export default {
           if(item2.sonShow){
               num++;
               id = item2.Id
-              price = item2.Denomination
+              price = item2.MeetConditions
           }
         })
       })
