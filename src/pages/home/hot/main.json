@@ -1,3 +1,4 @@
 {
-  "navigationBarTitleText": "热门项目"
+  "navigationBarTitleText": "热门项目",
+  "enablePullDownRefresh": true
 }
