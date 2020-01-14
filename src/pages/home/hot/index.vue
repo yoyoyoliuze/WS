@@ -1,5 +1,13 @@
 <template>
   <div>
+      <div class="searchBox" v-if="searchStatus">
+        <div class="left">
+          <img src="/static/images/search.png" alt="">
+          <input type="text" placeholder="输入要搜索的服务" v-model="keyword">
+          <div class="removeInput" v-show="keyword" @click="keyword=''">×</div>
+        </div>
+        <div class="searchBtn" @click="onSearch">搜索</div>
+      </div>
       <div class="flex bg_fff p3">
           <div class="hot_itl font30" :class="{'active':tabActive==0}" @click="cliTab(0)">默认</div>
           <div class="hot_itl flex flexAlignCenter justifyContentCenter" :class="{'active':tabActive==1}" @click="cliTab(1)">
@@ -33,8 +41,8 @@
               </div>
           </div>
       </div>
-      <p class="list-data" v-if="isHaveData">暂无数据</p>
-      <p class="list-data" v-if="isOver">没有更多了</p>
+      <p class="list-data" v-if="this.list.length<1">暂无数据</p>
+      <p class="list-data" v-if="isOver&&page!==1">没有更多了</p>
 
   </div>
 </template>
@@ -45,10 +53,16 @@ import '@/style/bb.scss'
 
 export default {
   
-  onShow(){
-    this.tabActive = 0
-    this.paixu = 0
-    this.getList()
+  onLoad(options){
+    this.keyword = options.keyword||'';
+    if(options.keyword){
+      this.searchStatus = true;
+    }else{
+      this.searchStatus = false;
+    }
+    this.tabActive = 0;
+    this.paixu = 0;
+    this.getList();
   },
   watch: {
     paixu(e){
@@ -60,10 +74,11 @@ export default {
       tabActive:0,
       paixu:0,//排序，0为不排序，1为升序，2为降序
       page:1,
-      pagesize:12,
+      pagesize:10,
       list:[],
-      isHaveData:false,
-      isOver:false
+      isOver:false,
+      keyword:'',
+      searchStatus:false,
     }
   },
   methods: {
@@ -80,17 +95,17 @@ export default {
         PageSize:this.pagesize,
         Sort:this.tabActive,
         Order:xu,
-        IsHot:1
+        IsHot:1,
+        Keywords:this.keyword
       }).then(res=>{
-        if(res.code==0){
+          if(this.page===1){
+            this.list =[];
+          }
+          if(res.data.length <this.pagesize){
+            this.isOver = true;
+          }
+          console.log(this.isOver)
           this.list.push(...res.data)
-          if(this.list.length == 0){
-            this.isHaveData = true
-          }
-          if(!this.isHaveData&&res.data.length!=this.pagesize){
-            this.isOver = true
-          }
-        }
       })
     },
     cliTab(index){
@@ -119,8 +134,31 @@ export default {
       wx.navigateTo({
         url
       })
+    },
+    // 搜索
+    onSearch(){
+        this.isOver = false;
+        this.page = 1;
+        this.getList();
     }
     
+  },
+  //下拉刷新
+  onPullDownRefresh() {
+    wx.stopPullDownRefresh();
+    this.isOver = false;
+    this.page = 1;
+    this.tabActive=0;
+    this.paixu=0;
+    this.keyword ='';
+    this.getList();
+  },
+  // 上拉加载
+  onReachBottom() {
+    if(!this.isOver){
+        this.page += 1;
+        this.getList();
+    }
   },
 }
 </script>
@@ -156,5 +194,44 @@ export default {
   }
   .font38{
     font-size:38rpx;
+  }
+  .searchBox{
+    display:flex;
+    align-items:center;
+    padding:20rpx 30rpx 0;
+    box-sizing:border-box;
+    width:100%;
+    background:#fff;
+    .left{
+      background:#f5f5f5;
+      border-radius:10rpx;
+      padding:0 20rpx;
+      width:550rpx;
+      height:70rpx;
+      display:flex;
+      align-items:center;
+      img{
+        width:40rpx;
+        height:40rpx;
+      }
+      input{
+        width:430rpx;
+        margin:0 20rpx;
+      }
+      .removeInput{
+        border-radius:50%;
+        background:#ccc;
+        width:40rpx;
+        height:40rpx;
+        text-align:center;
+        line-height:40rpx;
+        color:#fff;
+      }
+    }
+    .searchBtn{
+      color:#cc9f68;
+      text-align:center;
+      width:100rpx;
+    }
   }
 </style>

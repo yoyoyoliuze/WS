@@ -9,7 +9,8 @@
       <div class="search ali-c jus-b">
         <div class="left ali-c">
           <img src="/static/images/search.png" alt="">
-          <input type="text" placeholder="请输入发型师或门店名称" v-model="searchText" placeholder-style='color:#999' confirm-type="search" @confirm="search">
+          <input type="text" placeholder="输入要搜索的服务" v-model="searchText" 
+            placeholder-style='color:#999' confirm-type="search" @confirm="onSearch">
         </div>
         <!-- <div class="right">
           <img src="/static/images/map.png" alt="">
@@ -194,8 +195,12 @@ export default {
       })
     },
     // 搜索门店
-    search(){
+    onSearch(){
       console.log(this.searchText)
+      if(!this.searchText) return;
+      wx.navigateTo({
+        url:'/pages/home/hot/main?keyword='+this.searchText
+      })
     }
   }
   
