@@ -9,16 +9,32 @@
       </div>
       <div class="score ali-c">
         <p>评分</p>
-        <img src="/static/images/icons/s1.png" alt="">
-        <span>满意</span>
-        <img src="/static/images/icons/s2.png" alt="">
+        <div class="flex flexAlignCenter" v-for="(item,index) in emotionList" :key="index" @tap=chose(item)>
+          <img src="/static/images/icons/s1.png" alt="" v-if="index==0&&item.Statu==true">
+          <img src="/static/images/icons/s4.png" alt="" v-if="index==0&&item.Statu==false">
+          <img src="/static/images/icons/s2.png" alt="" v-if="index==1&&item.Statu==true">
+          <img src="/static/images/icons/s5.png" alt="" v-if="index==1&&item.Statu==false">
+          <img src="/static/images/icons/s3.png" alt="" v-if="index==2&&item.Statu==true">
+          <img src="/static/images/icons/s6.png" alt="" v-if="index==2&&item.Statu==false">
+          <span>{{index==0?'满意':(index==1?'一般':'不满意')}}</span>
+        </div>
+        <!-- <div class="flex flexAlignCenter">
+          <img src="/static/images/icons/s2.png" alt="">
+          <span>一般</span>
+        </div>
+        <div class="flex flexAlignCenter">
+          <img src="/static/images/icons/s3.png" alt="">
+          <span>不满意</span>
+        </div> -->
+        
+        <!-- <img src="/static/images/icons/s2.png" alt="">
         <span>一般</span>
         <img src="/static/images/icons/s3.png" alt="">
-        <span>不满意</span>
+        <span>不满意</span> -->
       </div>
       <textarea placeholder="填写您对技师的评价~"></textarea>
       <div class="img-box">
-        <img src="/static/images/my_icon_2.png" alt="">
+        <img src="/static/images/icons/add2.png" alt="">
       </div>
       <p class="butn flexc">提交</p>
   </div>
@@ -30,9 +46,20 @@ export default {
 
   data () {
     return {
-      
+      emotionList:[{Id:1,Name:'满意',Statu:true},{Id:2,Name:'一般',Statu:false},{Id:3,Name:'不满意',Statu:false}]
     }
   },
+  methods:{
+    chose(item){
+        this.emotionList.map(item2=>{
+          if(item==item2){
+              item2.Statu = true
+          }else{
+              item2.Statu = false
+          }
+        })
+    }
+  }
 }
 </script>
 
@@ -47,7 +74,7 @@ export default {
   margin: 100rpx auto
 }
 .img-box{
-  background-color: #fff;
+  background: #fff;
   padding: 30rpx;
   box-sizing: border-box;
   img{
@@ -91,4 +118,5 @@ textarea{
     margin-right: 20rpx;
   }
 }
+
 </style>

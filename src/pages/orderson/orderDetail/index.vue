@@ -98,7 +98,7 @@ export default {
     menuItem(){
       if(data.StatueSTR=='已服务'){//去往评价页面
         wx.navigateTo({
-          url:'/pages/index/main?OrderNo='+data.OrderNumber
+          url:'/pages/myson/pingjia/main?OrderNo='+data.OrderNumber
         })
       }else if(data.StatueSTR=='待服务'){//取消预约
         this.cancleOrder()

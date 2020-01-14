@@ -280,6 +280,13 @@
 					"pathName": "pages/myson/consume/main",
 					"query": "",
 					"scene": null
+				},
+				{
+					"id": -1,
+					"name": "发表评价",
+					"pathName": "pages/myson/pingjia/main",
+					"query": "",
+					"scene": null
 				}
 			]
 		}
