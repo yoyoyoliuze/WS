@@ -36,8 +36,9 @@
           <p v-if="artInfo.ShopData">{{artInfo.ShopData.ShopNick}}</p>
           <div>
             <img src="/static/images/detail/phone.png" alt="" @click="call">
-            <img src="/static/images/detail/address.png" alt="">
-            <img src="/static/images/detail/love.png" alt="">
+            <img src="/static/images/detail/address.png" alt="" @click="goLocation">
+            <img src="/static/images/detail/love.png" v-if="!love" alt="" @click="attention">
+            <img src="/static/images/detail/love-a.png" v-else alt="" @click="attention">
           </div>
         </div>
       </div>
@@ -142,7 +143,7 @@
 </template>
 
 <script>
-import {post,callPhone} from '@/utils/index'
+import {post,callPhone,openLocation} from '@/utils/index'
 export default {
   name:'技师详情',
   data () {
@@ -152,7 +153,8 @@ export default {
       artInfo:{},
       artId:'',
       speciality:{},//专长
-      comment:{}
+      comment:{},
+      love:false,
     }
   },
   computed: {
@@ -202,7 +204,31 @@ export default {
       this.tabIndex = index
     },
     call(){
-      callPhone(this.artInfo.Mobile)
+      callPhone(this.artInfo.ShopData.Phone)
+    },
+    goLocation(){
+      openLocation({lng:this.artInfo.ShopData.Lng,lat:this.artInfo.ShopData.Lat})
+    },  
+    // 收藏
+    attention(){
+      // wx.showModal({
+      //   title:'',
+      //   success(ret){
+          // if(ret.confirm){
+            post('User/AddCollections',{
+              UserId:wx.getStorageSync('userId'),
+              Token:wx.getStorageSync('token'),
+              Type:2,
+              Id:this.artId
+            }).then(res=>{
+              this.love = true;
+              wx.showToast({
+                title:res.msg
+              })
+            })
+          // }
+      //   }
+      // })
     },
     goComment(){
       wx.navigateTo({

@@ -1,9 +1,9 @@
 <template>
   <div>
     <div v-if="list.length>0">
-        <div class="list" v-for="(item,index) in list" :key="index">
+        <div class="list" v-for="(item,index) in list" :key="index" @click="goArt(item)">
           <div class="top ali-c">
-            <img class="left" src="/static/images/ava.png" alt="">
+            <img class="left" :src="item.ArtificerPic" alt="">
             <div class="right">
               <div class="ali-c one">
                 <p>{{item.Name}}</p>
@@ -12,16 +12,16 @@
               <div class="ali-c two">
                 <img src="/static/images/my_icon_7.png" alt="">
                 <span>好评率</span>
-                <span>{{item.FeedbackRate}}</span>
+                <span>{{item.FeedbackRate}}%</span>
               </div>
             </div>
           </div>
           <div class="address ali-c jus-b">
             <div class="ali-c">
-              <p>{{item.ShopData.ShopNick}}</p>
+              <p @click.stop="goShopDetail(item)">{{item.ShopData.ShopNick}}</p>
               <img class="left" src="/static/images/more.png" alt="">
             </div>
-            <img class="right" src="/static/images/address_r.png" alt="">
+            <img class="right" src="/static/images/address_r.png" alt="" @click.stop="goLocation(item.ShopData)">
           </div>
           <div class="btn-box jus-e ali-c">
             <p class="flexc" :class="item.IsRest==1?'active':'normal'">{{item.IsRest==1?'休息中':'预约'}}</p>
@@ -33,16 +33,20 @@
 </template>
 
 <script>
-import {post} from '@/utils'
+import {post,openLocation} from '@/utils'
 export default {
   data () {
     return {
       list:[],
+      page:1,
+      pageSize:12,
     }
   },
-  onShow(){
+  onLoad(){
     this.userId = wx.getStorageSync("userId")
     this.token = wx.getStorageSync("token")
+    this.page=1;
+    this.list=[];
     this.getData()
   },
   methods: {
@@ -50,14 +54,36 @@ export default {
       post('User/MemberCollections',{
         UserId:this.userId,
         Token:this.token,
-        Page:1,
-        Type:1,//0产品 1商家 2技师
+        Page:this.page,
+        PageSize:this.pageSize,
+        Type:2,//0产品 1商家 2技师
       }).then(res=>{
         if(res.code==0){
-          this.list = res.data
+          this.list.push(...res.data);
         }
       })
+    },
+    goArt(item){
+      console.log(item)
+      wx.navigateTo({
+        url:'/pages/myson/jishiDetail/main?artId='+item.ArtId
+      })
+    },
+    goShopDetail(item){
+        wx.navigateTo({
+          url:'/pages/other/chose/main?id='+item.ShopId
+        })
+    },
+    goLocation(shop){
+        openLocation({
+          lat:shop.Lat,
+          lng:shop.Lng
+        })
     }
+  },
+  onReachBottom(){
+    this.page+=1;
+    this.getData();
   }
 }
 </script>
@@ -124,7 +150,8 @@ export default {
           font-weight: 900
         }
         span{
-          width: 60rpx;
+          // width: 60rpx;
+          padding:0 10rpx;
           height: 32rpx;
           background-color: #cc9f68;
           border-radius: 4rpx;
