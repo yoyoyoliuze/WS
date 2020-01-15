@@ -164,7 +164,7 @@ export default {
           setTimeout(()=>{
             let payUrl = ''
             if(this.type == 2){ //次卡支付成功去往我的次卡
-              wx.reLaunch({
+              wx.redirectTo({
                 url:"/pages/member/ticket/main"
               })
             }else{
