@@ -151,7 +151,7 @@ export default {
     delImg(index) {
       this.imgPathArr.splice(index, 1);
       this.imgPathArr2.splice(index, 1);
-      if (this.imgPathArr.length < 8) {
+      if (this.imgPathArr.length < 4) {
         this.isShowBtnUpload = true;
       }
     },
@@ -166,9 +166,9 @@ export default {
       }).then(res=>{
         if(res.code==0){
           wx.showToast({title:"评价成功~"})
-          setTimeout(()=>{
-            wx.navigateTo({url:'/pages/other/allcomment/main'})
-          },1500)
+          // setTimeout(()=>{
+          //   wx.navigateTo({url:'/pages/other/allcomment/main'})
+          // },1500)
         }
       })
     }

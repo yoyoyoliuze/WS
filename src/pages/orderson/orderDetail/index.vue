@@ -98,14 +98,14 @@ export default {
     },
     //订单重新预约等操作
     menuItem(){
-      if(data.StatueSTR=='已服务'){//去往评价页面
+      if(data.IsComment==1){//去往评价页面
         wx.navigateTo({
           url:'/pages/myson/pingjia/main?OrderNo='+data.OrderNumber
         })
-      }else if(data.StatueSTR=='待服务'){//取消预约
+      }else if(data.IsCancel==1){//取消预约
         this.cancleOrder()
       }else{ //重新预约
-        wx.navigateTo({
+        wx.switchTab({
           url:'/pages/index/main'
         })
       }

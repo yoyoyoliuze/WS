@@ -19,6 +19,7 @@ import '@/style/bb.scss'
 export default {
   
   onShow(){
+    this.getData()
   },
 
   data () {
@@ -36,6 +37,11 @@ export default {
     switchPath(url){
       wx.navigateTo({
         url
+      })
+    },
+    getData(){
+      post('User/WebSysConfig').then(res=>{
+        
       })
     }
     
