@@ -1,10 +1,10 @@
 <template>
   <div style="padding-bottom:100rpx" v-if="hasData">
       <div class="top flexc">
-        <span :class="move?'move':''">{{data.StatueSTR}}</span>
+        <span :class="move?'move':''">{{data.Payment=='到店付款'?data.Payment:data.StatusName}}</span>
       </div>
       <div class="shop ali-c jus-b">
-        <div class="ali-c jus-b">
+        <div class="ali-c jus-b" @click="goShopDetail">
           <img class="left" :src="data.ShopData.Logo" alt="">
           <p>{{data.ShopData.ShopName}}</p>
         </div>
@@ -25,10 +25,10 @@
       <div class="ali-c jus-e heji">
         <span>支付金额:￥{{data.Total}}</span>
       </div>
-      <div class="jishi">
+      <div class="jishi" v-if="data.PicData.length>0">
         <div class="tit ali-c"><span></span><p>技师图片</p></div>
         <scroll-view scroll-x enable-flex class="jishi-img ali-c">
-          <div class="ali-c" v-if="data.PicData.length>0">
+          <div class="ali-c">
             <img mode='aspectFill' :src="item.PicUrl" alt="" v-for="(item, index) in data.PicData" :key="index">
           </div>
         </scroll-view>
@@ -42,16 +42,24 @@
 
       </div>
       <div class="end jus-e ali-c">
+        <p class="flexc tt_item" @tap="payStatus=true" v-if="data.Ispay==1">支付</p>
         <p class="flexc tt_item" @tap="menuItem(item1)" v-if="data.IsComment==1">评价</p>
         <p class="flexc tt_item" @tap="menuItem(item1)" v-if="data.IsCancel==1">取消预约</p>
-        <p class="flexc tt_item" @tap="menuItem(item1)" v-else>重新预约</p>
+        <p class="flexc tt_item" @tap="onReservation()" v-else>重新预约</p>
       </div>
+      <pay :total="data.Total" :orderNumber="data.OrderNumber" v-if="payStatus" 
+        @onClose="payStatus = false" 
+        @success="onPayconfirm"
+        >
+      </pay>
   </div>
 </template>
 
 <script>
-import {post,openLocation} from '@/utils'
+import {post,openLocation,Reservation,Payconfirm} from '@/utils';
+import pay from '@/components/pay.vue';
 export default {
+  components:{pay},
 
   data () {
     return {
@@ -61,6 +69,7 @@ export default {
       OrderNo:"",
       data:{},
       hasData:false,//是否开始渲染数据
+      payStatus:false,
     }
   },
   onUnload(){
@@ -98,32 +107,61 @@ export default {
     },
     //订单重新预约等操作
     menuItem(){
-      if(data.IsComment==1){//去往评价页面
+      if(this.data.IsComment==1){//去往评价页面
         wx.navigateTo({
-          url:'/pages/myson/pingjia/main?OrderNo='+data.OrderNumber
+          url:'/pages/myson/pingjia/main?OrderNo='+this.data.OrderNumber
         })
-      }else if(data.IsCancel==1){//取消预约
+      }else if(this.data.IsCancel==1){//取消预约
         this.cancleOrder()
-      }else{ //重新预约
-        wx.switchTab({
-          url:'/pages/index/main'
-        })
       }
     },
+    // 取消订单
     cancleOrder(){
-      post('Order/CancelOrders',{
-        UserId:this.userId,
-        Token:this.token,
-        OrderNo:data.OrderNumber,
-      }).then(res=>{
-        if(res.code==0){
-          wx.showToast({title:"订单取消成功~"})
-          this.getData()
+      const that =this;
+      wx.showModal({
+        title:'是否取消预约',
+        confirmColor:'#cc9f68',
+        cancelColor:'#999',
+        success(ret){
+          if(ret.confirm){
+              post('Order/CancelOrders',{
+                UserId:that.userId,
+                Token:that.token,
+                OrderNo:that.data.OrderNumber,
+              }).then(res=>{
+                if(res.code==0){
+                  wx.showToast({title:"订单取消成功~"})
+                  that.getData()
+                }
+              })
+          }
         }
       })
     },
+    // 确认付款
+    onPayconfirm(type,pwd){
+      Payconfirm(this.data.OrderNumber,type,pwd).then(res=>{
+        wx.showToast({
+          title:'支付成功'
+        })
+        this.payStatus = false;
+        setTimeout(()=>{
+            this.getData();
+        },1500)
+      })
+    },
+    // 重新预约
+    onReservation(){
+      Reservation(this.data);
+    },
     openLoca(){
-      openLocation()
+      const location = this.data.ShopData;
+      openLocation({lat:location.Lat,lng:location.Lng})
+    },
+    goShopDetail(){
+        wx.navigateTo({
+          url:'/pages/other/chose/main?id='+this.data.ShopData.ShopId
+        })
     }
   }
 }
@@ -247,5 +285,8 @@ export default {
     right: 450rpx;
     transition: all .3s
   }
+}
+.tt_item{
+  margin-left:20rpx;
 }
 </style>

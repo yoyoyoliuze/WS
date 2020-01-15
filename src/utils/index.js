@@ -295,30 +295,6 @@ export function formatTime(date) {
   return `${t1} ${t2}`
 }
 
-// 微信支付
-// param--支付参数（后台返回）；success--支付成功执行的方法
-export function wx_pay(param) {
-  return new Promise((resolve, reject) => {
-    let payData = JSON.parse(param);
-    wx.requestPayment({
-      timeStamp: payData.timeStamp,
-      nonceStr: payData.nonceStr,
-      package: payData.package,
-      signType: payData.signType,
-      paySign: payData.paySign,
-      success(res) {
-        resolve(res)
-      },
-      fail(err) {
-        wx.showToast({
-          title: "支付失败，请重新尝试",
-          icon: "none"
-        });
-        reject(err)
-      }
-    });
-  })
-}
 
 // 更改时间格式
 // type:'date'--返回日期；'time'--返回日期+时间
@@ -442,6 +418,101 @@ export function openLocation(location){
         name:location.name,
         address:location.address
     })
+}
+// 重新预约订单
+export function Reservation(items){
+  let arrId = [];
+  items.OrderDetails.map(item=>{
+      arrId.push(item.ProductId);
+  })
+  const idArr = arrId.join(',')
+  // 技师
+  if(items.ServiceMode==1){
+   wx.setStorageSync('submitPro',
+    {
+      proId:idArr,
+      artId:items.ArtData.ArtId||'',
+      shopId:items.ShopData.ShopId,
+      time:items.MakeHour*60,
+      proNum:items.OrderDetails.length,
+    })
+  }
+  // 项目
+  else{
+    wx.setStorageSync('submitPro',
+      {
+        proId:idArr,
+        shopId:items.ShopData.ShopId,
+        time:items.MakeHour*60,
+        proNum:items.OrderDetails.length,
+      })
+  }
+  wx.navigateTo({
+      url:`/pages/other/apointtime/main`
+  })
+}
+
+// 微信支付
+// param--支付参数（后台返回）；success--支付成功执行的方法
+export function wx_pay(param) {
+  return new Promise((resolve, reject) => {
+    let payData = JSON.parse(param);
+    wx.requestPayment({
+      timeStamp: payData.timeStamp,
+      nonceStr: payData.nonceStr,
+      package: payData.package,
+      signType: payData.signType,
+      paySign: payData.paySign,
+      success(res) {
+        resolve(res)
+      },
+      fail(err) {
+        wx.showToast({
+          title: "支付失败，请重新尝试",
+          icon: "none"
+        });
+        reject(err)
+      }
+    });
+  })
+}
+
+ // 确认支付-type--支付类型0--微信支付.1--余额支付;paw--支付密码
+ export function Payconfirm(orderNo,type,paw){
+   return new Promise((resolve,reject)=>{
+      if(type*1===2){
+        post('Order/OrderOfflinePay',{
+          UserId:wx.getStorageSync('userId'),
+          Token:wx.getStorageSync('token'),
+          OrderNo:orderNo,
+          Password:paw
+        }).then(res=>{
+          resolve(res)
+        })  
+      }else 
+      if(type*1===1){
+        post('Order/PaymentOrder',{
+          UserId:wx.getStorageSync('userId'),
+          Token:wx.getStorageSync('token'),
+          OrderNo:orderNo,
+          Password:paw
+        }).then(res=>{
+          resolve(res)
+        })  
+      }else if(type*1===0){
+        post('Order/ConfirmWeiXinSmallPay',{
+          UserId:wx.getStorageSync('userId'),
+          Token:wx.getStorageSync('token'),
+          OrderNo:orderNo,
+          WxOpenid: wx.getStorageSync("openId"),
+          WxCode:wx.getStorageSync("wxCode")
+        }).then(res=>{
+          wx_pay(res.data.JsParam).then(pay=>{
+            resolve(res)
+          })
+        }) 
+      }
+  })
 }
 // module.exports = {
 //   dateUtils: dateUtils,

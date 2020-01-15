@@ -12,7 +12,7 @@
       </div>
       <div class="order_list" v-if="list.length>0">
         <div class="list" v-for="(item1,key) in list" :key="key">
-          <div class="tit ali-c" @click="toDetail(item1)">待服务</div>
+          <div class="tit ali-c" @click="toDetail(item1)">{{item1.Payment=='到店付款'?item1.Payment:item1.StatusName}}</div>
           <div class="main">
             <div class="time-box ali-c" @click="toDetail(item1)">
               <div class="flex1 flexc">
@@ -48,21 +48,28 @@
               <div class="ali-c jus-b"><p>合计</p><span>￥{{item1.serInfo.total}}</span></div>
             </div>
             <div class="btn-box jus-e ali-c">
+              <p class="flexc tt_item" @tap="onPay(item1,key)" v-if="item1.Ispay==1">支付</p>
               <p class="flexc tt_item" @tap="menuItem(item1)" v-if="item1.IsComment==1">评价</p>
               <p class="flexc tt_item" @tap="menuItem(item1)" v-if="item1.IsCancel==1">取消预约</p>
-              <p class="flexc tt_item" @tap="menuItem(item1)" v-else>重新预约</p>
+              <p class="flexc tt_item" @tap="onReservation(item1)" v-else>重新预约</p>
             </div>
           </div>
         </div>
       </div>
       <div v-else style="padding:200rpx 0;text-align:center">暂无数据</div>
+      <pay :total="allPrice" :orderNumber="orderNo" v-if="payStatus" 
+        @onClose="payStatus = false" 
+        @success="onPayconfirm"
+        >
+      </pay>
   </div>
 </template>
 
 <script>
-import {switchPath,post} from '@/utils'
+import {switchPath,post,Reservation,Payconfirm} from '@/utils';
+import pay from '@/components/pay.vue';
 export default {
-
+  components:{pay},
   data () {
     return {
       serverList:[{Id:1,Name:'预约服务'},{Id:2,Name:'预约技师'}],
@@ -73,8 +80,11 @@ export default {
       Status:1,//0-全部状态 1-待服务 2-已服务 3-已取消
       userId:"",
       token:"",
-      list:[]
-      
+      list:[],
+      payStatus:false,
+      allPrice:0,
+      orderNo:'',
+      payIndex:0,
     }
   },
   computed: {
@@ -83,7 +93,8 @@ export default {
     }
   },
   onShow(){
-    this.list =[]
+    this.list =[];
+    this.payStatus = false;
     console.log(wx.getStorageSync("statu"),"333statu")
     if(wx.getStorageSync("statu")){
       this.Status = wx.getStorageSync("statu")
@@ -152,23 +163,52 @@ export default {
         })
       }else if(item.IsCancel==1){//取消预约
         this.cancleOrder(item)
-      }else{ //重新预约
-        wx.switchTab({
-          url:'/pages/index/main'
-        })
       }
     },
+    // 重新预约
+    onReservation(item){
+      Reservation(item);
+    },
+    // 支付
+    onPay(item,index){
+      this.allPrice = item.Total;
+      this.orderNo = item.OrderNumber;
+      this.payIndex = index+1;
+      this.payStatus = true;
+    },
+    // 确认付款
+    onPayconfirm(type,pwd){
+      Payconfirm(this.orderNo,type,pwd).then(res=>{
+        wx.showToast({
+          title:'支付成功'
+        })
+        this.payStatus = false;
+        setTimeout(()=>{
+            this.list[this.payIndex-1].Ispay=0;
+        },1500)
+      })
+    },
     cancleOrder(item){
-      post('Order/CancelOrders',{
-        UserId:this.userId,
-        Token:this.token,
-        OrderNo:item.OrderNumber,
-      }).then(res=>{
-        if(res.code==0){
-          wx.showToast({title:"订单取消成功~"})
-          setTimeout(()=>{
-            this.getList()
-          },1500)
+      const that =this;
+      wx.showModal({
+        title:'是否取消预约',
+        confirmColor:'#cc9f68',
+        cancelColor:'#999',
+        success(ret){
+          if(ret.confirm){
+            post('Order/CancelOrders',{
+              UserId:that.userId,
+              Token:that.token,
+              OrderNo:item.OrderNumber,
+            }).then(res=>{
+              if(res.code==0){
+                wx.showToast({title:"订单取消成功~"})
+                setTimeout(()=>{
+                  that.getList()
+                },1500)
+              }
+            })
+          }
         }
       })
     },

@@ -193,6 +193,7 @@ export default {
         Token:wx.getStorageSync('token'),
         ProIdList:this.submitPro.proId,
         MakeTime:this.submitPro.date,
+        ArtId:this.submitPro.artId||'',
         CouponId:useCouponId||0,//-1:请选择优惠券;0:默认自动匹配优惠券;>0:使用的优惠券
       }).then(res=>{
         const data = res.data;

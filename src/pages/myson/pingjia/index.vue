@@ -66,7 +66,7 @@ export default {
       OrderNo:"",
       data:{},
       ContentText:"",//评价内容 
-      Rank:0,//1-不满意 2-一般 3-满意
+      Rank:3,//1-不满意 2-一般 3-满意
       PicList:[],
       hasData:false,
       imgPathArr:[],
@@ -162,7 +162,7 @@ export default {
         OrderNo:this.OrderNo,
         ContentText:this.ContentText,
         Rank:this.Rank,
-        PicList:this.imgPathArr2
+        PicList:JSON.stringify(this.imgPathArr2)
       }).then(res=>{
         if(res.code==0){
           wx.showToast({title:"评价成功~"})

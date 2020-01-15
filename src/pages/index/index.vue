@@ -109,11 +109,11 @@
                         <p class="flex">
                           <span>{{item.ShopData.ShopName}}</span>
                         </p>
-                        <p class="phone">{{item.ShopData.Mobile}}</p>
+                        <p class="phone">{{item.ShopData.Phone}}</p>
                         <p class="btn_pill"><span v-for="(tab,tabIndex) in item.OrderDetails" :key="tabIndex">{{tab.ProductName}}</span></p>
                     </div>
                 </div>
-                <img src="/static/images/rili.png" alt="" class="b_rili" @click="yy(item)">
+                <img src="/static/images/rili.png" alt="" class="b_rili" @click="onReservation(item)">
             </div>
         </div>
     </div>
@@ -121,7 +121,7 @@
 </template>
 
 <script>
-import {post} from '@/utils'
+import {post,Reservation} from '@/utils'
 export default {
   data () {
     return {
@@ -195,7 +195,7 @@ export default {
     getFirstYuyue(){
       const userId = wx.getStorageSync("userId")
       const token = wx.getStorageSync("token")
-      if((!userId||!token)&&this.firstYuyueStatus) return;
+      if((!userId||!token)||this.firstYuyueStatus) return;
       post('Order/OrderList',{
         UserId: userId,
         Token: token,
@@ -228,21 +228,14 @@ export default {
     },
     // 搜索门店
     onSearch(){
-      console.log(this.searchText)
       if(!this.searchText) return;
       wx.navigateTo({
         url:'/pages/home/hot/main?keyword='+this.searchText
       })
     },
     // 弹窗快速预约
-    yy(items){
-      console.log(items)
-      let arrId = [];
-      items.OrderDetails.map(item=>{
-          arrId.push(item.Id);
-      })
-      const idArr = arrId.join(',')
-      console.log(idArr)
+    onReservation(items){
+      Reservation(items)
     }
   }
   
@@ -474,30 +467,38 @@ export default {
 .b_rili{
   width:80rpx;height:60rpx;
 }
-.btn_pill{
-  display:flex;
-  align-items:center;
-  flex-flow:nowrap row;
-  width:350rpx;
-  span{
-    border:1rpx solid #999999;border-radius:8rpx;color:#999999;
-    padding:0 10rpx;
-    margin-right:10rpx;
-  }
-}
+// 上次预约
 .yuMask{
   position: fixed;z-index:100;
-  width:690rpx;height:650rpx;
-  top:200rpx;
+  width:690rpx;
+  top:100rpx;
   left:30rpx;right:30rpx;
   text-align: center;
   .yu_main{
     margin-top:100rpx;
-    padding:30rpx;border-radius:15rpx;
+    border-radius:15rpx;
+      padding:0 30rpx;
     .yu_item{
-      height:215rpx;border-bottom: 1rpx solid #f5f5f5;
+      padding:30rpx 0;
+      border-bottom: 1rpx solid #f5f5f5;
       &:last-child{
         border:0
+      }
+      .yu_left{
+        align-items:center;
+      }
+      .btn_pill{
+        display:flex;
+        align-items:center;
+        flex-flow:wrap row;
+        width:350rpx;
+        span{
+          border:1rpx solid #999999;border-radius:8rpx;color:#999999;
+          padding:0 10rpx;
+          margin-right:10rpx;
+          flex:0 0 auto;
+          margin-top:10rpx;
+        }
       }
     }
   }
