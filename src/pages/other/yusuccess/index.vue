@@ -81,7 +81,7 @@
             <p>折扣金额：</p>￥{{data.zkPrice}}
           </div>
           <div v-if="data.ServiceFee">
-           <p>服务费：</p>{{data.ServiceFee*100}}%
+           <p>服务费：</p>￥{{data.ServiceFee}}
           </div>
         </div>
         <div class="rights">

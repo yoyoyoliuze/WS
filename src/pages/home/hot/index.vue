@@ -26,12 +26,13 @@
           </div>
       </div>
       <div class="mt2 bg_fff hot_list pw3">
-          <div class="hot_item p3 flex justifyContentBetween" v-for="(item,index) in list" :key="index">
+          <div class="hot_item p3 flex justifyContentBetween" v-for="(item,index) in list" :key="index"
+            @click="goDetail(item)">
               <img :src="item.PicNo" alt="" class="item_m">
               <div class="item_r flex1 flex flexColumn justifyContentBetween">
                   <div>
                       <p class="font30 fb">{{item.Name}}</p>
-                      <p class="cg mt1">{{item.Synopsis}}</p>
+                      <p class="cg mt1 texts">{{item.Synopsis}}</p>
                       <!-- <span class="item_pill">30分钟</span> -->
                   </div>
                   <div class="flex justifyContentBetween flexAlignCenter">
@@ -140,6 +141,11 @@ export default {
         this.isOver = false;
         this.page = 1;
         this.getList();
+    },
+    goDetail(item){
+      wx.navigateTo({
+        url:"/pages/other/serdetail/main?id="+item.Id
+      })
     }
     
   },
@@ -233,5 +239,12 @@ export default {
       text-align:center;
       width:100rpx;
     }
+  }
+  .texts{
+    width:100%;
+    white-space:nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+
   }
 </style>

@@ -4,7 +4,10 @@
           <div class="list jus-b" v-for="(item,index) in data" :key="index">
             <div class="left flex">
               <div class="ill_ll cr">
-                <p class="cr"><span class="twity">{{item.Denomination}}</span><span>{{item.Denomination>0?'元':'折'}}</span></p>
+                <p class="cr">
+                  <span class="twity">{{((item.DiscountType)==2)?(item.Denomination*10):(item.Denomination)}}</span>
+                  <span>{{item.DiscountType==2?'折':'元'}}</span>
+                </p>
               </div>
               <div>
                 <p>{{item.Name}}</p>

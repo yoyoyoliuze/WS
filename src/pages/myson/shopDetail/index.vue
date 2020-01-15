@@ -354,7 +354,7 @@ export default {
     },
     goProDetail(id){
       wx.navigateTo({
-        url:"/pages/myson/serdetail/main?id="+id
+        url:"/pages/other/serdetail/main?id="+id
       })
     },
     goArtDetail(id){

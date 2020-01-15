@@ -36,7 +36,7 @@
     </div>
     <div class="school">
       <div class="one ali-c jus-b">
-        <div class="left ali-c jus-b"  @click="goUrl('/pages/myson/ticket/main')">
+        <div class="left ali-c jus-b"  @click="goUrl('/pages/home/getticket/main')">
           <div>
             <p>优惠券</p>
             <span>会员可享受特权哦</span>
@@ -84,36 +84,36 @@
     <div class="stratPic">
         <img :src="startPic" alt="">
     </div>
-    <!--弹层-->
-    <div class="mask" v-if="false"></div>
-    <div class="yuMask" v-if="false">
-        <img src="/static/images/cancle.png" alt="" class="cancle_b">
+    <!--上次预约-->
+    <div class="mask" v-if="firstYuyueStatus&&firstYuyueList.length>0"></div>
+    <div class="yuMask" v-if="firstYuyueStatus&&firstYuyueList.length>0">
+        <img src="/static/images/cancle.png" alt="" class="cancle_b" @click="firstYuyueList=[]">
         <div class="bg_fff yu_main">
-            <div class="flex yu_item  flexAlignCenter justifyContentBetween">
-                <div class="flex yu_left">
-                    <img src="/static/images/ava.png" alt="" class="b_ava">
+            <div class="flex yu_item  flexAlignCenter justifyContentBetween"
+              v-for="(item,index) in firstYuyueList" :key="index">
+                <!-- 技师 -->
+                <div class="flex yu_left" v-if="item.ServiceMode==1">
+                    <img :src="item.ArtData.ArtPic" alt="" class="b_ava">
                     <div class="flex flexColumn justifyContentBetween">
-                        <p class="flex">
-                          <span>Alisa</span><span class="b_pill">店长</span>
+                        <p class="flex name-a">
+                          <span>{{item.ArtData.ArtName}}</span><span class="b_pill">{{item.ArtData.LvlName}}</span>
                         </p>
-                        <p>13553206236</p>
-                        <p class="btn_pill">彩绘指甲</p>
+                        <p class="phone">{{item.ArtData.ArtTel}}</p>
+                        <p class="btn_pill"><span v-for="(tab,tabIndex) in item.OrderDetails" :key="tabIndex">{{tab.ProductName}}</span></p>
                     </div>
                 </div>
-                <img src="/static/images/rili.png" alt="" class="b_rili">
-            </div>
-            <div class="flex yu_item  flexAlignCenter justifyContentBetween">
-                <div class="flex yu_left">
-                    <img src="/static/images/ava.png" alt="" class="b_ava">
+                <!-- 技师 -->
+                <div class="flex yu_left" v-else >
+                    <img :src="item.ShopData.Logo" alt="" class="b_ava">
                     <div class="flex flexColumn justifyContentBetween">
                         <p class="flex">
-                          <span>Alisa</span><span class="b_pill">店长</span>
+                          <span>{{item.ShopData.ShopName}}</span>
                         </p>
-                        <p>13553206236</p>
-                        <p class="btn_pill">彩绘指甲</p>
+                        <p class="phone">{{item.ShopData.Mobile}}</p>
+                        <p class="btn_pill"><span v-for="(tab,tabIndex) in item.OrderDetails" :key="tabIndex">{{tab.ProductName}}</span></p>
                     </div>
                 </div>
-                <img src="/static/images/rili.png" alt="" class="b_rili">
+                <img src="/static/images/rili.png" alt="" class="b_rili" @click="yy(item)">
             </div>
         </div>
     </div>
@@ -130,6 +130,8 @@ export default {
       hotList:[],
       shopList:[],
       searchText:'',//搜索
+      firstYuyueStatus:false,//上一次预约的弹窗状态
+      firstYuyueList:[],//上一次预约的列表
     }
   },
   onShow(){
@@ -137,7 +139,8 @@ export default {
     this.getHotList()
     this.getBannerList()
     this.getModalMask()
-    this.getShopList()
+    this.getShopList();
+    this.getFirstYuyue();
   },
   methods:{
     getShopList(){
@@ -188,6 +191,35 @@ export default {
         }
       })
     },
+    // 获取上一次预约的列表
+    getFirstYuyue(){
+      const userId = wx.getStorageSync("userId")
+      const token = wx.getStorageSync("token")
+      if((!userId||!token)&&this.firstYuyueStatus) return;
+      post('Order/OrderList',{
+        UserId: userId,
+        Token: token,
+        Page:1,
+        PageSize:3,
+        Type:0,
+        Status:0
+      }).then(res=>{
+        if(res.code==0){
+          res.data.map(item=>{
+            let serInfo = {serve:[],total:0}
+            this.$set(item,"serInfo",serInfo)
+            item.OrderDetails.map(item2=>{
+                serInfo.serve.push(item2.ProductName)
+                serInfo.total+=item2.ActualPay
+            })
+            this.$set(item.serInfo,"serve",item.serInfo.serve.join(" | "))
+          })
+          this.firstYuyueList = res.data;
+          this.firstYuyueStatus = true;
+          console.log(this.firstYuyueList,"firstYuyueList+++++++++")
+        }
+      })
+    },  
     goUrl(url,id){
       console.log(url,'i')
       wx.navigateTo({
@@ -201,6 +233,16 @@ export default {
       wx.navigateTo({
         url:'/pages/home/hot/main?keyword='+this.searchText
       })
+    },
+    // 弹窗快速预约
+    yy(items){
+      console.log(items)
+      let arrId = [];
+      items.OrderDetails.map(item=>{
+          arrId.push(item.Id);
+      })
+      const idArr = arrId.join(',')
+      console.log(idArr)
     }
   }
   
@@ -407,6 +449,24 @@ export default {
 .cancle_b{
   width:60rpx;height:60rpx;
 }
+.yu_left{text-align:left;
+.name-a{
+  align-items:center;
+}
+  .b_pill{
+    color:#fff;
+    background:#cc9f68;
+    border-radius:5rpx;
+    padding:0 10rpx;
+    line-height:30rpx;
+    height:30rpx;
+    font-size:20rpx;
+    margin-left:20rpx;
+  }
+  .phone{
+    color:#999;
+  }
+}
 .b_ava{
   width:140rpx;height:140rpx;margin-right:15rpx;
   border-radius:50%;
@@ -415,7 +475,15 @@ export default {
   width:80rpx;height:60rpx;
 }
 .btn_pill{
-  border:1rpx solid #999999;border-radius:8rpx;color:#999999;
+  display:flex;
+  align-items:center;
+  flex-flow:nowrap row;
+  width:350rpx;
+  span{
+    border:1rpx solid #999999;border-radius:8rpx;color:#999999;
+    padding:0 10rpx;
+    margin-right:10rpx;
+  }
 }
 .yuMask{
   position: fixed;z-index:100;
