@@ -1,7 +1,7 @@
 <template>
   <div>
       <div class="top-r ali-c" v-if="hasData">
-        <img src="/static/images/ava.png" alt="">
+        <img :src="data.ArtData.ArtPic" alt="">
         <div>
           <p>服务门店：{{data.ShopData.ShopName}}</p>
           <p>服务项目：{{data.serInfo.serve}}</p>
@@ -80,7 +80,7 @@ export default {
     this.userId = wx.getStorageSync("userId")
     this.token = wx.getStorageSync("token")
     this.OrderNo = this.$mp.query.OrderNo
-    // this.getData()
+    this.getData()
   },
   methods:{
     chose(item){
