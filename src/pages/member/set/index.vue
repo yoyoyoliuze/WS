@@ -4,7 +4,7 @@
         <div class="list ali-c jus-b" v-for="(item, index) in list" :key="index" @click="switchPath(item.url)">
           <span>{{item.title}}</span>
           <div>
-            <span class="phone" v-if="index==0">0396-65826</span>
+            <span class="phone" v-if="index==0">{{info.WebTel}}</span>
             <img src="/static/images/icons/more.png" alt="">
           </div>
         </div>
@@ -41,7 +41,7 @@ export default {
     },
     getData(){
       post('User/WebSysConfig').then(res=>{
-        
+        this.info = res.data;
       })
     }
     

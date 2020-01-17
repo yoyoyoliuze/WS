@@ -14,7 +14,7 @@
           <div class="pinglun flex">
           <div class="flex1 flexc">
             <div>
-              <p>{{artInfo.FeedbackRate}}%</p>
+              <p>{{comment.GoodRate||0}}</p>
               <span>好评率</span>
             </div>
           </div>

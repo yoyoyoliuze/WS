@@ -9,18 +9,18 @@
           <div class="flex justifyContentBetween pp3 bg_fff flexAlignCenter">
               <div class="flex1">
                   <div class="ser_name fb">{{data.Name}}</div>
-                  <p class="flex cg mt1 flexAlignCenter">
+                  <!-- <p class="flex cg mt1 flexAlignCenter">
                       <span class="s_pill font20">{{data.HourNum*60}}分钟</span>
                       <span>{{data.Synopsis}}</span>
-                  </p>
+                  </p> -->
                   <p class="cr mt1">¥<span class="price">{{data.Price}}</span></p>
                   <p class="cg ">服务时长：{{data.HourNum*60}}分钟</p>
               </div>
               <div class="flex flexColumn flexAlignCenter">
-                  <p class="flex flexColumn flexAlignCenter sh_bg">
+                  <button class="flex flexColumn flexAlignCenter sh_bg" open-type="share">
                       <img src="/static/images/icons/share.png" alt="" class="share">
                       <span class="cg">分享</span>
-                  </p>
+                  </button>
                   <p class="cg mt3">{{data.SalesVolume}}人预约</p>
               </div>
           </div>
@@ -59,6 +59,12 @@ export default {
         lat:'',
         lng:'',
         data:{},
+    }
+  },
+  onShareAppMessage() {
+    return {
+      title: data.Name,
+      path:`/pages/other/serdetail/index?id=${this.ID}` 
     }
   },
   onLoad(options){
@@ -180,5 +186,8 @@ export default {
   }
   .page_detail{
     padding-bottom:100rpx;
+  }
+  button::after {
+    border: none;
   }
 </style>

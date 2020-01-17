@@ -19,8 +19,9 @@
         <div class="ali-c jus-b"><p>服务项目</p><span>{{data.serInfo.serve}}</span></div>
         <div class="ali-c jus-b"><p>服务时长</p><span>{{data.MakeHour}}小时</span></div>
         <div class="ali-c jus-b"><p>总金额</p><span>¥{{data.TotalAmount}}</span></div>
-        <div class="ali-c jus-b"><p>折扣</p><span>-¥{{data.YhPrice}}</span></div>
-        <div class="ali-c jus-b"><p>优惠券</p><span>-¥{{data.ZkPrice}}</span></div>
+        <div class="ali-c jus-b" v-if="data.YhPrice"><p>折扣</p><span>-¥{{data.YhPrice}}</span></div>
+        <div class="ali-c jus-b" v-if="data.ZkPrice"><p>优惠券</p><span>-¥{{data.ZkPrice}}</span></div>
+        <div class="ali-c jus-b" v-if="data.Freight"><p>服务费</p><span>+¥{{data.Freight}}</span></div>
       </div>
       <div class="ali-c jus-e heji">
         <span>支付金额:￥{{data.Total}}</span>
@@ -39,7 +40,6 @@
         <p>创建时间：{{data.OrderTime}}</p>
         <p>支付时间：{{data.OrderTime}}</p>
         <p>取消时间：{{data.OrderTime}}</p>
-
       </div>
       <div class="end jus-e ali-c">
         <p class="flexc tt_item" @tap="payStatus=true" v-if="data.Ispay==1">支付</p>

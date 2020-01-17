@@ -67,7 +67,6 @@ export default {
       data:{},
       ContentText:"",//评价内容 
       Rank:3,//1-不满意 2-一般 3-满意
-      PicList:[],
       hasData:false,
       imgPathArr:[],
       imgPathArr2: [],
@@ -76,13 +75,19 @@ export default {
       emotionList:[{Id:3,Name:'满意',Statu:true},{Id:2,Name:'一般',Statu:false},{Id:1,Name:'不满意',Statu:false}]
     }
   },
-  onShow(){
+  onLoad(){
+    this.init();
     this.userId = wx.getStorageSync("userId")
     this.token = wx.getStorageSync("token")
     this.OrderNo = this.$mp.query.OrderNo
     this.getData()
   },
   methods:{
+    init(){
+      this.imgPathArr=[];
+      this.ContentText='';
+      this.Rank=3;//1-不满意 2-一般 3-满意
+    },
     chose(item){
       this.Rank = item.Id
       this.emotionList.map(item2=>{
@@ -166,9 +171,10 @@ export default {
       }).then(res=>{
         if(res.code==0){
           wx.showToast({title:"评价成功~"})
-          // setTimeout(()=>{
-          //   wx.navigateTo({url:'/pages/other/allcomment/main'})
-          // },1500)
+          setTimeout(()=>{
+            // wx.navigateTo({url:'/pages/other/allcomment/main'})
+            wx.navigateBack();
+          },1500)
         }
       })
     }

@@ -90,7 +90,7 @@ export default function logins(params) {
                                         });
                                         setTimeout(()=>{
                                           // 跳转注册
-                                          wx.navigateTo({
+                                          wx.redirectTo({
                                             url: RegisterPath
                                           });
                                           reject();

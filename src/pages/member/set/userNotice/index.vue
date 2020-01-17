@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="bfff">
       <div v-html="content">
       </div>
   </div>
@@ -39,26 +39,8 @@ export default {
 </script>
 
 <style lang='scss' scoped>
-.list-box{
-  margin-top:20rpx;
-  .list{
-    height: 88rpx;
-    line-height: 88rpx;
-    padding:0 30rpx;
-    display: flex;justify-content: space-between;align-items: center;
-    border-bottom: 1rpx solid #ededed;
-    span{
-      font-size: 28rpx;
-      color: #333
-    }
-    img{
-      width: 11rpx;
-      height: 20rpx;
-    }
-  }
-  .phone{
-    color:#999999!important;
-    font-size:26rpx;margin-right:10rpx;
-  }
+.bfff{
+  background:#fff;
+  min-height:100vh;
 }
 </style>

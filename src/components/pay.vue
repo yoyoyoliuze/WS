@@ -204,14 +204,14 @@ export default {
   left: 0;
   height: 100vh;
   width: 100%;
-  z-index: 100;
+  z-index: 1000;
   background: rgba(0, 0, 0, 0.4);
 }
 .paywindows {
   position: fixed;
   bottom: 0;
   left: 0;
-  z-index: 101;
+  z-index: 1001;
   background: #fff;
   height: 680rpx;
   width: 100%;
@@ -308,7 +308,7 @@ export default {
   position: fixed;
   bottom: 0;
   left: 0;
-  z-index: 101;
+  z-index: 1001;
   width: 100%;
   box-sizing: border-box;
   /* padding-bottom:60rpx; */
@@ -326,7 +326,7 @@ export default {
   position: fixed;
   top: 0;
   left: 0;
-  z-index: 102;
+  z-index: 1002;
   height: 100vh;
   width: 100%;
   overflow: hidden;

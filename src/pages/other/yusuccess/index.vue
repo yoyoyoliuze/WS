@@ -169,6 +169,7 @@ export default {
   },
   onLoad(options){
     this.setBarTitle();
+    this.init();
     this.submitPro = wx.getStorageSync('submitPro');//要预约的产品，
     wx.setStorageSync('submitPro',{});
     this.getData();
@@ -192,6 +193,9 @@ export default {
           Id: -1,
           MeetConditions: 0
         }
+        this.name='';
+        this.phone='';
+        this.remark='';
     },
     getData(useCouponId){
       post('Order/ConfirmMakeOrder',{

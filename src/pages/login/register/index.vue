@@ -19,7 +19,7 @@
             <button
               class="getcode"
               :style="btnText!=='获取验证码'?'background:#ccc;':''"
-              @click="getVerifyCode(this)"
+              @click="getVerifyCode()"
             >{{btnText}}</button>
           </div>
           <!-- <div class="from-line"  v-if="inviteCode !=''">
@@ -162,7 +162,7 @@ export default {
       }, 1500);
     },
     // 发送验证码
-    getVerifyCode(that) {
+    getVerifyCode() {
       if (this.disabled) {
         return false;
       }
@@ -192,13 +192,13 @@ export default {
         if (!this.timer) {
           this.count = TIME_COUNT;
 
-          that.disabled = true;
+          this.disabled = true;
           this.timer = setInterval(() => {
             if (this.count > 0 && this.count <= TIME_COUNT) {
               this.count--;
               this.btnText = this.count + "s后重新获取";
             } else {
-              that.disabled = false;
+              this.disabled = false;
               clearInterval(this.timer);
               this.timer = null;
               this.btnText = "获取验证码";

@@ -2,7 +2,7 @@
   <div>
     <swiper class="swiper-box" autoplay interval='3000' circular indicator-dots>
       <swiper-item v-for="(item, index) in bannerList" :key="index">
-        <img mode='aspectFill' :src="item.Pic" alt="">
+        <img  :src="item.Pic" alt="">
       </swiper-item>
     </swiper>
     <div class="search-box flexc">
@@ -392,7 +392,7 @@ export default {
   }
 }
 .swiper-box{
-  height: 528rpx;
+  height: 500rpx;
   img{
     width: 100%;
     height: 100%;

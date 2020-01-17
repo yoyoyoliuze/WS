@@ -295,7 +295,6 @@ export default {
     // 获取评论
     getComment(){
       post('Order/OrderCommentHz',{
-        ArtId:'',
         ShopId:this.shopId
       }).then(res=>{
         this.comment = res.data;
