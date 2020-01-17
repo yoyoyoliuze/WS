@@ -26,11 +26,11 @@
         </div>
         <div class=" flex flexWrap justifyContentBetween">
             <div class="cell bb1">
-              <h4>预约人姓名</h4>
+              <h4 class="w40">预约人姓名</h4>
               <input type="text" placeholder="请输入您的姓名" v-model="name">
             </div>
             <div class="cell">
-              <h4>联系方式</h4>
+              <h4 class="w40">联系方式</h4>
               <input type="text" placeholder="请输入您的手机号码" v-model="phone">
             </div>
         </div>
@@ -69,7 +69,12 @@
             <img src="/static/images/icons/sign.png" alt="" class="icon3">
             <span class="ml1">备注</span>
         </div>
-        <textarea class="sign mt2 boxSize" name="" id="" cols="30" rows="10" placeholder="请输入备注" v-model="remark"></textarea>
+        <textarea class="sign mt2 boxSize"  name="" id="" cols="30" rows="10" 
+          placeholder="请输入备注" v-model="remark" v-show="textareaFocus" :focus="textareaFocus" @blur="textareaFocus=false">
+        </textarea>
+        <div class="textarea-text sign mt2 boxSize" v-show="!textareaFocus" @click="textareaFocus=true"
+          :class="{'c999':!remark}">{{remark||'请输入备注'}}
+        </div>
     </div>
     <!-- 价格信息 -->
     <div class="pp3 bg_fff mt2 total">
@@ -91,7 +96,7 @@
     </div>
 
     <!--服务按钮-->
-    <div class="pp3 flex justifyContentBetween fixed bg_fff mt2">
+    <div class="pp3 flex justifyContentBetween fixed bg_fff mt2 submit">
         <div> 
           <span><span class="cr">{{data.AllNumber}}个</span>项目</span>  
           <span class="cen_text">应付款：<span class="cr"> ¥{{data.AllPrice}}</span></span>
@@ -154,11 +159,12 @@ export default {
           Id: -1,
           MeetConditions: 0
       },
-      name:'1',
-      phone:'15014010111',
+      name:'',
+      phone:'',
       remark:'',
       orderNumber:'',//订单号
       payStatus:false,
+      textareaFocus:false,//对焦textarea
     }
   },
   onLoad(options){
@@ -195,7 +201,7 @@ export default {
         MakeTime:this.submitPro.date,
         ArtId:this.submitPro.artId||'',
         CouponId:useCouponId||0,//-1:请选择优惠券;0:默认自动匹配优惠券;>0:使用的优惠券
-      }).then(res=>{
+      },this.getData).then(res=>{
         const data = res.data;
         this.data = data;
         this.shop =data.ShopData;
@@ -218,7 +224,11 @@ export default {
           MeetConditions: 0
         })
         this.couponList = data.UseCouponList;
-      }),this.getData;
+      }).catch(err=>{
+        setTimeout(()=>{
+          wx.navigateBack();
+        },1500)
+      });
     },
     // 选择优惠券
     couponConfirm(){
@@ -379,6 +389,7 @@ export default {
   .right{
     width:13rpx;height:24rpx;
   }
+  .c999{color:#888;}
   .sign{
     width:100%;
     height:200rpx;border:1rpx solid #ececec;
@@ -444,10 +455,11 @@ export default {
     width:100%;
     height:88rpx;
     h4{
-
+      width:40%;
     }
     input{
       text-align:right;
+      width:50%;
     }
     &.bb1{
       border-bottom:1rpx #e8e8e8 solid;
@@ -495,5 +507,8 @@ export default {
     bottom:0;
     left:0;
     width:100%;
+  }
+  .submit{
+    z-index:999;
   }
 </style>

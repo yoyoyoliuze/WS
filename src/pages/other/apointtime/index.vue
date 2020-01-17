@@ -86,7 +86,8 @@ export default {
           this.submitPro.date = item.value;
           this.submitPro.getDay = item.getDay;
           wx.setStorageSync('submitPro',this.submitPro)
-           wx.redirectTo({
+          //  wx.redirectTo({
+           wx.navigateTo({
              url:`/pages/other/yusuccess/main`
            })
         }

@@ -44,7 +44,8 @@
         "right/main",
         "setPwd/main",
         "cardBuy/main",
-        "set/main"
+        "set/main",
+        "set/userNotice/main"
       ]
     },
     {

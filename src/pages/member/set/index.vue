@@ -27,8 +27,8 @@ export default {
       info:{},
       list:[
         {title:'客户电话',url:''},
-        {title:'用户须知',url:''},
-        {title:'用户授权 ',url:''},
+        {title:'用户须知',url:'/pages/member/set/userNotice/main?type=UserNotice'},
+        {title:'用户授权 ',url:'/pages/member/set/userNotice/main?type=UserAuth'},
         {title:'支付密码 ',url:'/pages/member/setPwd/main'}
       ]
     }

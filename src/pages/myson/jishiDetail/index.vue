@@ -453,7 +453,6 @@ export default {
           }
         }
         .ava{
-          width: 92rpx;
           height: 36rpx;
           background-color: #ececec;
           border-radius: 18rpx;
@@ -465,6 +464,7 @@ export default {
           span{
             font-size: 22rpx;
             color: #999;
+            margin:0 10rpx;
           }
         }
       }

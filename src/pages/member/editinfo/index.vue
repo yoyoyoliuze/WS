@@ -271,6 +271,10 @@ export default {
       height: 20rpx;
       margin-left:10rpx;
     }
+    input{width:100%;}
+    .flexAlignCenter{
+      width:50%;
+    }
   }
 }
 .avatar{

@@ -32,4 +32,7 @@ export default {
 
 <style lang='scss'>
 @import './style/lz';
+.w40{
+  width:40%;
+}
 </style>

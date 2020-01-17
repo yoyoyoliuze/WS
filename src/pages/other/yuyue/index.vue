@@ -250,4 +250,7 @@ export default {
   .bt1{
     border-top:1rpx #e8e8e8 solid;
   }
+  .se_list{
+    margin-bottom:120rpx;
+  }
 </style>

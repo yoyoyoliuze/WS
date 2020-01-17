@@ -64,7 +64,7 @@
             <div>
               <div class="ali-c one">
                 <p>{{item.Name}}</p>
-                <span class="flexc">{{item.LvlName}}</span>
+                <span class="flexc" v-if="item.LvlName">{{item.LvlName}}</span>
               </div>
               <p class="two">{{item.Mobile}}</p>
               <div class="ali-c thr">
@@ -557,7 +557,6 @@ export default {
           }
         }
         .ava{
-          width: 92rpx;
           height: 36rpx;
           background-color: #ececec;
           border-radius: 18rpx;
@@ -569,6 +568,7 @@ export default {
           span{
             font-size: 22rpx;
             color: #999;
+            margin:0 10rpx;
           }
         }
       }

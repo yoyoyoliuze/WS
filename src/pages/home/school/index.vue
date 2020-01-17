@@ -43,7 +43,8 @@ export default {
     async getData(){
       const res = await post('About/AboutUs',{Type:1})
       if(res.code==0){
-        this.info = res.data.Content
+        this.info = res.data.Content.replace(/\<img/gi, '<img style="max-width:100%;height:auto" ');
+
         console.log(this.info)
       }
     }

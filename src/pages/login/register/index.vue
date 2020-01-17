@@ -112,7 +112,7 @@ export default {
     },
     //注册账号
     async Register() {
-      if (!this.registerCheck()) return;
+      // if (!this.registerCheck()) return;
       const userInfo = wx.getStorageSync("userInfo");
       const openId = wx.getStorageSync("openId");
       const token = wx.getStorageSync("wxToken");

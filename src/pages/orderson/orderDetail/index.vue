@@ -13,7 +13,7 @@
       <div class="jus-box">
         <div class="ali-c jus-b"><p>预约序号</p><span>{{data.MakeNum}}</span></div>
         <div class="ali-c jus-b"><p>预约日期</p><span>{{data.MakeDate}}</span></div>
-        <div class="ali-c jus-b"><p>开始时间</p><span>16:30</span></div>
+        <!-- <div class="ali-c jus-b"><p>开始时间</p><span>16:30</span></div> -->
       </div>
       <div class="jus-box">
         <div class="ali-c jus-b"><p>服务项目</p><span>{{data.serInfo.serve}}</span></div>

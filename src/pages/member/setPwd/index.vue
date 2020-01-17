@@ -18,11 +18,11 @@
         </div>
         <div class="flex justifyContentBetween pp3 bg_fff">
             <span>新密码</span>
-           <input type="text" placeholder="请输入6位支付密码" class="input_cell" v-model="PassWord">
+           <input type="password" placeholder="请输入6位支付密码" class="input_cell" v-model="PassWord">
         </div>
         <div class="flex justifyContentBetween pp3 bg_fff">
             <span>确认密码</span>
-           <input type="text" placeholder="请再次输入6位密码" class="input_cell" v-model="pwd2">
+           <input type="password" placeholder="请再次输入6位密码" class="input_cell" v-model="pwd2">
         </div>
         <div class="btn" style="margin-top:100rpx;" @tap="btnSubmit">
             <div class="fill cf">确认</div>
