@@ -96,17 +96,17 @@ export default {
           icon:"none"
         })
       }else{
-        if(item.ProductId==0&&item.ShopId==0){
+        if(!item.ProductId&&!item.ShopId){
           wx.switchTab({
               url:`/pages/index/main`
           })
-        }else if(item.ProductId==0){ //去往店铺详情
-          wx.navigateTo({
-              url:`/pages/other/serdetail/main?id=`+item.ShopId
-          })
-        }else if(item.ShopId==0){ //去产品详情
+        }else if(item.ProductId){ //去产品详情
           wx.navigateTo({
               url:`/pages/other/serdetail/main?id=`+item.ProductId
+          })
+        }else if(item.ShopId){ //去往店铺详情
+          wx.navigateTo({
+              url:`/pages/myson/shopDetail/main?id=`+item.ShopId
           })
         }
         // wx.setStorageSync('submitPro',{

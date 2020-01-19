@@ -1,5 +1,6 @@
 {
   "pages": [
+    "pages/adPage/main",
     "pages/index/main",
     "pages/mine/main",
     "pages/login/main",

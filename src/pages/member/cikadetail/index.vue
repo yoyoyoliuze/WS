@@ -18,7 +18,7 @@
           <div>
               <p class="flex mt2 flexAlignCenter">
                   <i class="bo_cc"></i>
-                  <span class="mr1 font24">次卡名称：会员次卡——{{data.Name}}</span>
+                  <span class="mr1 font24">次卡名称：{{data.Name}}</span>
               </p>
               <p class="flex mt2 flexAlignCenter">
                   <i class="bo_cc"></i>
@@ -26,20 +26,16 @@
               </p>
               <p class="flex mt2 flexAlignCenter">
                   <i class="bo_cc"></i>
-                  <span class="mr1 font24">可做次数：10次</span>
+                  <span class="mr1 font24">可做次数：{{data.CardNum}}次</span>
               </p>
           </div>
       </div>
       <div class="mt2 pp3 bg_fff">
           <div class="font24 fb">使用说明</div>
           <div>
-              <p class="flex mt2 flexAlignCenter">
+              <p class="flex mt2 flexAlignCenter" v-for="(item,index) in data.contentArr" :key="index">
                   <i class="bo_cc"></i>
-                  <span class="mr1 font24">下单后在优惠方式中选择使用会员次卡</span>
-              </p>
-              <p class="flex mt2 flexAlignCenter">
-                  <i class="bo_cc"></i>
-                  <span class="mr1 font24">使用会员次卡抵消1次，剩余次数减少1次</span>
+                  <span class="mr1 font24">{{item}}</span>
               </p>
           </div>
       </div>
@@ -71,7 +67,15 @@ export default {
       post('Coupon/VipCardxq',{
         Id:this.Id
       }).then(res=>{
-        this.data = res.data
+        const contentArr = res.data.UseExplain.split(/\n|\r|\t/);
+        let arr =[];
+        contentArr.map(item=>{
+          if(item){
+            arr.push(item);
+          }
+        })
+        res.data.contentArr = arr;
+        this.data = res.data;
       })
     }
   },
@@ -104,7 +108,7 @@ export default {
 }
 .bo_cc{
   width:10rpx;height: 10rpx;
-  border-radius:50%;background: #1a1a1a;
+  border-radius:50%;background: #1a1a1a;flex: 0 0 auto;
 }
 
 </style>

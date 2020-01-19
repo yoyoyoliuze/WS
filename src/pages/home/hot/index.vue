@@ -96,7 +96,7 @@ export default {
         PageSize:this.pagesize,
         Sort:this.tabActive,
         Order:xu,
-        IsHot:1,
+        IsHot:0,
         Keywords:this.keyword
       }).then(res=>{
           if(this.page===1){
@@ -128,6 +128,8 @@ export default {
           this.paixu = 1
         }
       }
+      this.isOver=false;
+      this.page=1;
       this.list = []
       this.getList()
     },

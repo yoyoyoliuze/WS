@@ -70,7 +70,7 @@
               <div class="ali-c thr">
                 <img src="/static/images/my_icon_7.png" alt="">
                 <span>好评率</span>
-                <span>{{item.FeedbackRate}}%</span>
+                <span>{{item.FeedbackRate}}</span>
               </div>
             </div>
           </div>

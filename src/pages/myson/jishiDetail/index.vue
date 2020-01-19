@@ -7,7 +7,7 @@
               <img :src="artInfo.ArtificerPic" alt="">
               <div class="flexc">
                 <p>{{artInfo.Name}}</p>
-                <span class="flexc">{{artInfo.LvlName}}</span>
+                <span class="flexc" v-if="artInfo.LvlName">{{artInfo.LvlName}}</span>
               </div>
             </div>
           </div>
@@ -72,7 +72,7 @@
       <div class="server-box">
         <!-- <p class="tit">服务评价</p> -->
         <div class="server flex">
-          <div class="flex1 flexc" v-if="comment.CommentCount">
+          <div class="flex1 flexc" >
             <div>
               <p>{{comment.GoodRate}}</p>
               <span>好评率</span>
@@ -136,7 +136,8 @@
       </div>
       
       <div class="bottom ali-c jus-b">
-        <p>前面有3人，约等待60分钟</p>
+        <!-- <p>前面有3人，约等待60分钟</p> -->
+        <p></p>
         <div class="flexc" @click="submit">预约</div>
       </div>
   </div>
@@ -148,10 +149,10 @@ export default {
   name:'技师详情',
   data () {
     return {
-      tabList:['服务评价','技师特长','Ta的作品'],
+      tabList:['服务评价','技师特长','技师图片'],
       tabIndex:0,
       artInfo:{},
-      artId:'',
+      artId:0,
       speciality:{},//专长
       comment:{},
       love:false,
@@ -163,7 +164,7 @@ export default {
     }
   },
   onLoad(options){
-    this.artId = options.artId;
+    this.artId = options.artId*1;
     this.getArtInfo();
     this.getComment();
   },
@@ -200,9 +201,6 @@ export default {
         url:"/pages/other/yuyue/main"
       })
     },
-    cliTab(index){
-      this.tabIndex = index
-    },
     call(){
       callPhone(this.artInfo.ShopData.Phone)
     },
@@ -234,7 +232,23 @@ export default {
       wx.navigateTo({
         url:"/pages/other/allcomment/main?artId="+this.artId
       })
-    }
+    },
+    cliTab(index){
+      this.tabIndex = index
+      if(index===0){
+        this.scroll('.server-box')
+      }else if(index===1){
+        this.scroll('.info')
+      }else if(index===2){
+        this.scroll('.jishi')
+      }
+    },
+    scroll(el){
+      wx.pageScrollTo({
+        selector:el,
+        duration: 300
+      })
+    },
   },
 }
 </script>

@@ -23,7 +23,7 @@
                       <div class="flex justifyContentBetween flexAlignCenter desc_main" v-for="(item2,key) in item.Info" :key="key" :class="item2.sonShow?'ch_active':''" @tap="sonShowItem(index,item.Info,key)">
                         <div class="flex flexColumn flexAlignCenter">
                             <p>{{item2.Name}}</p>
-                            <p class="font24">（服务次数：10次）</p>
+                            <p class="font24">（服务次数：{{item2.CardNum}}次）</p>
                             <p class="cr">{{item2.MeetConditions}}元</p>
                         </div>
                         <div class="dd_see" :class="item2.sonShow?'active_btn':''" @tap="seeDetail(item2)">查看详情</div>
@@ -104,7 +104,7 @@ export default {
           })
           comfData = Array.from(new Set(comfData)); //数组去重
           comfData.forEach(item=>{
-            this.data.push({Id:item,Name:'',Info:[],isShow:false})
+            this.data.push({Id:item,Name:'全场通用',Info:[],isShow:false})
           })
           res.data.forEach(item2=>{
             this.data.forEach(item=>{
@@ -132,7 +132,7 @@ export default {
                 }
             })
           })
-          // console.log(this.data,"/////")
+          console.log(this.data,"/////")
         }
       })
     },
@@ -207,6 +207,7 @@ export default {
       top:-200rpx;left:60rpx;
       .bg11{
         width:630rrpx;height:321rpx;
+        border-radius:15rpx;
       }
       .ff_size{
         position: absolute;

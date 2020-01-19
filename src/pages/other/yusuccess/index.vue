@@ -48,7 +48,7 @@
             </div>
         </div>
     </div>
-    <!--服务独有-->
+    <!--服务独有--优惠券-->
     <div class="flex justifyContentBetween pp3 mt2 bg_fff" @click="showCoupon = true">
         <div class="flex flexAlignCenter">
             <div class="flex flexAlignCenter">
@@ -60,6 +60,22 @@
         </div>
         <div class="flex flexAlignCenter">
             <span class="cr" v-if="selectCouponItem.Id!=-1">-{{selectCouponItem.DiscountType==1?selectCouponItem.Denomination:selectCouponItem.Denomination*10+'折'}}</span>
+            <img src="/static/images/icons/more.png" alt="" class="right ml1">
+        </div>
+    </div>
+    <!---end  !!!-->
+    <!--服务独有--次卡-->
+    <div class="flex justifyContentBetween pp3 mt2 bg_fff" @click="oneCardStatus = true">
+        <div class="flex flexAlignCenter">
+            <div class="flex flexAlignCenter">
+              <img src="/static/images/icons/yh.png" alt="" class="icon2">
+              <span class="ml1">次卡</span>
+          </div>
+          <div class="cg ml1" v-if="selectOneCard.Id!=-1">{{selectOneCard.Title}}</div>
+          <div class="cg ml1" v-else>不使用次卡</div>
+        </div>
+        <div class="flex flexAlignCenter">
+            <span class="cr" v-if="selectCouponItem.Id!=-1">剩余{{selectOneCard.CardNum}}次</span>
             <img src="/static/images/icons/more.png" alt="" class="right ml1">
         </div>
     </div>
@@ -105,7 +121,7 @@
     </div>
     <!--技师独有-->
     <div class="btn" style="display:none">立即预约</div>
-
+    <!-- 选择优惠券Win -->
     <div class="mask" v-if="showCoupon" @click="couponClose"></div>
     <div class="modal_mask" v-if="showCoupon">
         <div class="flex ms_title fb">
@@ -128,6 +144,30 @@
         </div>
         <div class="msk_btn" @click="couponConfirm">完成</div>
     </div> 
+    <!-- 选择次卡Win -->
+    <div class="mask" v-if="oneCardStatus" @click="closeOneCard"></div>
+    <div class="modal_mask" v-if="oneCardStatus">
+        <div class="flex ms_title fb">
+          <img src="/static/images/icons/left.png" alt="" class="left" @click="closeOneCard">
+          选择次卡
+        </div>
+        <div class="pp3 couponList">
+            <radio-group  class="gou">
+              <label class="flex-between payitem" v-for="(item,index) in oneCardList" :key="index" @click="closeOneCard(item)">
+                <div class="flex-center" v-if="item.Id!=-1">
+                  <span>{{item.Title}}</span>
+                  <span class="ml2"> 剩余{{item.CardNum}}次</span>
+                </div>
+                <div class="flex-center" v-else>
+                  <span>不使用次卡</span>
+                </div>
+                <input type="radio" name="payType" :checked="item.Id===selectOneCard.Id" value="0" />
+              </label>
+            </radio-group>
+        </div>
+        <div class="msk_btn" @click="oneCardConfirm">完成</div>
+    </div> 
+
     <pay :total="data.AllPrice" :orderNumber="orderNumber" v-if="payStatus" 
       @onClose="closePay" 
       @success="payconfirm"
@@ -165,6 +205,11 @@ export default {
       orderNumber:'',//订单号
       payStatus:false,
       textareaFocus:false,//对焦textarea
+      oneCardList:[],
+      oneCardStatus:false,
+      selectOneCard:{
+        Id:'',
+      },//选中的次卡
     }
   },
   onLoad(options){
@@ -197,14 +242,16 @@ export default {
         this.phone='';
         this.remark='';
     },
-    getData(useCouponId){
+    // type=oneCard;选中次卡。Coupon--优惠券
+    getData(Id,type){
       post('Order/ConfirmMakeOrder',{
         UserId:wx.getStorageSync('userId'),
         Token:wx.getStorageSync('token'),
         ProIdList:this.submitPro.proId,
         MakeTime:this.submitPro.date,
         ArtId:this.submitPro.artId||'',
-        CouponId:useCouponId||0,//-1:请选择优惠券;0:默认自动匹配优惠券;>0:使用的优惠券
+        CouponId:!type?0:type=='Coupon'?Id:'-1',//-1:请选择优惠券;0:默认自动匹配优惠券;>0:使用的优惠券
+        SubCardId:!type?0:type=='oneCard'?Id:'-1'
       },this.getData).then(res=>{
         const data = res.data;
         this.data = data;
@@ -214,6 +261,7 @@ export default {
             time+=(item.HourNum*60)
         })
         data.totalTime = time;
+        // 优惠券
         if(data.CouponId>0){
           data.UseCouponList.map(item=>{
             if(item.Id ===data.CouponId){
@@ -228,16 +276,28 @@ export default {
           MeetConditions: 0
         })
         this.couponList = data.UseCouponList;
+        console.log(this.SubCardList)
+        // 次卡
+        if(data.SubCardId>0){
+          data.SubCardList.map(item=>{
+            if(item.Id ===data.SubCardId){
+              this.selectOneCard = item;
+            }
+          })
+        }
+        data.SubCardList.unshift({
+          CardNum: 0,
+          Id: -1,
+          Title: "",
+          UseNum: 0
+        })
+        this.oneCardList = data.SubCardList;
+        console.log(this.oneCardList)
       }).catch(err=>{
         setTimeout(()=>{
           wx.navigateBack();
         },1500)
       });
-    },
-    // 选择优惠券
-    couponConfirm(){
-        this.showCoupon = false;
-        this.getData(this.selectCouponItem.Id);
     },
     // 取消选择优惠券
     couponClose(){
@@ -251,6 +311,29 @@ export default {
     // 选择优惠券
     couponChange(e){
       this.selectCouponItem = e;
+    },
+    // 确认选择优惠券
+    couponConfirm(){
+        this.showCoupon = false;
+        this.getData(this.selectCouponItem.Id,'Coupon');
+    },
+    // 选中次卡
+    closeOneCard(e){
+      this.selectOneCard = e;
+    },
+    // 取消选择次卡
+    closeOneCard(){
+      this.oneCardStatus = false;
+      this.oneCardList.map(item=>{
+        if(item.Id===this.data.SubCardId){
+          this.selectOneCard= item;
+        }
+      })
+    },
+    // 确认选择次卡
+    oneCardConfirm(){
+        this.oneCardStatus = false;
+        this.getData(this.selectOneCard.Id,'oneCard');
     },
     // 预提交
     yysubmit(){

@@ -39,16 +39,14 @@
             <img src="/static/images/icons/more.png" alt="">
           </div>
         </div>
-        <div class="pp3" >
+        <!-- <div class="pp3" >
           <span>服务简介</span>
-          <div class="mt2">
-              <!-- <p v-if="!showtextarea" class="text_fl" @tap="showtextarea=true" :class="Remark.length>0?'colorBlack':'colorPlace'">{{Remark||'请输入您的服务简介'}}</p> -->
-              <textarea class="text_fl" name="" auto-focus adjust-position="true" id="" maxlength="100" cols="30" rows="10" placeholder="请输入您的服务简介" 
+          <div class="mt2"><textarea class="text_fl" name="" auto-focus adjust-position="true" id="" maxlength="100" cols="30" rows="10" placeholder="请输入您的服务简介" 
                 v-model="Remark">
               </textarea>
               <div class="text_right">{{Remark.length}}/100</div>
           </div>
-        </div>
+        </div> -->
       </div>
       <div class="btn" @tap="saveInfo">保存</div>
       <div class="mask" v-if="showNick"></div>

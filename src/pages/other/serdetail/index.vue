@@ -9,10 +9,10 @@
           <div class="flex justifyContentBetween pp3 bg_fff flexAlignCenter">
               <div class="flex1">
                   <div class="ser_name fb">{{data.Name}}</div>
-                  <!-- <p class="flex cg mt1 flexAlignCenter">
-                      <span class="s_pill font20">{{data.HourNum*60}}分钟</span>
+                  <p class="flex cg mt1 flexAlignCenter">
+                      <!-- <span class="s_pill font20">{{data.HourNum*60}}分钟</span> -->
                       <span>{{data.Synopsis}}</span>
-                  </p> -->
+                  </p>
                   <p class="cr mt1">¥<span class="price">{{data.Price}}</span></p>
                   <p class="cg ">服务时长：{{data.HourNum*60}}分钟</p>
               </div>

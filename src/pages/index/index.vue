@@ -60,7 +60,7 @@
           <div class="ali-c">
             <span v-for="(ite, ind) in item.MapReservation" :key="ind">{{ite}}</span>
           </div>
-          <p v-if="item.Distance>0" class="Distance">{{item.Distance}}km</p>
+          <p v-if="item.Distance>1" class="Distance">{{item.Distance}}km</p>
           <p v-if="item.Distance==0" class="Distance">小于1km</p>
           <p v-if="item.Distance!=0&&item.Distance<1" class="Distance">{{item.Distance*1000}}m</p>
         </div>
@@ -177,7 +177,8 @@ export default {
     getHotList(){
       post('Goods/GoodsList',{
         Page:1,
-        PageSize:5
+        PageSize:5,
+        IsHot:1,
       }).then(res=>{
           if(res.code==0){
             this.hotList = res.data
