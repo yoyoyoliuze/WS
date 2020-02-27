@@ -18,6 +18,7 @@
       <div class="jus-box">
         <div class="ali-c jus-b"><p>服务项目</p><span>{{data.serInfo.serve}}</span></div>
         <div class="ali-c jus-b"><p>服务时长</p><span>{{data.MakeHour}}小时</span></div>
+        <div class="ali-c jus-b" v-if="data.Ispay===0"><p>支付方式</p><span>{{data.Payment}}</span></div>
         <div class="ali-c jus-b"><p>总金额</p><span>¥{{data.TotalAmount}}</span></div>
         <div class="ali-c jus-b" v-if="data.YhPrice"><p>折扣</p><span>-¥{{data.YhPrice}}</span></div>
         <div class="ali-c jus-b" v-if="data.ZkPrice"><p>优惠券</p><span>-¥{{data.ZkPrice}}</span></div>

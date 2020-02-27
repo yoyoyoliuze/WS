@@ -18,10 +18,17 @@ export default {
         bannerList:[],
         time:5,
         timeout:null,
+        status:false,
     }
   },
   onLoad(){
-    this.getData();
+    if(this.status){
+      wx.switchTab({
+        url:'/pages/index/main'
+      })
+    }else{
+      this.getData();
+    }
   },
   methods:{
     getData(){
@@ -31,15 +38,13 @@ export default {
           if(this.time){
             this.time-=1;
           }else{
-            clearInterval(this.timeout)
-            wx.switchTab({
-              url:'/pages/index/main'
-            })
+            this.onClose();
           }
         },1000)
       })
     },
     onClose(){
+      this.status=true;
       clearInterval(this.timeout)
       wx.switchTab({
         url:'/pages/index/main'

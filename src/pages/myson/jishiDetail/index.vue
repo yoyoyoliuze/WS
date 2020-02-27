@@ -1,7 +1,8 @@
 <template>
   <div style="padding-bottom:120rpx">
       <div class="top-box">
-        <div class="top">
+        <div class="top relative">
+          <div class="workTime">{{artInfo.WorkExperience}}</div>
           <div class="ava flexc">
             <div>
               <img :src="artInfo.ArtificerPic" alt="">
@@ -136,9 +137,10 @@
       </div>
       
       <div class="bottom ali-c jus-b">
-        <!-- <p>前面有3人，约等待60分钟</p> -->
+        <p>{{artInfo.WorkNote}}</p>
         <p></p>
-        <div class="flexc" @click="submit">预约</div>
+        <div class="flexc" v-if="!artInfo.IsRest" @click="submit">预约</div>
+        <div class="flexc rest" v-else>休息中</div>
       </div>
   </div>
 </template>
@@ -591,5 +593,20 @@ export default {
 .notData{
   color:#999;
   text-align:center;
+}
+.rest{
+  background-color:#ccc!important;
+}
+.relative{
+  position:relative;
+  .workTime{
+    position:absolute;
+    top:30rpx;
+    right:30rpx;
+    line-height:1.2;
+    background:#e1e1e1;
+    padding:0 20rpx;
+    border-radius:5rpx;
+  }
 }
 </style>

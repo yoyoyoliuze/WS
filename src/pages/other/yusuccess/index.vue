@@ -153,7 +153,7 @@
         </div>
         <div class="pp3 couponList">
             <radio-group  class="gou">
-              <label class="flex-between payitem" v-for="(item,index) in oneCardList" :key="index" @click="closeOneCard(item)">
+              <label class="flex-between payitem" v-for="(item,index) in oneCardList" :key="index" @click="changeOneCard(item)">
                 <div class="flex-center" v-if="item.Id!=-1">
                   <span>{{item.Title}}</span>
                   <span class="ml2"> 剩余{{item.CardNum}}次</span>
@@ -318,7 +318,7 @@ export default {
         this.getData(this.selectCouponItem.Id,'Coupon');
     },
     // 选中次卡
-    closeOneCard(e){
+    changeOneCard(e){
       this.selectOneCard = e;
     },
     // 取消选择次卡
@@ -351,13 +351,18 @@ export default {
         ProIdList:this.submitPro.proId,
         MakeTime:this.submitPro.date,
         ArtId:this.submitPro.artId||'',
+        SubCardId:this.selectOneCard.Id||'',
         CouponId:this.selectCouponItem.Id||'',
         ContactName:this.name,
         Tel:this.phone,
         Remark:this.remark
       }).then(res=>{
-        this.orderNumber = res.data;
-        this.payStatus = true;
+          this.orderNumber = res.data;
+        if(res.code==200){
+          this.paySuccess();
+        }else{
+          this.payStatus = true;
+        }
       })
     },
     // 确认支付-type--支付类型0--微信支付.1--余额支付;paw--支付密码
@@ -583,6 +588,7 @@ export default {
   }
   .modal_mask {
     height:auto;
+    z-index:1000;
   }
   .msk_btn{
     margin: 10rpx auto 30rpx;

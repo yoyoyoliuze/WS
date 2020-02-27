@@ -42,8 +42,8 @@
               <img class="right" src="/static/images/address_r.png" alt="">
             </div>
             <div class="heji" @click="toDetail(item1)">
-              <div class="ali-c jus-b"><p>技师</p><span>{{item1.ArtData.ArtName}}</span></div>
-              <div class="ali-c jus-b"><p>电话</p><span>{{item1.ArtData.ArtTel}}</span></div>
+              <div class="ali-c jus-b" v-if="item1.ArtData.ArtName"><p>技师</p><span>{{item1.ArtData.ArtName}}</span></div>
+              <div class="ali-c jus-b" v-if="item1.ArtData.ArtTel"><p>技师电话</p><span>{{item1.ArtData.ArtTel}}</span></div>
               <div class="ali-c jus-b"><p>服务项目</p><span>{{item1.serInfo.serve}}</span></div>
               <div class="ali-c jus-b"><p>合计</p><span>￥{{item1.serInfo.total}}</span></div>
             </div>

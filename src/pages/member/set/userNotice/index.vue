@@ -12,7 +12,8 @@ import '@/style/bb.scss'
 export default {
   // 'UserNotice' =用户须知;UserAuth=用户授权
   onLoad(options){
-    this.type =options.type
+    this.type =options.type;
+    this.setBarTitle();
     this.getData();
   },
 
@@ -25,7 +26,7 @@ export default {
   methods: {
     setBarTitle() {
         wx.setNavigationBarTitle({
-            title: "全部评价"
+            title: this.type=='UserNotice'?'用户须知':'用户授权'
         });
     },
     getData(){
@@ -42,5 +43,6 @@ export default {
 .bfff{
   background:#fff;
   min-height:100vh;
+  padding:20rpx;
 }
 </style>

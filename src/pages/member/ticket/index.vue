@@ -15,15 +15,15 @@
         <div class="list pw3" v-if="list.length>0">
             <div class="cc_item" v-for="(item,index) in list" :key="index">
                 <img src="/static/images/icons/c1.png" alt="" class="cc_img" v-if="Status==1">
-                <img src="/static/images/icons/c2.png" alt="" class="cc_img" v-if="Status==3">
+                <img src="/static/images/icons/c2.png" alt="" class="cc_img" v-if="Status==2">
                 <div class="cc_main flex justifyContentBetween flexAlignCenter">
                     <p class="font30">会员次卡</p>
                     <div class="cc_right">
-                        <p>服务项目-{{item.Title}}</p>
+                        <p>{{item.Title}}</p>
                         <p class="font22 mt1">剩余次数{{item.CardNum}}/{{item.UseNum}}</p>
                         <p class="flex justifyContentBetween font22 mt1">
-                          <span>次卡权益</span>
-                          <span class="cc_use" :class="item.Enable==2?'active':''" @tap="useCard(item)">立即使用</span>
+                          <span>{{item.ScopeOfUse}}</span>
+                          <span class="cc_use" :class="item.CardNum==0?'active':''" @tap="useCard(item)">立即使用</span>
                         </p>
                     </div>
                 </div>
@@ -40,7 +40,7 @@ export default {
 
   data () {
     return {
-      tabList:[{Id:1,Name:"可使用"},{Id:3,Name:"已失效"}],
+      tabList:[{Id:1,Name:"可使用"},{Id:2,Name:"已失效"}],
       tabIndex:0,
       userId:"",
       token:"", 
@@ -81,7 +81,8 @@ export default {
         UserId:this.userId,
         Token:this.token,
         Status:this.Status,
-        Page:1
+        Page:1,
+        PageSize:30
       }).then(res=>{
           if(res.code==0){
             this.list = res.data
@@ -90,24 +91,27 @@ export default {
     },
     //立即使用服务次卡
     useCard(item){
-      if(item.Enable==2){ //已失效
+      if(item.CardNum==0){ //已失效
         wx.showToast({
           title:"该服务已失效~",
           icon:"none"
         })
       }else{
-        if(!item.ProductId&&!item.ShopId){
+        if(!(item.ProductId*1)&&!(item.ShopId*1)){
           wx.switchTab({
               url:`/pages/index/main`
           })
+          return;
         }else if(item.ProductId){ //去产品详情
           wx.navigateTo({
               url:`/pages/other/serdetail/main?id=`+item.ProductId
           })
+          return;
         }else if(item.ShopId){ //去往店铺详情
           wx.navigateTo({
-              url:`/pages/myson/shopDetail/main?id=`+item.ShopId
+              url:`/pages/other/chose/main?id=`+item.ShopId
           })
+          return;
         }
         // wx.setStorageSync('submitPro',{
         //   proId:item.ProductId,
