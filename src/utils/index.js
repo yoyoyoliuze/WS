@@ -419,6 +419,14 @@ export function openLocation(location){
         address:location.address
     })
 }
+// 全屏查看图片,
+// imgArr一个图片数组,thisImg现在预览的图片
+export function previewImg(imgArr,index){
+    wx.previewImage({
+      urls:imgArr,//array
+      current:imgArr[index],//string
+    })
+}
 // 重新预约订单
 export function Reservation(items){
   let arrId = [];

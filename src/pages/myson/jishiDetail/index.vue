@@ -101,8 +101,13 @@
                 <span>{{comment.CommentList[0].Rank==1?'不满意':comment.CommentList[0].Rank==2?'一般':'满意'}}</span>
               </div>
             </div>
-            <div class="text">
-              {{comment.CommentList[0].ContentText}}
+            <div class="text">{{comment.CommentList[0].ContentText}}</div>
+            <div class="imgList">
+              <img :src="imgItem.PicUrl" alt="" 
+                v-for="(imgItem,imgIndex) in comment.CommentList[0].PicData" :key="imgIndex" 
+                v-show="imgItem&&imgItem.PicUrl"
+                @click="previewImage(comment.CommentList[0].PicData,imgIndex)"
+                >
             </div>
             <div class="ali-c jus-b time">
               <p>技师：{{comment.CommentList[0].ArtName}}</p>
@@ -125,10 +130,10 @@
         </div>
       </div>
 
-      <div class="jishi">
+      <div class="jishi" v-if="artInfo.PicData&&artInfo.PicData.legnth>0">
         <div class="tit ali-c"><p>技师图片</p></div>
         <scroll-view scroll-x enable-flex class="jishi-img">
-          <div class="item"  v-for="(item, index) in artInfo.PicData" :key="index">
+          <div class="item"  v-for="(item, index) in artInfo.PicData" :key="index" @click="previewImage(artInfo.PicData,index)">
             <img :src="item.PicUrl" alt="" >
           </div>
             <!-- <img mode='aspectFill' :src="item.PicUrl" alt=""  
@@ -146,7 +151,7 @@
 </template>
 
 <script>
-import {post,callPhone,openLocation} from '@/utils/index'
+import {post,callPhone,openLocation,previewImg} from '@/utils/index'
 export default {
   name:'技师详情',
   data () {
@@ -251,6 +256,14 @@ export default {
         duration: 300
       })
     },
+    // 预览图片
+    previewImage(imgArr,index){
+      let arr = [];
+      imgArr.map(item=>{
+        arr.push(item.PicUrl)
+      })
+      previewImg(arr,index)
+    }
   },
 }
 </script>
@@ -401,7 +414,7 @@ export default {
     }
     .text{
       margin-left: 10rpx;
-      color: #999
+      color: #999;
     }
   }
   .line{
@@ -455,6 +468,7 @@ export default {
       }
       .text{
         margin: 15rpx 0;
+        overflow-wrap: break-word;
       }
       .one{
         .name{
@@ -593,6 +607,7 @@ export default {
 .notData{
   color:#999;
   text-align:center;
+  margin:20rpx 0;
 }
 .rest{
   background-color:#ccc!important;
@@ -607,6 +622,16 @@ export default {
     background:#e1e1e1;
     padding:0 20rpx;
     border-radius:5rpx;
+  }
+}
+.imgList{
+  margin-top:15rpx;
+  margin-right: -16rpx;
+  img{
+    width:125rpx;
+    height:125rpx;
+    margin-right:20rpx;
+    border-radius:7rpx;
   }
 }
 </style>

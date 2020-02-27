@@ -22,7 +22,14 @@
                         <span class="col_tag">{{item.Rank==1?'不满意':item.Rank==2?'一般':'满意'}}</span>
                     </p>
                 </div>
-                <div>{{item.ContentText}}</div>
+                <div class="text">{{item.ContentText}}</div>
+                <div class="imgList">
+                  <img :src="imgItem.PicUrl" alt="" 
+                    v-for="(imgItem,imgIndex) in item.PicData" :key="imgIndex" 
+                    v-show="imgItem&&imgItem.PicUrl"
+                    @click="previewImage(item.PicData,imgIndex)"
+                    >
+                </div>
                 <div class="cg font24 flex justifyContentBetween mt1">
                   <p>技师：{{item.ArtName}}</p>
                   <p>{{item.AddTime}}</p>
@@ -39,7 +46,7 @@
 <script>
 
 import '@/style/bb.scss';
-import {post} from "@/utils/index";
+import {post,previewImg} from "@/utils/index";
 export default {
   data () {
     return {
@@ -104,6 +111,14 @@ export default {
       this.type = type;
       this.page=1;
       this.getCommentList()
+    },
+    // 预览图片
+    previewImage(imgArr,index){
+      let arr = [];
+      imgArr.map(item=>{
+        arr.push(item.PicUrl)
+      })
+      previewImg(arr,index)
     }
   },
   onPullDownRefresh(){
@@ -167,5 +182,17 @@ export default {
     color:#999;
     text-align:center;
     line-height:3;
+  }
+  .imgList{
+    margin-top:15rpx;
+    img{
+      width:125rpx;
+      height:125rpx;
+      margin-right:20rpx;
+      border-radius:7rpx;
+    }
+  }
+  .text{
+      overflow-wrap: break-word;
   }
 </style>

@@ -115,6 +115,13 @@
             <div class="text">
               {{comment.CommentList[0].ContentText}}
             </div>
+            <div class="imgList">
+              <img :src="imgItem.PicUrl" alt="" 
+                v-for="(imgItem,imgIndex) in comment.CommentList[0].PicData" :key="imgIndex" 
+                v-show="imgItem&&imgItem.PicUrl"
+                @click="previewImage(comment.CommentList[0].PicData,imgIndex)"
+                >
+            </div>
             <div class="ali-c jus-b time">
               <p>技师：{{comment.CommentList[0].ArtName}}</p>
               <p>{{comment.CommentList[0].AddTime}}</p>
@@ -172,7 +179,7 @@
 </template>
 
 <script>
-import {post,openLocation,callPhone} from '@/utils'
+import {post,openLocation,callPhone,previewImg} from '@/utils'
 export default {
 
   data () {
@@ -371,6 +378,14 @@ export default {
     },
     call(){
       callPhone(this.shopDetail.Phone)
+    },
+    // 预览图片
+    previewImage(imgArr,index){
+      let arr = [];
+      imgArr.map(item=>{
+        arr.push(item.PicUrl)
+      })
+      previewImg(arr,index)
     }
   },
 }
@@ -542,6 +557,7 @@ export default {
       }
       .text{
         margin: 15rpx 0;
+        overflow-wrap: break-word;
       }
       .one{
         .name{
@@ -774,5 +790,15 @@ export default {
 .notData{
   color:#999;
   text-align:center;
+}
+.imgList{
+  margin-top:15rpx;
+  margin-right: -16rpx;
+  img{
+    width:125rpx;
+    height:125rpx;
+    margin-right:20rpx;
+    border-radius:7rpx;
+  }
 }
 </style>

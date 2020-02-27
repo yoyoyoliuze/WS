@@ -13,6 +13,8 @@
       <div class="jus-box">
         <div class="ali-c jus-b"><p>预约序号</p><span>{{data.MakeNum}}</span></div>
         <div class="ali-c jus-b"><p>预约日期</p><span>{{data.MakeDate}}</span></div>
+        <div class="ali-c jus-b" v-if="data.ArtData.ArtName"><p>预约技师</p><span>{{data.ArtData.ArtName}}</span></div>
+        <div class="ali-c jus-b" v-if="data.ArtData.ArtTel"><p>技师电话</p><span>{{data.ArtData.ArtTel}}</span></div>
         <!-- <div class="ali-c jus-b"><p>开始时间</p><span>16:30</span></div> -->
       </div>
       <div class="jus-box">

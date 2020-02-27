@@ -18,7 +18,7 @@
                           <p class="fb mt1">{{shopInfo.ShopName}}</p>
                           <p class="mt1 fb">{{shopInfo.Phone}}</p>
                       </div>
-                      <img src="/static/images/icons/phone.png" alt="" class="phone" @click="call">
+                      <img src="/static/images/icons/phone.png" alt="" class="phone" @click="call(shopInfo.Phone)">
                   </div>
                   <div class="mt2"> 
                       <p class="font22">预约服务</p>
@@ -138,8 +138,8 @@ export default {
       })
     },
     // 拨打电话
-    call(){
-      callPhone(this.info.Tel)
+    call(tel){
+      callPhone(tel)
     },
     // 取消订单
     cancleOrder(){

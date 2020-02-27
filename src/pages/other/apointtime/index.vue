@@ -83,8 +83,9 @@ export default {
     submit(){
       this.data.map((item,i)=>{
         if(item.active === true){
+          console.log(item,'submitPro')
           this.submitPro.date = item.value;
-          this.submitPro.getDay = item.getDay;
+          this.submitPro.getDay = item.title;
           wx.setStorageSync('submitPro',this.submitPro)
           //  wx.redirectTo({
            wx.navigateTo({
