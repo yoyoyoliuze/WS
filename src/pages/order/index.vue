@@ -93,22 +93,24 @@ export default {
     }
   },
   onShow(){
-    this.list =[];
-    this.payStatus = false;
-    console.log(wx.getStorageSync("statu"),"333statu")
-    if(wx.getStorageSync("statu")){
-      this.Status = wx.getStorageSync("statu")
-      this.tabList.map((item,i)=>{
-        if(wx.getStorageSync("statu")==item.Id){
-          this.tabIndex = i
-        }
-      })
-    }
-    this.userId = wx.getStorageSync("userId")
-    this.token = wx.getStorageSync("token")
-    this.getList()
+    this.init();
   },
   methods: {
+    init(){
+      this.list =[];
+      this.payStatus = false;
+      if(wx.getStorageSync("statu")){
+        this.Status = wx.getStorageSync("statu")
+        this.tabList.map((item,i)=>{
+          if(wx.getStorageSync("statu")==item.Id){
+            this.tabIndex = i
+          }
+        })
+      }
+      this.userId = wx.getStorageSync("userId")
+      this.token = wx.getStorageSync("token")
+      this.getList()
+    },
     goUrl(url,param){
         wx.navigateTo({
           url:url+'?id='+param
@@ -218,8 +220,14 @@ export default {
       })
     }
   },
+   //下拉刷新
+
+  onPullDownRefresh: function () {
+    wx.stopPullDownRefresh();
+    this.init();
+  },
   onHide(){
-    wx.setStorageSync('statu',1)//清楚个人中心页面缓存
+    wx.setStorageSync('statu',1)//清除个人中心页面缓存
   }
 }
 </script>

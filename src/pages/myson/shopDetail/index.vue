@@ -333,6 +333,13 @@ export default {
             }
           })
       })
+      if(proId.length<1){
+        wx.showToast({
+          title:'请选择服务项目',
+          icon:'none'
+        })
+        return;
+      }
        wx.setStorageSync('submitPro',
         {
           proId:proId.join(','),
@@ -790,6 +797,7 @@ export default {
 .notData{
   color:#999;
   text-align:center;
+  padding:20rpx 0;
 }
 .imgList{
   margin-top:15rpx;

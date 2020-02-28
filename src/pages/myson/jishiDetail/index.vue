@@ -607,7 +607,7 @@ export default {
 .notData{
   color:#999;
   text-align:center;
-  margin:20rpx 0;
+  padding:20rpx 0;
 }
 .rest{
   background-color:#ccc!important;
