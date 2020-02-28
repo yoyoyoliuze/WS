@@ -1,8 +1,8 @@
 <template>
   <div>
     <div v-if="list.length>0">
-        <div class="list" v-for="(item,index) in list" :key="index" @click="goArt(item)">
-          <div class="top ali-c">
+        <div class="list" v-for="(item,index) in list" :key="index">
+          <div class="top ali-c" @click="goArt(item)">
             <img class="left" :src="item.ArtificerPic" alt="">
             <div class="right">
               <div class="ali-c one">
@@ -16,7 +16,7 @@
               </div>
             </div>
           </div>
-          <div class="address ali-c jus-b">
+          <div class="address ali-c jus-b" @click="goArt(item)">
             <div class="ali-c">
               <p @click.stop="goShopDetail(item)">{{item.ShopData.ShopNick}}</p>
               <img class="left" src="/static/images/more.png" alt="">
@@ -24,6 +24,7 @@
             <img class="right" src="/static/images/address_r.png" alt="" @click.stop="goLocation(item.ShopData)">
           </div>
           <div class="btn-box jus-e ali-c">
+            <p class="flexc active mr20" @click="cancel(item.ArtId,index)">取消关注</p>
             <p class="flexc" :class="item.IsRest==1?'active':'normal'">{{item.IsRest==1?'休息中':'预约'}}</p>
           </div>
         </div>
@@ -79,6 +80,20 @@ export default {
           lat:shop.Lat,
           lng:shop.Lng
         })
+    },
+    // 取消关注
+    cancel(artId,index){
+        post('User/ReCollections',{
+          UserId:this.userId,
+          Token:this.token,
+          Type:2,
+          Id:artId
+        }).then(res=>{
+          wx.showToast({
+            title:res.msg
+          })
+          this.list.splice(index,1);
+        })
     }
   },
   onReachBottom(){
@@ -133,6 +148,13 @@ export default {
   .top{
     height: 180rpx;
     border-bottom: 1rpx solid #ededed;
+    .cancels{
+      position:absolute;
+      right:30rpx;
+      top:15rpx;
+      font-size:26rpx;
+      color:#cc9f68;
+    }
     .left{
       width: 120rpx;
       height: 120rpx;
@@ -169,5 +191,8 @@ export default {
       }
     }
   }
+}
+.mr20{
+  margin-right:20rpx;
 }
 </style>

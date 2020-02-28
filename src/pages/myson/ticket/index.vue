@@ -9,7 +9,7 @@
           <div class="list jus-b" v-for="(item,key) in list" :key="key">
             <div class="left">
               <p>{{item.Title}}</p>
-              <span>有效期至{{item.EndTime}}</span>
+              <span>有效期至{{item.endTime}}</span>
               <div class="flexc cc9f" :class="Status==1?'use':''">{{item.DiscountType==1?'减满券':(item.DiscountType==2?'折扣券':'无')}}</div>
             </div>
             <div class="right flexc">
@@ -27,7 +27,7 @@
 </template>
 
 <script>
-import {post} from '@/utils'
+import {post,editTime} from '@/utils'
 export default {
 
   data () {
@@ -71,7 +71,10 @@ export default {
         Status:this.Status
       }).then(res=>{
         if(res.code==0){
-          this.list = res.data
+          this.list = res.data;
+          res.data.map(item=>{
+            item.endTime = editTime(item.EndTime,'time')
+          })
         }
       })
     }

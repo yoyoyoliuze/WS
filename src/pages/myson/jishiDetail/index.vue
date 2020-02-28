@@ -39,7 +39,7 @@
             <img src="/static/images/detail/phone.png" alt="" @click="call">
             <img src="/static/images/detail/address.png" alt="" @click="goLocation">
             <img src="/static/images/detail/love.png" v-if="!love" alt="" @click="attention">
-            <img src="/static/images/detail/love-a.png" v-else alt="" @click="attention">
+            <img src="/static/images/detail/love-a.png" v-else alt="" @click="cancelAttention">
           </div>
         </div>
       </div>
@@ -179,9 +179,12 @@ export default {
     // 获取技师信息
     getArtInfo(){
       post('Shop/GetShopArtificerxq',{
-          ArtId:this.artId
+          ArtId:this.artId,
+          UserId:wx.getStorageSync('userId')||'',
+          Token:wx.getStorageSync('token')||'',
       }).then(res=>{
         this.artInfo = res.data;
+        this.love = Boolean(res.data.IsFollowNum);
         this.speciality = JSON.parse(res.data.Speciality);
       })
     },
@@ -234,6 +237,20 @@ export default {
           // }
       //   }
       // })
+    },
+    // 取消关注
+    cancelAttention(){
+        post('User/ReCollections',{
+          UserId:wx.getStorageSync('userId'),
+          Token:wx.getStorageSync('token'),
+          Type:2,
+          Id:this.artId
+        }).then(res=>{
+          this.love = false;
+          wx.showToast({
+            title:res.msg
+          })
+        })
     },
     goComment(){
       wx.navigateTo({
