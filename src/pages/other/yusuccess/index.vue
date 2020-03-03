@@ -75,7 +75,7 @@
           <div class="cg ml1" v-else>不使用次卡</div>
         </div>
         <div class="flex flexAlignCenter">
-            <span class="cr" v-if="selectCouponItem.Id!=-1">剩余{{selectOneCard.CardNum}}次</span>
+            <span class="cr" v-if="selectOneCard.Id!=-1">剩余{{selectOneCard.CardNum}}次</span>
             <img src="/static/images/icons/more.png" alt="" class="right ml1">
         </div>
     </div>
@@ -208,7 +208,7 @@ export default {
       oneCardList:[],
       oneCardStatus:false,
       selectOneCard:{
-        Id:'',
+        Id:-1,
       },//选中的次卡
     }
   },
@@ -253,6 +253,17 @@ export default {
         CouponId:!type?0:type=='Coupon'?Id:'-1',//-1:请选择优惠券;0:默认自动匹配优惠券;>0:使用的优惠券
         SubCardId:!type?0:type=='oneCard'?Id:'-1'
       },this.getData).then(res=>{
+        //初始化优惠券
+        this.selectCouponItem={
+          Denomination: 0,
+          DiscountType: 0,
+          Id: -1,
+          MeetConditions: 0
+        };
+        //初始化次卡
+        this.selectOneCard={
+        Id:-1,
+        };
         const data = res.data;
         this.data = data;
         this.shop =data.ShopData;
