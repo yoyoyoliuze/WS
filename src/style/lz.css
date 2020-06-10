@@ -34,7 +34,6 @@ checkbox .wx-checkbox-input {
   text-align: center;
   font-size: 26rpx;
   color: #999;
-  background-color: #f5f5f5;
 }
 /*checkbox选中后样式  */
 checkbox .wx-checkbox-input.wx-checkbox-input-checked {

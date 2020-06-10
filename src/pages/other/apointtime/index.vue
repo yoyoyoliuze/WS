@@ -140,15 +140,21 @@ export default {
   }
   .list{
     border-top:20rpx #f2f2f2 solid;
-    padding:50rpx 100rpx 100rpx;
+    padding:30rpx 30rpx;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    flex-flow:row wrap;
     .item{
       line-height:2;
-      padding:30rpx 0;
+      padding:10rpx 0;
       text-align:center;
-      margin-bottom:40rpx;
+      margin-bottom:30rpx;
       border:3rpx #ccc solid;
       color:#999;
       position:relative;
+      flex:0 0 auto;
+      width:47%;
       .tit{
       color:#999;
       }

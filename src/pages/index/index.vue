@@ -93,7 +93,7 @@
               v-for="(item,index) in firstYuyueList" :key="index">
                 <!-- 技师 -->
                 <div class="flex yu_left" v-if="item.ServiceMode==1">
-                    <img :src="item.ArtData.ArtPic" alt="" class="b_ava">
+                    <img :src="item.ArtData.ArtPic" alt="" mode="aspectFill" class="b_ava">
                     <div class="flex flexColumn justifyContentBetween">
                         <p class="flex name-a">
                           <span>{{item.ArtData.ArtName}}</span><span class="b_pill">{{item.ArtData.LvlName}}</span>
@@ -104,7 +104,7 @@
                 </div>
                 <!-- 技师 -->
                 <div class="flex yu_left" v-else >
-                    <img :src="item.ShopData.Logo" alt="" class="b_ava">
+                    <img :src="item.ShopData.Logo" alt="" class="b_ava" mode="aspectFill">
                     <div class="flex flexColumn justifyContentBetween">
                         <p class="flex">
                           <span>{{item.ShopData.ShopName}}</span>

@@ -8,7 +8,34 @@
         </div>
         <div class="searchBtn" @click="onSearch">搜索</div>
       </div>
-      <div class="flex bg_fff p3">
+      <div class="classify">
+        <scroll-view scroll-x class="nav-scroll" :scroll-into-view="'id'+nowClassifyId" scroll-with-animation>
+          <div class="nav-list">
+            <div class="item" :id="'id'+item.Id" :class="{'active':item.Id===nowClassifyId}" 
+              v-for="(item,index) in classify" :key="index" 
+              @click="onClassify(item)">{{item.Name}}</div>
+          </div>
+        </scroll-view>
+        <div class="downArrow" @click="showClassifyWin = true">
+          <img src="/static/images/icons/left.png" alt="">
+        </div>
+        <!-- 导航弹窗 -->
+        <div class="nav-scroll-win" v-if="showClassifyWin" @click="showClassifyWin = false">
+          <div class="content" @click.stop="on">
+            <div class="titles">
+              <p>全部分类</p>
+              <img src="/static/images/icons/left.png" alt="" @click="showClassifyWin = false">
+            </div>
+            <div class="list">
+              <div class="item" :class="{'active':item.Id===nowClassifyId}"
+                v-for="(item,index) in classify" :key="index" @click="onClassify(item)">
+                {{item.Name}}
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="flex bg_fff sort">
           <div class="hot_itl font30" :class="{'active':tabActive==0}" @click="cliTab(0)">默认</div>
           <div class="hot_itl flex flexAlignCenter justifyContentCenter" :class="{'active':tabActive==1}" @click="cliTab(1)">
               <p class="mr_b font30">人气</p>
@@ -42,7 +69,7 @@
               </div>
           </div>
       </div>
-      <p class="list-data" v-if="this.list.length<1">暂无数据</p>
+      <p class="list-data" v-if="list.length<1">暂无数据</p>
       <p class="list-data" v-if="isOver&&page!==1">没有更多了</p>
 
   </div>
@@ -63,7 +90,7 @@ export default {
     }
     this.tabActive = 0;
     this.paixu = 0;
-    this.getList();
+    this.getClassify();
   },
   watch: {
     paixu(e){
@@ -76,6 +103,9 @@ export default {
       paixu:0,//排序，0为不排序，1为升序，2为降序
       page:1,
       pagesize:10,
+      classify:[],
+      nowClassifyId:'',
+      showClassifyWin:false,
       list:[],
       isOver:false,
       keyword:'',
@@ -83,6 +113,15 @@ export default {
     }
   },
   methods: {
+    getClassify(){
+      post('Goods/TypeList',{
+        Type:0
+      }).then(res=>{
+        this.classify = res.data;
+        this.nowClassifyId = res.data[0].Id;
+        this.getList();
+      })
+    },
     getList(){
       if(this.paixu==1){
         var xu = 0
@@ -97,6 +136,7 @@ export default {
         Sort:this.tabActive,
         Order:xu,
         IsHot:0,
+        TypeId:this.nowClassifyId,
         Keywords:this.keyword
       }).then(res=>{
           if(this.page===1){
@@ -105,9 +145,14 @@ export default {
           if(res.data.length <this.pagesize){
             this.isOver = true;
           }
-          console.log(this.isOver)
           this.list.push(...res.data)
       })
+    },
+    // 点击分类
+    onClassify(item){
+      this.nowClassifyId = item.Id;
+      this.showClassifyWin = false;
+      this.getList();
     },
     cliTab(index){
       if(index===0){//点击第一个
@@ -148,7 +193,8 @@ export default {
       wx.navigateTo({
         url:"/pages/other/serdetail/main?id="+item.Id
       })
-    }
+    },
+    on(){}
     
   },
   //下拉刷新
@@ -172,6 +218,83 @@ export default {
 </script>
 
 <style lang='scss' scoped>
+.classify{
+  background:#fff;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  .nav-scroll{
+    width:90%;
+    height:83rpx;
+    .nav-list{
+      display:flex;
+      align-items:center;
+      height:80rpx;
+      line-height:80rpx;
+      .item{
+        flex:0 0 auto;margin-left:30rpx;
+        padding:0 7rpx;
+          border-bottom:4rpx solid #fff;
+        &.active{
+          border-bottom:4rpx solid #cc9f68;
+        }
+      }
+    }
+  }
+  .nav-scroll-win{
+    position:fixed;
+    top:0;
+    left:0;
+    z-index:999;
+    width:100%;height:100%;
+    background:rgba(0,0,0,.5);
+    .content{
+      background:#fff;
+      .titles{
+        font-size:30rpx;
+        display:flex;
+        align-items:center;
+        justify-content:space-between;
+        padding:0 30rpx;
+        height:90rpx;line-height:90rpx;
+        img{
+          width:18rpx;height:35rpx;
+          transform:rotate(90deg);
+        }
+      }
+      .list{
+        display:flex;
+        align-items:center;
+        flex-flow:row wrap;
+        padding:10rpx 0 30rpx 30rpx;
+        .item{
+          padding:0 30rpx;
+          line-height:2;
+          border-radius:5rpx;
+          border:1rpx solid #ccc;
+          margin-right:30rpx;
+          margin-bottom:20rpx;
+          &.active{
+            border:1rpx solid #cc9f68;
+          }
+        }
+      }
+    }
+  }
+  .downArrow{
+    width:9%;
+    line-height:100%;
+    text-align:center;
+    img{
+      width:18rpx;height:35rpx;
+      transform:rotate(-90deg);
+      margin-right:10rpx;
+    }
+  }
+}
+.sort{
+  padding-top:15rpx;padding-bottom:20rpx;
+}
 .active{
   color: #cc9f68!important
 }
