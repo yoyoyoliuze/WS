@@ -128,7 +128,7 @@ export default {
   }
   .bfff{
     background:#fff;
-    height:100vh;
+    min-height:100vh;
   }
   .justifyContentBetween{
     position:fixed;
@@ -140,7 +140,7 @@ export default {
   }
   .list{
     border-top:20rpx #f2f2f2 solid;
-    padding:30rpx 30rpx;
+    padding:30rpx 30rpx 100rpx;
     display:flex;
     align-items:center;
     justify-content:space-between;
