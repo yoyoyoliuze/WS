@@ -27,12 +27,12 @@
                   <span>预约日期</span>
                 </div>
               </div>
-              <div class="flex1 flexc">
+              <!-- <div class="flex1 flexc">
                 <div>
                   <p>16:30</p>
                   <span>开始时间</span>
                 </div>
-              </div>
+              </div> -->
             </div>
             <div class="address ali-c jus-b" @click="toDetail(item1)">
               <div class="ali-c left">
